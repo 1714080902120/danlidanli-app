@@ -1,32 +1,32 @@
 <template>
   <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
+    <Base/>
+    <Sidebar/>
     <router-view/>
   </div>
 </template>
 
-<style lang="less">
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
+<script>
+import Base from 'components/common/base/Base'
+import Sidebar from 'components/common/base/sidebar/Sidebar'
 
-#nav {
-  padding: 30px;
-
-  a {
-    font-weight: bold;
-    color: #2c3e50;
-
-    &.router-link-exact-active {
-      color: #42b983;
-    }
+export default {
+  name: 'App',
+  data () {
+    return {}
+  },
+  components: {
+    Base,
+    Sidebar
   }
+}
+</script>
+
+<style scoped>
+@import 'assets/css/base.css';
+@import 'assets/css/normalize.css';
+#app {
+  overflow: hidden;
+  background-color: rgba(30, 30, 30, .8);
 }
 </style>
