@@ -1,103 +1,56 @@
 <template>
-  <div class="wrapper" ref="wrapper" :style="{ width, height }">
+  <div class="wrapper" ref="wrapper" :style="{ width: screenWidth, height: screenHeight }">
     <div class="content">
       <slot></slot>
     </div>
-    <BackToTop :show="show" @click.native="backToTop()"></BackToTop>
   </div>
 </template>
 
 <script>
-import BS from 'better-scroll'
-import BackToTop from './BackToTop'
+import BS from "better-scroll";
 export default {
-  name: 'BetterScroll',
+  name: "BetterScroll",
   props: {
-    probeType: Number,
-    pullUpLoad: {
-      type: Object
+    bounce: {
+      type: Boolean,
+      default: true
     },
-    fixLocation: {
-      type: Number,
-      default: 0
-    },
-    width: {
+    screenWidth: {
       type: String,
-      default: window.innerWidth + 'px'
+      default: "100%"
     },
-    height: {
+    screenHeight: {
       type: String,
-      default: window.innerHeight * (1 - (1 / 16) - (1 / 13)) + 'px'
+      default: "100vh"
     }
   },
-  data () {
+  data() {
     return {
-      BS: null,
-      show: false,
-      y: 0
-    }
+      BS: null
+    };
   },
-  mounted () {
+  mounted() {
     this.$nextTick(() => {
-      this.getBetterScroll()
-      this.startScroll()
-      this.pullingUp()
-      this.position()
-      this.goScrollTo()
-    })
+      this.getBetterScroll();
+    });
   },
-  components: {
-    BackToTop
-  },
+  components: {},
   methods: {
-    getBetterScroll () {
+    getBetterScroll() {
       this.BS = new BS(this.$refs.wrapper, {
         click: true,
-        probeType: this.probeType,
-        pullUpLoad: this.pullUpLoad
-      })
+        bounce: this.bounce
+      });
     },
-    backToTop () {
-      this.BS.scrollTo(0, 0, 500)
-    },
-    goScrollTo () {
-      this.BS.on('scroll', (position) => {
-        this.$emit('go', position)
-      })
-    },
-    startScroll () {
-      this.BS.on('scroll', (position) => {
-        if (position.y <= -3000) {
-          this.show = true
-        } else {
-          this.show = false
-        }
-      })
-    },
-    pullingUp () {
-      if (this.pullUpLoad && this.$store.state.moduleDetail.active) {
-        this.BS.on('pullingUp', () => {
-          setTimeout(() => {
-            this.$emit('addGoods')
-          }, 2200)
-          setTimeout(() => {
-            this.BS.finishPullUp()
-          }, 6000)
-        })
-      }
-    },
-    scrollTo (position, delay) {
-      this.BS.scrollTo(position.x, position.y, delay)
-    },
-    refresh () {
-      this.BS.refresh()
+    refresh() {
+      this.BS.refresh();
     }
   }
-}
+};
 </script>
 
 <style lang="less" scoped>
-  .wrapper {
-    overflow: hidden;
-  }
+.wrapper {
+  overflow: hidden;
+}
 </style>

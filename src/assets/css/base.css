@@ -1,6 +1,6 @@
 @import "normalize.css";
 :root {
-  --color-text: #666;
+  --color-text: #eee;
   --color-txt: #e6e6e6;
   --color-high-text: #ff5777;
   --color-tint: #ee537a;
@@ -9,7 +9,8 @@
   --line-height: 1.5;
   --color-active-default: rgb(253, 6, 130);
   --top-margin: 60px;
-  --base-bg-color: rgba(30, 30, 30, .9);
+  --base-bg-color: rgba(90, 90, 90);
+  --base-bg-color-sec: rgba(35, 35, 35, .8);
 }
 *,
 *::before,

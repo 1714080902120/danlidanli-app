@@ -1,12 +1,13 @@
 <template>
   <div id="base">
     <div class="head">
-      <div class="left">
+      <div class="left" @click="goAppear()">
         <i class="btn">
           <img src="~assets/img/base/munu_white.svg" alt />
         </i>
         <i class="logo">
-          <img src="~assets/img/base/user_avatar_init.png" alt />
+          <img v-if="!isTokenExist()" src="~assets/img/base/user_avatar_init.png" alt />
+          <img v-else-if="isTokenExist()" src="~assets/img/base/user_avatar_init.png" alt />
         </i>
       </div>
       <div class="center">
@@ -19,14 +20,12 @@
     <div class="bottom">
       <slot name="bottom"></slot>
     </div>
-    <Sidebar/>
     <Tabbar />
   </div>
 </template>
 
 <script>
 import Tabbar from "./tabbar/Tabbar";
-import Sidebar from './sidebar/Sidebar'
 
 export default {
   name: "Base",
@@ -34,8 +33,19 @@ export default {
     return {};
   },
   components: {
-    Tabbar,
-    Sidebar
+    Tabbar
+  },
+  methods: {
+    goAppear() {
+      this.$Bus.$emit("goAppear");
+    }
+  },
+  computed: {
+    isTokenExist() {
+      return () => {
+        return window.localStorage.getItem("token");
+      };
+    }
   }
 };
 </script>
@@ -80,7 +90,7 @@ export default {
   }
   .bottom {
     position: relative;
-    background-color: var(--color-lint);
+    background-color: var(--base-bg-color-sec);
   }
 }
 </style>

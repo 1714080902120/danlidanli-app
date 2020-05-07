@@ -64,7 +64,7 @@ export default {
   position: relative;
   display: flex;
   .outer {
-    background-color: var(--color-text);
+    background-color: var(--base-bg-color-sec);
     display: flex;
     flex: auto;
     .tabbar-item {

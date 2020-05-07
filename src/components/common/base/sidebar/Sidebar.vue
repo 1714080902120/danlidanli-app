@@ -1,39 +1,66 @@
 <template>
-  <div id="sidebar">
-    <div class="inner">
-      <div class="user-info">
-        <div class="header">
-          <div class="logo-lebel">
-            <span class="logo">21312312312</span>
-            <span class>1231231</span>
+  <div
+    id="sidebar"
+    :class="{ appear: isAppear === true && isDisappear === false, disappear: isDisappear = true && isAppear === false }"
+    @click="goDisappear($event)"
+  >
+    <BetterScroll ref="scroll" :bounce="false" screenWidth="80%" screenHeight="100vh">
+      <div class="inner">
+        <div class="user-info">
+          <div class="header">
+            <div class="logo-lebel">
+              <span class="logo"></span>
+              <span class></span>
+            </div>
+            <div class="wallet-scan"></div>
           </div>
-          <div class="wallet-scan">1231231</div>
         </div>
+        <mt-cell
+          :style="{ 'background-color': 'transparent', margin: '-2px 0' }"
+          v-for="(item, index) in items"
+          :title="item.title"
+          :key="index"
+          :to="item.path"
+        >
+          <img
+            slot="icon"
+            v-if="item.icon"
+            :src="item.icon"
+            width="20"
+            height="20"
+            :style="{ margin: '0 24px 0 5px' }"
+          />
+        </mt-cell>
       </div>
-      <mt-cell
-        :style="{ 'background-color': 'transparent', margin: '-1px 0' }"
-        v-for="(item, index) in items"
-        :title="item.title"
-        :key="index"
-        :to="item.path"
-        :class="{ 'small-margin': item.title === '' }"
-      >
-        <img slot="icon" v-if="item.icon" :src="item.icon" width="20" height="20" :style="{ margin: '0 24px 0 5px' }" />
-      </mt-cell>
+    </BetterScroll>
+    <div class="tabbar-outer">
+      <span class="set">
+        <img slot="icon" src="~assets/img/base/set_dark.svg" />设置
+      </span>
+      <span class="theme">
+        <img slot="icon" src="~assets/img/base/theme_dark.svg" />主题
+      </span>
+      <span class="skip">
+        <img slot="icon" src="~assets/img/base/sun.svg" />夜间
+      </span>
     </div>
   </div>
 </template>
 
 <script>
 import {
-  getUserData,
+  getUserData
   // getToken
-  } from 'network/user'
+} from "network/user";
+
+import BetterScroll from "components/common/better_scroll/BetterScroll";
 
 export default {
   name: "Sidebar",
   data() {
     return {
+      isAppear: false,
+      isDisappear: false,
       items: [
         {
           title: "首页",
@@ -125,23 +152,38 @@ export default {
           title: "青少年模式",
           path: "/teen",
           icon: require("assets/img/base/teen_dark.svg")
+        },
+        {
+          title: ""
         }
       ],
       baseInfo: {}
-    }
+    };
   },
   created() {
-    // this.getData();
+    this.$nextTick(() => {
+      this.$Bus.$on("goAppear", () => {
+        this.isAppear = true;
+      });
+    });
+  },
+  components: {
+    BetterScroll
   },
   methods: {
     getData() {
-      // getToken({ username: '13798510901', password: '443529931' })
       getUserData({
-        url: '/user/base-info',
-        method: 'get'
+        url: "/user/base-info",
+        method: "get"
       }).then(res => {
-        console.log(res)
-      })
+        console.log(res);
+      });
+    },
+    goDisappear(e) {
+      let X = window.innerWidth;
+      if (e.x > X * 0.8) {
+        this.isAppear = false;
+      }
     }
   }
 };
@@ -151,13 +193,60 @@ export default {
 #sidebar {
   position: absolute;
   top: 0;
-  width: 75%;
-  height: 100vh;
-  background-color: var(--base-bg-color);
+  width: 100%;
   z-index: 999;
-  // overflow: hidden;
-  .small-margin {
-    margin: -10px 0;
+  overflow: hidden;
+  transition: 0.6s;
+  transform: translate(-100%, 0);
+  .inner {
+    background-color: var(--base-bg-color);
+    width: 90%;
+  }
+  .tabbar-outer {
+    position: absolute;
+    display: flex;
+    bottom: 0;
+    background-color: var(--base-bg-color);
+    justify-content: space-around;
+    align-items: center;
+    font-size: 35px;
+    width: 72%;
+    padding-left: 20px;
+    span {
+      height: 110px;
+      line-height: 110px;
+      flex: auto;
+      display: flex;
+      align-items: center;
+      img {
+        width: 60px;
+        height: 60px;
+      }
+    }
+  }
+}
+.appear {
+  animation: appear 0.16s linear forwards;
+}
+.disappear {
+  animation: disappear 0.1s linear forwards;
+}
+
+@keyframes appear {
+  from {
+    transform: translate(-100%, 0);
+  }
+  to {
+    transform: translate(0, 0);
+    background-color: rgba(0, 0, 0, 0.1);
+  }
+}
+@keyframes disappear {
+  from {
+    transform: translate(0, 0);
+  }
+  to {
+    transform: translate(-100%, 0);
   }
 }
 </style>
