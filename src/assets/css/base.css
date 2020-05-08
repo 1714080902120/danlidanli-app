@@ -9,7 +9,7 @@
   --line-height: 1.5;
   --color-active-default: rgb(253, 6, 130);
   --top-margin: 60px;
-  --base-bg-color: rgba(85, 85, 85);
+  --base-bg-color: rgba(85, 85, 85, 1);
   --base-bg-color-sec: rgba(35, 35, 35, .8);
 }
 *,

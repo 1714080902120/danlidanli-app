@@ -81,10 +81,13 @@ export default {
 #sidebar-head {
   margin-bottom: 20px;
   border-bottom: 1px solid rgb(95, 95, 95);
+  background-image: url('~assets/img/base/bilibili_user_logo_bg.svg');
+  background-size: 70%;
+  background-position-x: 140px;
+  background-repeat: no-repeat;
   .have-token {
 
     .header {
-      background-color: rgba(60, 60, 60);
 
     }
   }

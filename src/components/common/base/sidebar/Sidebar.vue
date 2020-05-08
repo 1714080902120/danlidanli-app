@@ -7,23 +7,27 @@
     <BetterScroll ref="scroll" :bounce="false" screenWidth="80%" :screenHeight="height()">
       <div class="inner">
         <SidebarHead :info="userInfo" />
-        <mt-cell
+        <li
           class="cell"
           v-for="(item, index) in items"
           :title="item.title"
           :key="index"
-          :to="item.path"
           :class="{ active: index === isActive }"
+          v-waves
+          @touchstart="touchStart($event)"
         >
           <img
             slot="icon"
             v-if="item.icon"
             :src="item.icon"
-            width="20"
-            height="20"
+            width="20px"
+            height="20px"
             :style="{ margin: '0 24px 0 5px' }"
           />
-        </mt-cell>
+          <div class="title">
+            {{item.title}}
+          </div>
+        </li>
       </div>
     </BetterScroll>
     <div class="tabbar-outer">
@@ -187,9 +191,9 @@ export default {
         getUserData().then(res => {
           this.userInfo = res;
 
-          delete this.userInfo._id
-          delete this.userInfo.username
-        })
+          delete this.userInfo._id;
+          delete this.userInfo.username;
+        });
       }
     },
     goDisappear(e) {
@@ -197,17 +201,21 @@ export default {
       if (e.x > X * 0.8) {
         this.isAppear = false;
       }
+    },
+    touchStart(e) {
+      console.log(e);
+      
     }
   },
   computed: {
-    height () {
+    height() {
       return () => {
         const height = window.innerHeight;
-        
-        return `${height - 55}px`
-      }
+
+        return `${height - 55}px`;
+      };
     }
-  },
+  }
 };
 </script>
 
@@ -221,12 +229,20 @@ export default {
   overflow: hidden;
   transition: 0.6s;
   transform: translate(-100%, 0);
+  background-color: var(--base-bg-color);
+  list-style: none;
   .inner {
     background-color: var(--base-bg-color);
     width: 90%;
     .cell {
+      font-size: 30px;
       background-color: transparent;
-      margin: -2px 0;
+      margin: 10px 0;
+      height: 80px;
+      line-height: 80px;
+      color: var(--color-text);
+      display: flex;
+      align-items: center;
     }
     .active {
       background-color: rgb(110, 110, 110);
