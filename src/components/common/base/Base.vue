@@ -7,7 +7,7 @@
         </i>
         <i class="logo">
           <img v-if="!isTokenExist()" src="~assets/img/base/user_avatar_init.png" alt />
-          <img v-else-if="isTokenExist()" src="~assets/img/base/user_avatar_init.png" alt />
+          <img v-else-if="isTokenExist()" :src="`${userInfo.baseInfo.logo.src}${userInfo.baseInfo.logo.name}`" alt />
         </i>
       </div>
       <div class="center">
@@ -27,6 +27,7 @@
 <script>
 import Tabbar from "./tabbar/Tabbar";
 
+
 export default {
   name: "Base",
   data() {
@@ -43,7 +44,7 @@ export default {
   computed: {
     isTokenExist() {
       return () => {
-        return window.localStorage.getItem("token");
+        return window.localStorage.getItem("haveToken");
       };
     }
   }

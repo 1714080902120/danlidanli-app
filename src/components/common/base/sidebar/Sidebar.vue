@@ -4,23 +4,16 @@
     :class="{ appear: isAppear === true && isDisappear === false, disappear: isDisappear = true && isAppear === false }"
     @click="goDisappear($event)"
   >
-    <BetterScroll ref="scroll" :bounce="false" screenWidth="80%" screenHeight="100vh">
+    <BetterScroll ref="scroll" :bounce="false" screenWidth="80%" :screenHeight="height()">
       <div class="inner">
-        <div class="user-info">
-          <div class="header">
-            <div class="logo-lebel">
-              <span class="logo"></span>
-              <span class></span>
-            </div>
-            <div class="wallet-scan"></div>
-          </div>
-        </div>
+        <SidebarHead :info="userInfo" />
         <mt-cell
-          :style="{ 'background-color': 'transparent', margin: '-2px 0' }"
+          class="cell"
           v-for="(item, index) in items"
           :title="item.title"
           :key="index"
           :to="item.path"
+          :class="{ active: index === isActive }"
         >
           <img
             slot="icon"
@@ -53,6 +46,7 @@ import {
   // getToken
 } from "network/user";
 
+import SidebarHead from "./SidebarHead";
 import BetterScroll from "components/common/better_scroll/BetterScroll";
 
 export default {
@@ -61,36 +55,43 @@ export default {
     return {
       isAppear: false,
       isDisappear: false,
+      isActive: 0,
       items: [
         {
           title: "首页",
           path: "/home",
-          icon: require("assets/img/base/home_dark.svg")
+          icon: require("assets/img/base/home_active.svg"),
+          iconActive: require("assets/img/base/home_active.svg")
         },
         {
           title: "历史记录",
           path: "/history",
-          icon: require("assets/img/base/history_dark.svg")
+          icon: require("assets/img/base/history_dark.svg"),
+          iconActive: require("assets/img/base/history_active.svg")
         },
         {
           title: "下载管理",
           path: "/download",
-          icon: require("assets/img/base/download_dark.svg")
+          icon: require("assets/img/base/download_dark.svg"),
+          iconActive: require("assets/img/base/download_active.svg")
         },
         {
           title: "我的收藏",
           path: "/collect",
-          icon: require("assets/img/base/collect_dark.svg")
+          icon: require("assets/img/base/collect_dark.svg"),
+          iconActive: require("assets/img/base/collect_active.svg")
         },
         {
           title: "稍后再看",
           path: "/back-look",
-          icon: require("assets/img/base/back_look_dark.svg")
+          icon: require("assets/img/base/back_look_dark.svg"),
+          iconActive: require("assets/img/base/back_look_active.svg")
         },
         {
           title: "个性装扮",
           path: "/cloth",
-          icon: require("assets/img/base/cloth_dark.svg")
+          icon: require("assets/img/base/cloth_dark.svg"),
+          iconActive: require("assets/img/base/cloth_active.svg")
         },
         {
           title: ""
@@ -98,17 +99,20 @@ export default {
         {
           title: "发布",
           path: "/upload",
-          icon: require("assets/img/base/upload_dark.svg")
+          icon: require("assets/img/base/upload_dark.svg"),
+          iconActive: require("assets/img/base/upload_active.svg")
         },
         {
           title: "创作中心",
           path: "/idea",
-          icon: require("assets/img/base/idea_dark.svg")
+          icon: require("assets/img/base/idea_dark.svg"),
+          iconActive: require("assets/img/base/idea_active.svg")
         },
         {
           title: "热门活动",
           path: "/hot",
-          icon: require("assets/img/base/flag_dark.svg")
+          icon: require("assets/img/base/flag_dark.svg"),
+          iconActive: require("assets/img/base/flag_active.svg")
         },
         {
           title: ""
@@ -116,68 +120,77 @@ export default {
         {
           title: "直播中心",
           path: "/live",
-          icon: require("assets/img/base/live_dark.svg")
+          icon: require("assets/img/base/live_dark.svg"),
+          iconActive: require("assets/img/base/live_active.svg")
         },
         {
           title: "我的课程",
           path: "/class",
-          icon: require("assets/img/base/class_dark.svg")
+          icon: require("assets/img/base/class_dark.svg"),
+          iconActive: require("assets/img/base/class_active.svg")
         },
         {
           title: "免流量服务",
           path: "/free",
-          icon: require("assets/img/base/free_dark.svg")
+          icon: require("assets/img/base/free_dark.svg"),
+          iconActive: require("assets/img/base/free_active.svg")
         },
         {
           title: "我的订单",
           path: "/order",
-          icon: require("assets/img/base/order_dark.svg")
+          icon: require("assets/img/base/order_dark.svg"),
+          iconActive: require("assets/img/base/order_active.svg")
         },
         {
           title: "会员购中心",
           path: "/member-shop",
-          icon: require("assets/img/base/member-shop_default.svg")
+          icon: require("assets/img/base/member-shop_default.svg"),
+          iconActive: require("assets/img/base/member-shop_active.svg")
         },
         {
           title: "联系客服",
           path: "/ask",
-          icon: require("assets/img/base/ask_dark.svg")
+          icon: require("assets/img/base/ask_dark.svg"),
+          iconActive: require("assets/img/base/ask_active.svg")
         },
         {
           title: "课堂模式",
           path: "/classess",
-          icon: require("assets/img/base/classess_dark.svg")
+          icon: require("assets/img/base/classess_dark.svg"),
+          iconActive: require("assets/img/base/classess_active.svg")
         },
         {
           title: "青少年模式",
           path: "/teen",
-          icon: require("assets/img/base/teen_dark.svg")
-        },
-        {
-          title: ""
+          icon: require("assets/img/base/teen_dark.svg"),
+          iconActive: require("assets/img/base/teen_active.svg")
         }
       ],
-      baseInfo: {}
+      userInfo: {}
     };
   },
   created() {
     this.$nextTick(() => {
+      this.getData();
       this.$Bus.$on("goAppear", () => {
         this.isAppear = true;
       });
     });
   },
   components: {
-    BetterScroll
+    BetterScroll,
+    SidebarHead
   },
   methods: {
     getData() {
-      getUserData({
-        url: "/user/base-info",
-        method: "get"
-      }).then(res => {
-        console.log(res);
-      });
+      if (window.localStorage.getItem("haveToken")) {
+        getUserData().then(res => {
+          this.userInfo = res;
+
+          delete this.userInfo._id
+          delete this.userInfo.username
+        })
+      }
     },
     goDisappear(e) {
       let X = window.innerWidth;
@@ -185,7 +198,16 @@ export default {
         this.isAppear = false;
       }
     }
-  }
+  },
+  computed: {
+    height () {
+      return () => {
+        const height = window.innerHeight;
+        
+        return `${height - 55}px`
+      }
+    }
+  },
 };
 </script>
 
@@ -194,6 +216,7 @@ export default {
   position: absolute;
   top: 0;
   width: 100%;
+  height: 100vh;
   z-index: 999;
   overflow: hidden;
   transition: 0.6s;
@@ -201,6 +224,14 @@ export default {
   .inner {
     background-color: var(--base-bg-color);
     width: 90%;
+    .cell {
+      background-color: transparent;
+      margin: -2px 0;
+    }
+    .active {
+      background-color: rgb(110, 110, 110);
+      color: var(--color-tint);
+    }
   }
   .tabbar-outer {
     position: absolute;
@@ -209,7 +240,7 @@ export default {
     background-color: var(--base-bg-color);
     justify-content: space-around;
     align-items: center;
-    font-size: 35px;
+    font-size: 25px;
     width: 72%;
     padding-left: 20px;
     span {
@@ -221,6 +252,7 @@ export default {
       img {
         width: 60px;
         height: 60px;
+        margin-right: 8px;
       }
     }
   }

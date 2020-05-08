@@ -1,7 +1,10 @@
 import axios from './axios'
 
-export async function getUserData(config) {
-  return await axios(config)
+export async function getUserData() {
+  return await axios({
+    url: '/user/base-info',
+    method: 'get'
+  })
 }
 
 export async function getToken({ username, password }) {
