@@ -1,13 +1,13 @@
 <template>
   <div id="app">
     <Sidebar />
-    <Base />
-    <router-view />
+    <keep-alive>
+      <router-view />
+    </keep-alive>
   </div>
 </template>
 
 <script>
-import Base from "components/common/base/Base";
 import Sidebar from "components/common/base/sidebar/Sidebar";
 
 export default {
@@ -15,15 +15,11 @@ export default {
   data() {
     return {};
   },
-  created() {
-  },
+  created() {},
   components: {
-    Base,
     Sidebar
   },
-  methods: {
-
-  }
+  methods: {}
 };
 </script>
 

@@ -26,13 +26,13 @@
           <span class="sub">让你体验到私人定制</span>
         </div>
         <div class="right">
-          <input class="scan" type="file" name="" id="">
-          <img src="~assets/img/base/scan_dark.svg" @click="toScan()" alt />
+          <input class="scan" type="file" name="" id="" @click="toScan()">
+          <img src="~assets/img/base/scan_dark.svg" alt />
         </div>
       </div>
       <div class="footer">
-        <span class="register">注册</span>
-        <span class="login">登录</span>
+        <span class="register" @click="register()" v-waves>注册</span>
+        <span class="login" @click="login()" v-waves>登录</span>
       </div>
     </div>
   </div>
@@ -72,6 +72,14 @@ export default {
     },
     toScan() {
       
+    },
+    register() {
+      this.$Bus.$emit('sidebarDisappear')
+      this.$router.replace({ name: 'RegisterOrLogin', params: { beforePath: this.$route.path, type: 'register' } })
+    },
+    login() {
+      this.$Bus.$emit('sidebarDisappear')
+      this.$router.replace({ name: 'RegisterOrLogin', params: { beforePath: this.$route.path, type: 'login' } })
     }
   }
 };

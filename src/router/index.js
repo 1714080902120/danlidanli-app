@@ -1,6 +1,8 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Home from '../views/Home.vue'
+
+const Home = () => import('views/home/Home')
+const RegisterOrLogin = () => import('views/RegisterOrLogin')
 
 Vue.use(VueRouter)
 
@@ -9,6 +11,11 @@ Vue.use(VueRouter)
     path: '/',
     name: 'Home',
     component: Home
+  },
+  {
+    path: '/registerOrLogin',
+    name: 'RegisterOrLogin',
+    component: RegisterOrLogin
   }
 ]
 

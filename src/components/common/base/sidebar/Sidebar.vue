@@ -24,9 +24,7 @@
             height="20px"
             :style="{ margin: '0 24px 0 5px' }"
           />
-          <div class="title">
-            {{item.title}}
-          </div>
+          <div class="title">{{item.title}}</div>
         </li>
       </div>
     </BetterScroll>
@@ -176,9 +174,7 @@ export default {
   created() {
     this.$nextTick(() => {
       this.getData();
-      this.$Bus.$on("goAppear", () => {
-        this.isAppear = true;
-      });
+      this.bus()
     });
   },
   components: {
@@ -196,15 +192,23 @@ export default {
         });
       }
     },
+    bus() {
+      this.$Bus.$on("goAppear", () => {
+        this.isAppear = true;
+      });
+      this.$Bus.$on("sidebarDisappear", () => {
+        this.isAppear = false;
+        this.isDisappear = true;
+      });
+    },
     goDisappear(e) {
       let X = window.innerWidth;
       if (e.x > X * 0.8) {
         this.isAppear = false;
       }
     },
-    touchStart(e) {
-      console.log(e);
-      
+    touchStart() {
+      // console.log(e);
     }
   },
   computed: {
