@@ -1,29 +1,73 @@
 <template>
   <div class="home">
-    <BaseOuter></BaseOuter>
+    <BaseOuter>
+      <div slot="center">
+        <div class="outer">
+          <img src="~assets/img/home/search_dark.svg" alt="">
+          <input type="text" name="" id="">
+        </div>
+      </div>
+      <div class="home-right" slot="right">
+        <span class="download"><img src="~assets/img/base/download_dark.svg" alt=""></span>
+        <span class="mail"><img src="~assets/img/home/mail_dark.svg" alt=""></span>
+      </div>
+      <div slot="bottom">
+        <Navbar>
+          <NavbarItem
+            slot="navbar"
+            :isActive="toActive(index)"
+            v-for="(item, index) in items"
+            :key="item.title"
+          >
+            <div class="navbar-item" @click="goTo(index)" slot="navbar-item">{{ item.title }}</div>
+          </NavbarItem>
+        </Navbar>
+      </div>
+    </BaseOuter>
   </div>
 </template>
 
 <script>
-import {
-  BaseOuter
-} from './index'
+import { BaseOuter, Navbar, NavbarItem } from "./index";
 
 export default {
-  name: 'Home',
+  name: "Home",
   data() {
     return {
-      
+      items: [
+        { title: "直播", path: "/live" },
+        { title: "推荐", path: "/recommend" },
+        { title: "热门", path: "/hot" },
+        { title: "追番", path: "/animate" },
+        { title: "影视", path: "/movie" },
+        { title: "新时代", path: "/new-date" },
+        { title: "学习区", path: "/study" }
+      ],
+      sendActive: 1
+    };
+  },
+  created() {},
+  methods: {
+    goTo(index) {
+      this.sendActive = index;
     }
   },
-  created () {
+  computed: {
+    toActive() {
+      return index => {
+        return this.sendActive === index;
+      };
+    }
   },
   components: {
-    BaseOuter
+    BaseOuter,
+    Navbar,
+    NavbarItem
   }
-}
+};
 </script>
 
 <style lang="less" scoped>
-  
+#home {
+}
 </style>

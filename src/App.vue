@@ -26,6 +26,7 @@ export default {
 <style scoped>
 @import "assets/css/base.css";
 @import "assets/css/normalize.css";
+@import "assets/css/mint-ui-reset/base.less";
 #app {
   overflow: hidden;
   background-color: var(--base-bg-color-sec);

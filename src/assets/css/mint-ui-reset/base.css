@@ -1,0 +1,5 @@
+.mint-navbar > .is-selected {
+  color: var(--color-tint) !important;
+  border-bottom: 3px solid var(--color-tint) !important;
+  flex-wrap: nowrap !important;
+}

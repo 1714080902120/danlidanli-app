@@ -7,7 +7,11 @@
         </i>
         <i class="logo">
           <img v-if="!isTokenExist()" src="~assets/img/base/user_avatar_init.png" alt />
-          <img v-else-if="isTokenExist()" :src="`${$store.state.userInfo.baseInfo.logo.src}${$store.state.userInfo.baseInfo.logo.name}`" alt />
+          <img
+            v-else-if="isTokenExist()"
+            :src="`${$store.state.userInfo.baseInfo.logo.src}${$store.state.userInfo.baseInfo.logo.name}`"
+            alt
+          />
         </i>
       </div>
       <div class="center">
@@ -26,7 +30,6 @@
 
 <script>
 import Tabbar from "./tabbar/Tabbar";
-
 
 export default {
   name: "Base",
@@ -85,13 +88,63 @@ export default {
         }
       }
     }
-    .center {
+    .center,
+    .right {
       flex: auto;
+      text-align: center;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+    }
+    .center {
+      .outer {
+        display: flex;
+        align-items: center;
+        border-radius: 30px;
+        background-color: rgba(65, 64, 64, 0.6);
+        height: 70px;
+        line-height: 70px;
+        padding: 10px;
+        input {
+          background-color: transparent;
+          border: none;
+          outline: none;
+          width: 350px;
+          font-size: 30px;
+          color: var(--color-text);
+        }
+        img {
+          width: 50px;
+          height: 50px;
+        }
+      }
+    }
+    .right {
+      .home-right {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        .download {
+          margin: 0 0 0 -10px;
+          img {
+            width: 28px;
+            height: 28px;
+          }
+        }
+        .mail {
+          margin: 0 0 0 15px;
+          img {
+            width: 23px;
+            height: 23px;
+          }
+        }
+      }
     }
   }
   .bottom {
     position: relative;
-    background-color: var(--base-bg-color-sec);
+    margin-top: 20px;
+    background-color: rgba(66, 65, 65, 0.8);
   }
 }
 </style>

@@ -359,6 +359,9 @@ export default {
         color: rgb(92, 91, 91);
         text-align: center;
       }
+      .check-btn {
+        font-size: 30px;
+      }
     }
     .btn,
     .btn-error {
