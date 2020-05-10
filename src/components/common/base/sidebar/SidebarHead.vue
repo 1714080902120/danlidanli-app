@@ -3,19 +3,32 @@
     <div v-if="$store.state.haveToken && Object.keys(info).length > 0" class="have-token">
       <div class="header">
         <div class="logo-wallet-scan">
-          <div class="logo"></div>
+          <div class="logo">
+            <img :src="`${info.baseInfo.logo.src}${info.baseInfo.logo.name}`" alt />
+          </div>
           <div class="wallet-scan">
-            <span class="wallet"></span>
-            <span class="scan"></span>
+            <span class="wallet">
+              <img src="~assets/img/base/wallet_dark.svg" alt />
+            </span>
+            <span class="scan">
+              <img src="~assets/img/base/scan_dark.svg" alt />
+            </span>
           </div>
         </div>
-        <div class="name-level-label"></div>
-        <div class="Bcoins-coins"></div>
+        <div class="name-level-label">
+          <span class="name">{{info.baseInfo.name}}</span>
+          <span class="level">LV{{info.baseInfo.level}}</span>
+          <span class="label">{{info.baseInfo.vip}}</span>
+        </div>
+        <div class="Bcoins-coins">
+          <span class="Bcoins">B币：{{info.coin.Bcoins}}</span>
+          <span class="coins">硬币：{{info.coin.coins}}</span>
+        </div>
       </div>
-      <div class="footer">
+      <div class="footer" v-if="items.length > 0">
         <div class="item" v-for="item in items" :key="item.name">
-          <span>{{ item.num }}</span>
-          <span>{{ item.name }}</span>
+          <span class="num">{{ item.num }}</span>
+          <span class="name">{{ item.name }}</span>
         </div>
       </div>
     </div>
@@ -26,7 +39,7 @@
           <span class="sub">让你体验到私人定制</span>
         </div>
         <div class="right">
-          <input class="scan" type="file" name="" id="" @click="toScan()">
+          <input class="scan" type="file" name id @click="toScan()" />
           <img src="~assets/img/base/scan_dark.svg" alt />
         </div>
       </div>
@@ -39,7 +52,6 @@
 </template>
 
 <script>
-
 export default {
   name: "SidebarHead",
   props: {
@@ -48,38 +60,39 @@ export default {
       default: () => {
         return {};
       }
+    },
+    items: {
+      type: Array,
+      default: () => {
+        return []
+      }
     }
   },
   data() {
     return {
-      items: []
     };
   },
   created() {
-    this.getUserInfo();
-    console.log()
+    console.log(this.items);
+    
+  },
+  activated() {
   },
   methods: {
-    getUserInfo() {
-      if (Object.keys(this.info).length > 0) {
-        let data = this.info;
-        this.items = [
-          { name: "动态", num: data.cardList.length },
-          { name: "关注", num: data.baseInfo.fans_follows_likes.follows },
-          { name: "粉丝", num: data.baseInfo.fans_follows_likes.fans }
-        ];
-      }
-    },
-    toScan() {
-      
-    },
+    toScan() {},
     register() {
-      this.$Bus.$emit('sidebarDisappear')
-      this.$router.replace({ name: 'RegisterOrLogin', params: { beforePath: this.$route.path, type: 'register' } })
+      this.$Bus.$emit("sidebarDisappear");
+      this.$router.replace({
+        name: "RegisterOrLogin",
+        params: { beforePath: this.$route.path, type: "register" }
+      });
     },
     login() {
-      this.$Bus.$emit('sidebarDisappear')
-      this.$router.replace({ name: 'RegisterOrLogin', params: { beforePath: this.$route.path, type: 'login' } })
+      this.$Bus.$emit("sidebarDisappear");
+      this.$router.replace({
+        name: "RegisterOrLogin",
+        params: { beforePath: this.$route.path, type: "login" }
+      });
     }
   }
 };
@@ -89,14 +102,114 @@ export default {
 #sidebar-head {
   margin-bottom: 20px;
   border-bottom: 1px solid rgb(95, 95, 95);
-  background-image: url('~assets/img/base/bilibili_user_logo_bg.svg');
+  background-image: url("~assets/img/base/bilibili_user_logo_bg.svg");
   background-size: 70%;
-  background-position-x: 140px;
+  background-position: 160px 40px;
   background-repeat: no-repeat;
   .have-token {
-
+    padding-top: 70px;
+    display: flex;
+    flex-direction: column;
     .header {
-
+      display: flex;
+      justify-content: space-between;
+      flex-direction: column;
+      padding: 0 20px;
+      .logo-wallet-scan {
+        display: flex;
+        text-align: center;
+        justify-content: space-between;
+        .logo {
+          width: 132px;
+          height: 132px;
+          background-color: #fff;
+          border-radius: 50%;
+          display: flex;
+          img {
+            margin: auto;
+            border-radius: 50%;
+            width: 120px;
+            height: 120px;
+            top: 50%;
+          }
+        }
+        .wallet-scan {
+          display: flex;
+          justify-content: space-between;
+          margin-left: 170px;
+          .wallet {
+            margin: 0 10px;
+            img {
+              margin: 10px 0;
+              width: 70px;
+              height: 70px;
+            }
+          }
+          .scan {
+            img {
+              width: 90px;
+              height: 90px;
+            }
+          }
+        }
+      }
+      .name-level-label {
+        
+        display: flex;
+        align-items: center;
+        margin-top: 40px;
+        font-size: 10px;
+        .name {
+          height: 40px;
+          line-height: 40px;
+          font-size: 36px;
+        }
+        .level {
+          height: 32px;
+          line-height: 32px;
+          margin: 0 10px;
+          border: 2px solid #fff;
+          color: rgb(252, 252, 252);
+          border-radius: 8px;
+          padding: 0 8px;
+        }
+        .label {
+          height: 32px;
+          line-height: 32px;
+          background-color: rgb(255, 66, 97);
+          color: rgb(243, 237, 237);
+          border-radius: 6px;
+        }
+      }
+      .Bcoins-coins {
+        margin: 16px 0;
+        font-size: 25px;
+        display: flex;
+        align-items: center;
+        .Bcoins {
+          margin: 0 10px;
+        }
+        .coins {
+          margin: 0 10px;
+        }
+      }
+    }
+    .footer {
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      font-size: 30px;
+      margin-top: 30px;
+      background-color: rgba(61, 60, 60, 0.6);
+      padding: 30px 0;
+      .item {
+        display: flex;
+        flex-direction: column;
+        text-align: center;
+        span {
+          margin: 5px 0;
+        }
+      }
     }
   }
   .no-token {
@@ -146,18 +259,19 @@ export default {
       align-items: center;
       font-weight: 10;
       font-size: 30px;
-      .register, .login {
+      .register,
+      .login {
         height: 60px;
         width: 46%;
         text-align: center;
         line-height: 60px;
-        background-color: rgb(98,98,98);
+        background-color: rgb(98, 98, 98);
         color: rgb(160, 160, 160);
         border-radius: 8px;
       }
       .login {
         color: var(--color-text);
-        background-color: rgb(182,98,121);
+        background-color: rgb(182, 98, 121);
         color: #eee;
       }
     }

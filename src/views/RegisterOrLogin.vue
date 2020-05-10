@@ -5,57 +5,67 @@
       <mt-button slot="right" @click="go()">{{ type() }}</mt-button>
     </mt-header>
     <div class="bg">
-      <img v-if="!isFocus" src="~assets/img/r_or_l/r_or_l_bg_default.png" alt />
-      <img v-if="isFocus" src="~assets/img/r_or_l/r_or_l_bg_active.png" alt />
+      <img v-if="!isFocus" v-lazy="img.default" alt />
+      <img v-if="isFocus" v-lazy="img.active" alt />
     </div>
     <div class="content">
       <div class="username">
         <span>用户名</span>
-        <span>
-          <input type="text" id="username" placeholder="请输入手机号" :v-model="username" />
+        <span :class="{ isWrong: ifUserNameMoreThanThirteen() }">
+          <input type="text" id="username" placeholder="请输入手机号" v-model="username" />
         </span>
       </div>
       <div class="password">
         <span>密码</span>
-        <span>
+        <span :class="{ isWrong: ifPasswordMoreThanSix() }">
           <input
             @focus="whenFocus()"
             @blur="whenBlur()"
             type="password"
             name
             id="password"
-            :v-model="password"
+            v-model="password"
             placeholder="6-15, 可以用密码或数字"
           />
         </span>
       </div>
-      <div class="repassword">
+      <div class="repassword" v-if="enterType === 'register'">
         <span>确认密码</span>
-        <span>
+        <span :class="{ isWrong: ifEqualToPassword() }">
           <input
             @focus="whenFocus()"
             @blur="whenBlur()"
             type="password"
             name
             id="repassword"
-            :v-model="repassword"
+            v-model="repassword"
             placeholder="确认密码"
           />
         </span>
       </div>
-      <div class="mail">
+      <div class="mail" v-if="enterType === 'register'">
         <span>邮箱</span>
-        <span>
-          <input type="email" name id="mail" :v-model="mail" placeholder="请输入邮箱地址" />
+        <span :class="{ isWrong: ifItsMail() }">
+          <input type="email" name id="mail" v-model="mail" placeholder="请输入邮箱地址" />
         </span>
       </div>
-      <div class="mail-check">
-        <span class="check">
+      <div class="mail-check" v-if="enterType === 'register'">
+        <span class="check" :class="{ isWrong: ifEqualToCheckCode() }">
           <input type="text" name id="check" v-model="check" placeholder="请输入验证码" />
         </span>
-        <span class="check-btn" @click="sendMail()">获取验证码</span>
+        <span class="check-btn" v-if="hadSend === false" @click="sendMail($event)">获取验证码</span>
+        <span v-else-if="hadSend === true" class="time">等待{{ time }}秒</span>
       </div>
-      <div class="btn" v-waves>{{ type() }}</div>
+      <div
+        class="btn"
+        v-if="!ifUserNameMoreThanThirteen() && !ifPasswordMoreThanSix() && !ifEqualToPassword() && !ifItsMail() && !ifEqualToCheckCode() && !ifCheck()"
+        @click="toRegister()"
+        v-waves
+      >{{ ReType() }}</div>
+      <div
+        class="btn-error"
+        v-if="ifUserNameMoreThanThirteen() || ifPasswordMoreThanSix() || ifEqualToPassword() || ifItsMail() || ifEqualToCheckCode() || ifCheck()"
+      >{{ ReType() }}</div>
       <div class="footer">
         <p>未注册或未绑定哔哩哔哩的手机号，将帮你注册新账号</p>
         <p>
@@ -74,6 +84,8 @@
 
 <script>
 import { Toast } from "mint-ui";
+import { sendMail, Register, getToken } from "network/user";
+import Utils from "common/utils";
 
 export default {
   name: "RegisterOrLogin",
@@ -84,39 +96,194 @@ export default {
       repassword: "",
       mail: "",
       check: "",
-      isFocus: false
+      isFocus: false,
+      img: {
+        default: require("assets/img/r_or_l/r_or_l_bg_default.png"),
+        active: require("assets/img/r_or_l/r_or_l_bg_active.png")
+      },
+      enterType: "",
+      hadSend: false,
+      time: 60
     };
   },
-  created() {},
+  created() {
+    if (!this.$route.params.type) {
+      this.$route.params.type = "register";
+    }
+  },
+  activated() {
+    this.enterType = this.$route.params.type;
+    this.refresh()
+  },
   methods: {
     goBack() {
       this.$router.replace({ path: this.$route.params.beforePath });
     },
-    go() {},
+    refresh() {
+      // 清零
+      (this.username = ""),
+        (this.password = ""),
+        (this.check = ""),
+        (this.mail = ""),
+        (this.repassword = "");
+    },
+    go() {
+      if (this.enterType === "register") {
+        this.enterType = "login";
+      } else if (this.enterType === "login") {
+        this.enterType = "register";
+      }
+      // 清零
+      (this.username = ""),
+        (this.password = ""),
+        (this.check = ""),
+        (this.mail = ""),
+        (this.repassword = "");
+    },
     whenFocus() {
       this.isFocus = true;
     },
     whenBlur() {
       this.isFocus = false;
     },
-    sendMail() {
-      // let reg = new RegExp("@", "gi");
-      if (!this.mail) {
+    async sendMail() {
+      const reg = /@/gi;
+      const reg2 = /\.com/i;
+      if (this.mail && reg.test(this.mail) && reg2.test(this.mail)) {
+        this.hadSend = true;
+        this.verification();
+        await sendMail({ mail: this.mail }).then(res => {
+          window.localStorage.setItem("mailCode", Utils.Encrypt(res.data));
+        });
         Toast({
           message: "发送成功！",
-          position: "top",
+          position: "middle",
           duration: 3000
         });
-        console.log('123')
+      } else {
+        Toast({
+          message: "请输入邮箱的正确格式！",
+          position: "middle",
+          duration: 3000
+        });
+        return false;
+      }
+    },
+    async toRegister() {
+      const username = this.username;
+      const password = this.password;
+      if (this.enterType === "register") {
+        await Register({ username, password })
+          .then(res => {
+            Toast({
+              message: `${res}`,
+              position: "middle",
+              duration: 3000
+            });
+            this.$router.replace({ path: "/" });
+          })
+          .catch(err => {
+            Toast({
+              message: `${err}`,
+              position: "middle",
+              duration: 3000
+            });
+          });
+      } else if (this.enterType === "login") {
+        getToken({ username, password })
+          .then(res => {
+            Toast({
+              message: `${res}`,
+              position: "middle",
+              duration: 3000
+            });
+            this.$router.replace({ path: "/" });
+          })
+          .catch(err => {
+            Toast({
+              message: `${err}`,
+              position: "middle",
+              duration: 3000
+            });
+          });
       }
     }
   },
   computed: {
     type() {
       return () => {
-        return this.$route.params.type === "register" ? "登录" : "注册";
+        return this.enterType === "register" ? "登录" : "注册";
+      };
+    },
+    ReType() {
+      return () => {
+        return this.enterType !== "register" ? "登录" : "注册";
+      };
+    },
+    ifUserNameMoreThanThirteen() {
+      return () => {
+        const array = this.username.split("");
+        return array.length > 0 && array.length < 11 ? true : false;
+      };
+    },
+    ifPasswordMoreThanSix() {
+      return () => {
+        const array = this.password.split("");
+        return array.length > 0 && array.length < 5 ? true : false;
+      };
+    },
+    ifEqualToPassword() {
+      return () => {
+        return this.repassword > 0 && this.repassword !== this.password
+          ? true
+          : false;
+      };
+    },
+    ifItsMail() {
+      return () => {
+        const reg = /@/gi;
+        const reg2 = /\.com/i;
+        return this.mail !== "" &&
+          (!reg.test(this.mail) || !reg2.test(this.mail))
+          ? true
+          : false;
+      };
+    },
+    verification() {
+      return () => {
+        let timer = setInterval(() => {
+          this.time -= 1;
+          if (this.time === 0) {
+            this.time = 60;
+            this.hadSend = false;
+            clearInterval(timer);
+            timer = null;
+          }
+        }, 1000);
+        return this.time;
+      };
+    },
+    ifEqualToCheckCode() {
+      return () => {
+        return this.check > 0 &&
+          this.check !== Utils.Decrypt(window.localStorage.getItem("mailCode"))
+          ? true
+          : false;
+      };
+    },
+    ifCheck() {
+      return () => {
+        if (this.enterType === "register") {
+          return this.check !== "";
+        } else if (this.enterType === "login") {
+          return false;
+        }
       };
     }
+  },
+  watch: {
+    deep: true,
+    immediate: true
   }
 };
 </script>
@@ -143,6 +310,7 @@ export default {
   .content {
     font-size: 40px;
     padding-bottom: 40px;
+
     .username,
     .password,
     .repassword,
@@ -176,13 +344,24 @@ export default {
     .username {
       border-top: 1px solid rgb(100, 100, 100);
     }
+    .isWrong {
+      border: 1px solid rgb(255, 0, 0);
+      input {
+        color: rgb(255, 0, 0);
+      }
+    }
     .mail-check {
       input {
         border: none;
         border-right: 1px solid rgba(238, 237, 237, 0.8);
       }
+      .time {
+        color: rgb(92, 91, 91);
+        text-align: center;
+      }
     }
-    .btn {
+    .btn,
+    .btn-error {
       font-size: 50px;
       height: 100px;
       width: 70%;
@@ -192,6 +371,10 @@ export default {
       line-height: 100px;
       text-align: center;
       background-color: rgb(41, 73, 82);
+    }
+    .btn-error {
+      background-color: rgb(68, 67, 67);
+      color: rgb(110, 105, 105);
     }
     .footer {
       margin-top: 30px;
@@ -206,5 +389,11 @@ export default {
       }
     }
   }
+}
+img[lazy="loading"] {
+  width: 375px;
+  height: 200px;
+  margin: auto;
+  background-image: url("~assets/img/base/bilibili_user_logo_bg.svg");
 }
 </style>

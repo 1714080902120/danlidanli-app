@@ -6,7 +6,7 @@
   >
     <BetterScroll ref="scroll" :bounce="false" screenWidth="80%" :screenHeight="height()">
       <div class="inner">
-        <SidebarHead :info="userInfo" />
+        <SidebarHead :info="userInfo" :items="middleItems" />
         <li
           class="cell"
           v-for="(item, index) in items"
@@ -168,13 +168,14 @@ export default {
           iconActive: require("assets/img/base/teen_active.svg")
         }
       ],
-      userInfo: {}
+      userInfo: {},
+      middleItems: []
     };
   },
   created() {
     this.$nextTick(() => {
       this.getData();
-      this.bus()
+      this.bus();
     });
   },
   components: {
@@ -186,9 +187,14 @@ export default {
       if (window.localStorage.getItem("haveToken")) {
         getUserData().then(res => {
           this.userInfo = res;
-
           delete this.userInfo._id;
           delete this.userInfo.username;
+          this.middleItems = [
+            { name: "动态", num: this.userInfo.cardList.length },
+            { name: "关注", num: this.userInfo.baseInfo.fans_follows_likes.follows },
+            { name: "粉丝", num: this.userInfo.baseInfo.fans_follows_likes.fans }
+          ];
+          this.$store.commit("getUserInfo", this.userInfo);
         });
       }
     },
@@ -263,6 +269,7 @@ export default {
     font-size: 25px;
     width: 72%;
     padding-left: 20px;
+    box-shadow: 0 -2px 1px rgb(65, 64, 64);
     span {
       height: 110px;
       line-height: 110px;

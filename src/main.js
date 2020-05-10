@@ -7,6 +7,7 @@ import MintUI from 'mint-ui'
 import 'mint-ui/lib/style.css'
 import vueWaves from 'common/waves/waves'
 
+
 Vue.config.productionTip = false
 Vue.use(MintUI)
 Vue.use(vueWaves)

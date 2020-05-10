@@ -7,7 +7,7 @@
         </i>
         <i class="logo">
           <img v-if="!isTokenExist()" src="~assets/img/base/user_avatar_init.png" alt />
-          <img v-else-if="isTokenExist()" :src="`${userInfo.baseInfo.logo.src}${userInfo.baseInfo.logo.name}`" alt />
+          <img v-else-if="isTokenExist()" :src="`${$store.state.userInfo.baseInfo.logo.src}${$store.state.userInfo.baseInfo.logo.name}`" alt />
         </i>
       </div>
       <div class="center">
@@ -44,7 +44,7 @@ export default {
   computed: {
     isTokenExist() {
       return () => {
-        return window.localStorage.getItem("haveToken");
+        return Object.keys(this.$store.state.userInfo).length > 0;
       };
     }
   }
