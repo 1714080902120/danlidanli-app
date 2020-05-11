@@ -24,8 +24,8 @@ vueWaves.install = (Vue, options = {}) => {
           } else {
             ripple.className = 'waves-ripple';
           }
-          ripple.style.top = (e.pageY - rect.top - window.pageYOffset - document.documentElement.clientTop) + 'px';
-          ripple.style.left = (e.pageX - rect.left - window.pageXOffset - document.documentElement.clientLeft) + 'px';
+          ripple.style.top = ((e.touches[0].pageY - rect.top - rect.height / 2) / 2 - window.pageYOffset - document.documentElement.clientTop) + 'px';
+          ripple.style.left = ((e.touches[0].pageX - rect.left - rect.width / 2) / 2 - window.pageXOffset - document.documentElement.clientLeft) + 'px';
           ripple.style.backgroundColor = opts.color;
           ripple.className = 'waves-ripple z-active';
           return false;

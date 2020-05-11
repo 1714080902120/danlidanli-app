@@ -58,7 +58,6 @@ export default {
 #base {
   position: relative;
   margin-top: var(--top-margin);
-  margin-bottom: 10px;
   .head {
     position: relative;
     display: flex;
@@ -145,6 +144,9 @@ export default {
     position: relative;
     margin-top: 20px;
     background-color: rgba(66, 65, 65, 0.8);
+    position: sticky;
+    top: 0;
+    left: 0;
   }
 }
 </style>

@@ -1,15 +1,19 @@
 <template>
   <div class="home">
-    <BaseOuter>
+    <BaseOuter ref="nav">
       <div slot="center">
         <div class="outer">
-          <img src="~assets/img/home/search_dark.svg" alt="">
-          <input type="text" name="" id="">
+          <img src="~assets/img/home/search_dark.svg" alt />
+          <input type="text" name id />
         </div>
       </div>
       <div class="home-right" slot="right">
-        <span class="download"><img src="~assets/img/base/download_dark.svg" alt=""></span>
-        <span class="mail"><img src="~assets/img/home/mail_dark.svg" alt=""></span>
+        <span class="download">
+          <img src="~assets/img/base/download_dark.svg" alt />
+        </span>
+        <span class="mail">
+          <img src="~assets/img/home/mail_dark.svg" alt />
+        </span>
       </div>
       <div slot="bottom">
         <Navbar>
@@ -19,16 +23,23 @@
             v-for="(item, index) in items"
             :key="item.title"
           >
-            <div class="navbar-item" @click="goTo(index, item.path)" slot="navbar-item">{{ item.title }}</div>
+            <div
+              class="navbar-item"
+              @click="goTo(index, item.path)"
+              slot="navbar-item"
+            >{{ item.title }}</div>
           </NavbarItem>
         </Navbar>
       </div>
     </BaseOuter>
+    <BS ref="scroll" :bounce="false" screenWidth="100%" :screenHeight="height()">
+      <HomeContent/>
+    </BS>
   </div>
 </template>
 
 <script>
-import { BaseOuter, Navbar, NavbarItem } from "./index";
+import { BaseOuter, Navbar, NavbarItem, BS, HomeContent } from "./index";
 
 export default {
   name: "Home",
@@ -46,13 +57,14 @@ export default {
       sendActive: 1
     };
   },
-  created() {
-
-  },
+  created() {},
   activated() {
-    if (this.$route.params.type === 'register' || this.$route.params.type === 'login') {
+    if (
+      this.$route.params.type === "register" ||
+      this.$route.params.type === "login"
+    ) {
       this.$router.go(0);
-    }    
+    }
   },
   methods: {
     goTo(index) {
@@ -64,17 +76,25 @@ export default {
       return index => {
         return this.sendActive === index;
       };
+    },
+    height() {
+      return () => {
+        return `${(window.innerHeight - 135)}px`;
+      };
     }
   },
   components: {
     BaseOuter,
     Navbar,
-    NavbarItem
+    NavbarItem,
+    BS,
+    HomeContent
   }
 };
 </script>
 
 <style lang="less" scoped>
 #home {
+  overflow: hidden;
 }
 </style>

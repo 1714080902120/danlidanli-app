@@ -200,7 +200,7 @@ export default {
       font-size: 30px;
       margin-top: 30px;
       background-color: rgba(61, 60, 60, 0.6);
-      padding: 30px 0;
+      padding: 20px 0;
       .item {
         display: flex;
         flex-direction: column;
