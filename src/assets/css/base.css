@@ -60,3 +60,30 @@ a {
 .right {
   float: right;
 }
+
+.to-active {
+  animation: toActive 0.15s linear forwards;
+}
+.to-default {
+  animation: toDefault 0.15s linear forwards;
+}
+
+@keyframes toActive {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+    transform: translate(0, 0);
+  }
+}
+@keyframes toDefault {
+  from {
+    opacity: 1;
+    transform: translate(0, 0);
+  }
+  to {
+    opacity: 0;
+    transform: translate(100%, 0);
+  }
+}

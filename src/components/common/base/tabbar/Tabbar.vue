@@ -1,7 +1,7 @@
 <template>
   <div id="tabbar">
     <mt-tabbar class="outer" fixed v-model="selected">
-      <div class="tabbar-item" v-for="item in items" :key="item.name">
+      <div class="tabbar-item" v-for="item in items" :key="item.name" v-waves>
         <mt-tab-item class="inner" :class="{ active: selected === item.name }" :id="item.name">
           <img v-if="item.name !== selected" slot="icon" :src="item.icon" />
           <img v-else-if="item.name === selected" slot="icon" :src="item.iconActive" />

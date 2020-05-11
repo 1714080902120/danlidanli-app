@@ -19,7 +19,7 @@
             v-for="(item, index) in items"
             :key="item.title"
           >
-            <div class="navbar-item" @click="goTo(index)" slot="navbar-item">{{ item.title }}</div>
+            <div class="navbar-item" @click="goTo(index, item.path)" slot="navbar-item">{{ item.title }}</div>
           </NavbarItem>
         </Navbar>
       </div>
@@ -46,7 +46,14 @@ export default {
       sendActive: 1
     };
   },
-  created() {},
+  created() {
+
+  },
+  activated() {
+    if (this.$route.params.type === 'register' || this.$route.params.type === 'login') {
+      this.$router.go(0);
+    }    
+  },
   methods: {
     goTo(index) {
       this.sendActive = index;

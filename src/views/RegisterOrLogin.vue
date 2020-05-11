@@ -1,5 +1,5 @@
 <template>
-  <div id="registerOrLogin">
+  <div id="registerOrLogin" :class="{ 'to-active': isActive, 'to-default': !isActive }">
     <mt-header class="header" title>
       <mt-button slot="left" icon="back" @click="goBack()">返回</mt-button>
       <mt-button slot="right" @click="go()">{{ type() }}</mt-button>
@@ -103,7 +103,8 @@ export default {
       },
       enterType: "",
       hadSend: false,
-      time: 60
+      time: 60,
+      isActive: false
     };
   },
   created() {
@@ -113,11 +114,17 @@ export default {
   },
   activated() {
     this.enterType = this.$route.params.type;
-    this.refresh()
+    this.refresh();
+    this.isActive = true;
   },
   methods: {
     goBack() {
-      this.$router.replace({ path: this.$route.params.beforePath });
+      this.isActive = false;
+      let timer = setTimeout(() => {
+        this.$router.replace({ path: this.$route.params.beforePath });
+        clearTimeout(timer);
+        timer = null;
+      }, 150);
     },
     refresh() {
       // 清零
@@ -180,7 +187,13 @@ export default {
               position: "middle",
               duration: 3000
             });
-            this.$router.replace({ path: "/" });
+
+            this.isActive = false;
+            let timer = setTimeout(() => {
+              this.$router.replace({ name: "Home", params: { type: 'register' } });
+              clearTimeout(timer);
+              timer = null;
+            }, 150);
           })
           .catch(err => {
             Toast({
@@ -197,7 +210,12 @@ export default {
               position: "middle",
               duration: 3000
             });
-            this.$router.replace({ path: "/" });
+            this.isActive = false;
+            let timer = setTimeout(() => {
+              this.$router.replace({ name: "Home", params: { type: 'login' } });
+              clearTimeout(timer);
+              timer = null;
+            }, 150);
           })
           .catch(err => {
             Toast({
@@ -284,6 +302,9 @@ export default {
   watch: {
     deep: true,
     immediate: true
+  },
+  destroyed() {
+    this.isActive = false;
   }
 };
 </script>
@@ -292,6 +313,9 @@ export default {
 #registerOrLogin {
   height: 100vh;
   background-color: var(--base-bg-color-sec);
+  transform: translateX(100%);
+  overflow: hidden;
+  opacity: 0;
   .header {
     height: 8vh;
     background-color: rgb(72, 72, 72);

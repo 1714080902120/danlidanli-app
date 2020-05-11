@@ -178,6 +178,8 @@ export default {
       this.bus();
     });
   },
+  activated() {
+  },
   components: {
     BetterScroll,
     SidebarHead
@@ -221,11 +223,17 @@ export default {
     height() {
       return () => {
         const height = window.innerHeight;
-
         return `${height - 55}px`;
       };
     }
-  }
+  },
+  watch: {
+    '$store.state.loginState' () {
+      this.getData()
+    },
+    deep: true,
+    immediate: true
+  },
 };
 </script>
 
