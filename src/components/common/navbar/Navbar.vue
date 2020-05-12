@@ -1,6 +1,13 @@
 <template>
-  <div id="navbar" ref="navbar" @touchstart="touchStart()" @touchmove="touchMove()" @touchend="touchEnd()">
+  <div
+    id="navbar"
+    ref="navbar"
+    @touchstart="touchStart()"
+    @touchmove="touchMove()"
+    @touchend="touchEnd()"
+  >
     <slot name="navbar"></slot>
+    <span class="bottom" ref="bottom"></span>
   </div>
 </template>
 
@@ -8,35 +15,64 @@
 export default {
   name: "Navbar",
   props: {
-    spped: {
+    isActive: {
       type: Number,
-      default: 10
+      default: 1
     }
   },
   data() {
-    return {};
+    return {
+      default: 1
+    };
+  },
+  created () {
+    this.$nextTick(() => {
+
+    })
   },
   methods: {
     touchStart() {},
-    touchMove() {
-    },
-    touchEnd() {}
+    touchMove() {},
+    touchEnd() {},
+    bottom () {
+
+
+    }
   },
-  components: {}
+  components: {},
+  watch: {
+    'isActive' (newVal) {
+      this.$nextTick(() => {        
+        this.$refs.bottom.style.transform = `translateX(${75 * (newVal - this.default)}px)`
+      })
+    },
+    immediate: true,
+    deep: true
+  },
 };
 </script>
 
 <style lang="less" scoped>
 #navbar {
+  position: relative;
   display: flex;
   flex-wrap: nowrap;
   align-items: center;
   height: 90px;
   line-height: 90px;
   overflow-x: auto;
-  transition: .5s;
+  transition: 0.5s;
+  .bottom {
+    position: absolute;
+    width: 90px;
+    height: 6px;
+    background-color: var(--color-tint);
+    bottom: 0;
+    left: 180px;
+    transition: .3s;
+  }
 }
 #navbar::-webkit-scrollbar {
-    display: none;
-  }
+  display: none;
+}
 </style>

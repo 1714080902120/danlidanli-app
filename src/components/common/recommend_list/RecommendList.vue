@@ -1,6 +1,6 @@
 <template>
   <div id="recommend-list" v-if="data.length > 0">
-    <div class="recommend-item" v-for="item in data" :key="item._id" v-waves>
+    <div class="recommend-item" v-for="item in data" :key="item._id" @click="goTo()" @touchstart="touchStart($event)" @touchend="touchEnd($event)" v-waves>
       <div class="cover">
         <img v-lazy="`${item.img.src}${item.img.name}`" alt />
         <div class="info">
@@ -17,11 +17,14 @@
         <p v-else-if="!item.video.label">&nbsp;</p>
         <img @click="actions()" src="~assets/img/recommend_list/three_points_dark.svg" alt="">
       </div>
+      <Popup :isShowPopup="isShowPopup"/>
     </div>
   </div>
 </template>
 
 <script>
+import Popup from 'components/common/popup/Popup'
+
 export default {
   name: "RecommendList",
   props: {
@@ -33,13 +36,29 @@ export default {
     }
   },
   data() {
-    return {};
+    return {
+      isShowPopup: false
+    };
+  },
+  created() {
+    this.popupInvisible()
   },
   methods: {
     actions() {
-
+      this.isShowPopup = true  
+    },
+    touchStart() {},
+    touchEnd() {},
+    goTo() {},
+    popupInvisible () {
+      this.$Bus.$on('popupInvisible', () => {
+        this.isShowPopup = false   
+      })
     }
   },
+  components: {
+    Popup
+  }
 };
 </script>
 

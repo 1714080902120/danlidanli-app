@@ -50,7 +50,6 @@ export default {
     .active {
       font-weight: 800;
       color: var(--color-tint);
-      border-bottom: 5px solid var(--color-tint);
     }
   }
 }

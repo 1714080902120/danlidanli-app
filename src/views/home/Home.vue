@@ -16,7 +16,7 @@
         </span>
       </div>
       <div slot="bottom">
-        <Navbar>
+        <Navbar :isActive="sendActive">
           <NavbarItem
             slot="navbar"
             :isActive="toActive(index)"

@@ -3,3 +3,7 @@
   border-bottom: 3px solid var(--color-tint) !important;
   flex-wrap: nowrap !important;
 }
+.mint-popup-bottom {
+  background-color: var(--base-bg-color) !important;
+  border-radius: 2px !important;
+}
