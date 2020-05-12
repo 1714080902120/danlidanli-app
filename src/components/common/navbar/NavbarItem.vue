@@ -44,7 +44,8 @@ export default {
     .inner {
       width: 100px;
       margin: auto;
-
+      height: 90px;
+      line-height: 90px;
     }
     .active {
       font-weight: 800;

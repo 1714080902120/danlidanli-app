@@ -79,7 +79,7 @@ export default {
     },
     height() {
       return () => {
-        return `${(window.innerHeight - 135)}px`;
+        return `${(window.innerHeight - 130)}px`;
       };
     }
   },

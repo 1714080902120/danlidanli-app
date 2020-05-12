@@ -9,7 +9,12 @@ import vueWaves from 'common/waves/waves'
 
 
 Vue.config.productionTip = false
-Vue.use(MintUI)
+Vue.use(MintUI, {
+  lazyload: {
+    preload: 0,
+    loading: '~assets/img/base/bilibili_user_logo_bg.svg'
+  }
+})
 Vue.use(vueWaves)
 Vue.prototype.$Bus = new Vue()
 

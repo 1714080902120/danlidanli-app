@@ -133,8 +133,8 @@ export default {
         .mail {
           margin: 0 0 0 15px;
           img {
-            width: 23px;
-            height: 23px;
+            width: 28px;
+            height: 28px;
           }
         }
       }

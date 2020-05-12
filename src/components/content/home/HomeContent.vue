@@ -29,8 +29,8 @@ export default {
     },
     async toGetHomeData () {
       await getHomeData({ skip: 0 }).then(res => {   
-        console.log(res[0]);
-        
+        console.log(res);
+        this.homeData = res
       })
     }
   },

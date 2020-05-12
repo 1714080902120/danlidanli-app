@@ -5,7 +5,8 @@
       class="mt-swipe"
       @change="handleChange()"
       :auto="3000"
-      :speed="500"
+      :speed="300"
+      :showIndicators="false"
     >
       <mt-swipe-item v-for="item in swipeData" :key="item.id">
         <img v-lazy="`${item.url}${item.name}`" :alt="item.alt" />
@@ -39,13 +40,13 @@ export default {
 #swipe {
   position: relative;
   border-radius: 10px;
-  padding-top: 20px;
+  padding-top: 15px;
   height: 340px;
   line-height: 340px;
   .mt-swipe {
     width: 7500px;
     height: 300px;
-          border-radius: 10px;
+    border-radius: 10px;
     img {
       border-radius: 10px;
       margin: 0 15px;
@@ -54,7 +55,9 @@ export default {
     }
   }
 }
-img[lazy=loading] {
-  background-image: url('~assets/img/base/bilibili_user_logo_bg.svg');
+img[lazy="loading"] {
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-image: url("~assets/img/base/bilibili_user_logo_bg.svg");
 }
 </style>
