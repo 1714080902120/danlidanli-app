@@ -10,6 +10,7 @@
     >
       <mt-swipe-item v-for="item in swipeData" :key="item.id">
         <img v-lazy="`${item.url}${item.name}`" :alt="item.alt" />
+        <div class="text">{{ item.text }}</div>
       </mt-swipe-item>
     </mt-swipe>
   </div>
@@ -52,6 +53,13 @@ export default {
       margin: 0 15px;
       width: 720px;
       height: 300px;
+    }
+    .text {
+      position: absolute;
+      top: 100px;
+      left: 30px;
+      font-size: 40px;
+      color: rgb(253, 0, 211);
     }
   }
 }

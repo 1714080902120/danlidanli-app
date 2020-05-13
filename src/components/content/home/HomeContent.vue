@@ -23,8 +23,12 @@ export default {
   },
   methods: {
     async toGetHomeSwipeData () {
-      await getHomeSwipe().then(res => {   
-        this.swipeData = res   
+      const text = [ '从前没得选，现在我想做个好人~', '华为：最贵的终端~', '快进来rua！' ]
+      await getHomeSwipe().then(res => {
+        this.swipeData = res.map((n, i) => {
+          n['text'] = text[i]
+          return n
+        })
       })
     },
     async toGetHomeData () {

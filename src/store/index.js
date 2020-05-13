@@ -8,7 +8,8 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     userInfo: {},
-    haveToken: window.localStorage.getItem('haveToken')
+    haveToken: window.localStorage.getItem('haveToken'),
+    popupUp: ''
   },
   mutations,
   actions,

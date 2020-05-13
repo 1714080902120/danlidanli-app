@@ -1,29 +1,40 @@
 <template>
   <div id="recommend-list" v-if="data.length > 0">
-    <div class="recommend-item" v-for="item in data" :key="item._id" @click="goTo()" @touchstart="touchStart($event)" @touchend="touchEnd($event)" v-waves>
+    <div
+      class="recommend-item"
+      v-for="(item, index) in data"
+      :key="item._id"
+      @click="goTo()"
+      @touchstart="touchStart($event)"
+      @touchend="touchEnd($event)"
+      v-waves
+    >
       <div class="cover">
         <img v-lazy="`${item.img.src}${item.img.name}`" alt />
         <div class="info">
-          <span><img src="~assets/img/recommend_list/play_dark.svg" alt="">{{ item.plays }}</span>
-          <span><img src="~assets/img/recommend_list/danmaku_dark.svg" alt="">{{ item.danmaku }}</span>
+          <span>
+            <img src="~assets/img/recommend_list/play_dark.svg" alt />
+            {{ item.plays }}
+          </span>
+          <span>
+            <img src="~assets/img/recommend_list/danmaku_dark.svg" alt />
+            {{ item.danmaku }}
+          </span>
           <span>{{ item.video.long }}</span>
         </div>
       </div>
-      <div class="title">
-        {{ item.title }}
-      </div>
+      <div class="title">{{ item.title }}</div>
       <div class="label">
         <p v-if="item.video.label">{{ item.video.label }}</p>
         <p v-else-if="!item.video.label">&nbsp;</p>
-        <img @click="actions()" src="~assets/img/recommend_list/three_points_dark.svg" alt="">
+        <img @click="actions(index)" src="~assets/img/recommend_list/three_points_dark.svg" alt />
       </div>
-      <Popup :isShowPopup="isShowPopup"/>
     </div>
   </div>
 </template>
 
 <script>
-import Popup from 'components/common/popup/Popup'
+
 
 export default {
   name: "RecommendList",
@@ -41,23 +52,19 @@ export default {
     };
   },
   created() {
-    this.popupInvisible()
+
   },
   methods: {
-    actions() {
-      this.isShowPopup = true  
+    actions(i) {
+      this.$Bus.$emit('popupVisible')
+      this.$store.state.popupUp = this.data[i].video.info.up;
     },
     touchStart() {},
     touchEnd() {},
     goTo() {},
-    popupInvisible () {
-      this.$Bus.$on('popupInvisible', () => {
-        this.isShowPopup = false   
-      })
-    }
+
   },
   components: {
-    Popup
   }
 };
 </script>
@@ -77,7 +84,7 @@ export default {
     margin-bottom: 20px;
     width: 350px;
     margin-right: 15px;
-    background-color: rgb(60,60,60);
+    background-color: rgb(60, 60, 60);
     border-radius: 10px;
     .cover {
       position: relative;

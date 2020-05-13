@@ -35,11 +35,12 @@
     <BS ref="scroll" :bounce="false" screenWidth="100%" :screenHeight="height()">
       <HomeContent/>
     </BS>
+    <Popup/>
   </div>
 </template>
 
 <script>
-import { BaseOuter, Navbar, NavbarItem, BS, HomeContent } from "./index";
+import { BaseOuter, Navbar, NavbarItem, BS, HomeContent, Popup } from "./index";
 
 export default {
   name: "Home",
@@ -57,7 +58,8 @@ export default {
       sendActive: 1
     };
   },
-  created() {},
+  created() {
+  },
   activated() {
     if (
       this.$route.params.type === "register" ||
@@ -88,7 +90,8 @@ export default {
     Navbar,
     NavbarItem,
     BS,
-    HomeContent
+    HomeContent,
+    Popup
   }
 };
 </script>

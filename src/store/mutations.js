@@ -4,6 +4,9 @@ const mutations = {
   },
   changeToken (state, payload) {
     state.haveToken = payload
+  },
+  popupUp (state, payload) {
+    state.popupUp = payload
   }
 }
 
