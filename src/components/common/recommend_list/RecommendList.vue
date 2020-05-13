@@ -10,8 +10,9 @@
       v-waves
     >
       <div class="cover">
-        <img v-lazy="`${item.img.src}${item.img.name}`" alt />
-        <div class="info">
+        <img :class="{ 'is-tip': isTip.indexOf(index) !== -1 }" v-lazy="`${item.img.src}${item.img.name}`" alt />
+        <img class="is-tip-bg" v-if="isTip.indexOf(index) !== -1" src="~assets/img/recommend_list/no_like_dark.svg" alt="">
+        <div class="info" v-if="isTip.indexOf(index) === -1">
           <span>
             <img src="~assets/img/recommend_list/play_dark.svg" alt />
             {{ item.plays }}
@@ -22,9 +23,14 @@
           </span>
           <span>{{ item.video.long }}</span>
         </div>
+        <!-- 被举报的信息 -->
+        <div class="is-tip-info" v-if="isTip.indexOf(index) !== -1">
+          <span class="main">{{ tipText }}</span>
+          <span class="sub"></span>
+        </div>
       </div>
-      <div class="title">{{ item.title }}</div>
-      <div class="label">
+      <div class="title" v-if="isTip.indexOf(index) === -1">{{ item.title }}</div>
+      <div class="label" v-if="isTip.indexOf(index) === -1">
         <p v-if="item.video.label">{{ item.video.label }}</p>
         <p v-else-if="!item.video.label">&nbsp;</p>
         <img @click="actions(index)" src="~assets/img/recommend_list/three_points_dark.svg" alt />
@@ -48,7 +54,10 @@ export default {
   },
   data() {
     return {
-      isShowPopup: false
+      isShowPopup: false,
+      isTip: [1],
+      isSelected: -1,
+      tipText: ''
     };
   },
   created() {
@@ -58,11 +67,17 @@ export default {
     actions(i) {
       this.$Bus.$emit('popupVisible')
       this.$store.state.popupUp = this.data[i].video.info.up;
+      this.isSelected = i
     },
     touchStart() {},
     touchEnd() {},
     goTo() {},
-
+    whenTipd () {
+      this.$Bus.$on('tip', (text) => {
+        this.isTip = this.isSelected
+        this.tipText = text
+      })
+    }
   },
   components: {
   }
@@ -89,7 +104,16 @@ export default {
     .cover {
       position: relative;
       margin-bottom: -20px;
-
+      .is-tip {
+        filter: blur(15px);
+      }
+      .is-tip-bg {
+        position: absolute;
+        top: 30px;
+        left: 120px;
+        width: 100px;
+        height: 100px;
+      }
       img {
         width: 350px;
         border-radius: 10px;

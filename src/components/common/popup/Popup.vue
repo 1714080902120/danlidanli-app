@@ -2,24 +2,24 @@
   <div id="popup">
     <mt-popup v-model="popupVisible" position="bottom">
       <div class="inner">
-        <div class="header">添加至稍后再看</div>
+        <div class="header" @click="addToBackLook()">添加至稍后再看</div>
         <div class="content">
           <div class="give-back">
             <div class="title">反馈（选择后将优化首页此类内容）</div>
             <div class="sub-inner">
-              <span class="item" v-waves>恐怖血腥</span>
-              <span class="item" v-waves>色情低俗</span>
-              <span class="item" v-waves>封面恶心</span>
-              <span class="item" v-waves>标题党/封面党</span>
+              <span class="item" @click="tip($event)" v-waves>恐怖血腥</span>
+              <span class="item" @click="tip($event)" v-waves>色情低俗</span>
+              <span class="item" @click="tip($event)" v-waves>封面恶心</span>
+              <span class="item" @click="tip($event)" v-waves>标题党/封面党</span>
             </div>
           </div>
           <div class="no-like">
             <div class="title">不感兴趣（选择后将减少相似内容推荐）</div>
             <div class="sub-inner">
-              <span class="item" v-waves>UP主：{{ $store.state.popupUp }}</span>
-              <span class="item" v-waves>分区：日常</span>
-              <span class="item" v-waves>频道：首页</span>
-              <span class="item" v-waves>不感兴趣</span>
+              <span class="item" @click="tip($event)" v-waves>UP主：{{ $store.state.popupUp }}</span>
+              <span class="item" @click="tip($event)" v-waves>分区：日常</span>
+              <span class="item" @click="tip($event)" v-waves>频道：首页</span>
+              <span class="item" @click="tip($event)" v-waves>不感兴趣</span>
             </div>
           </div>
         </div>
@@ -49,6 +49,9 @@ export default {
       this.$Bus.$on("popupVisible", () => {
         this.popupVisible = true;
       });
+    },
+    tip (e) {
+      this.$Bus.$emit('tip', e.target.innerText)
     }
   },
   watch: {
