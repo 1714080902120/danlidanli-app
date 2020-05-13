@@ -10,8 +10,17 @@
       v-waves
     >
       <div class="cover">
-        <img :class="{ 'is-tip': isTip.indexOf(index) !== -1 }" v-lazy="`${item.img.src}${item.img.name}`" alt />
-        <img class="is-tip-bg" v-if="isTip.indexOf(index) !== -1" src="~assets/img/recommend_list/no_like_dark.svg" alt="">
+        <img
+          :class="{ 'is-tip': isTip.indexOf(index) !== -1 }"
+          v-lazy="`${item.img.src}${item.img.name}`"
+          alt
+        />
+        <img
+          class="is-tip-bg"
+          v-if="isTip.indexOf(index) !== -1"
+          src="~assets/img/recommend_list/no_like_dark.svg"
+          alt
+        />
         <div class="info" v-if="isTip.indexOf(index) === -1">
           <span>
             <img src="~assets/img/recommend_list/play_dark.svg" alt />
@@ -25,9 +34,13 @@
         </div>
         <!-- 被举报的信息 -->
         <div class="is-tip-info" v-if="isTip.indexOf(index) !== -1">
-          <span class="main">{{ tipText }}</span>
-          <span class="sub"></span>
+          <span class="main">{{ tipTextList[isTip.indexOf(index)] }}</span>
+          <span class="sub">将优化首页此类内容</span>
         </div>
+      </div>
+      <div class="is-tip-reset" v-if="isTip.indexOf(index) !== -1" @click="reset(index)">
+        <img src="~assets/img/recommend_list/reset_dark.svg" alt />
+        撤回
       </div>
       <div class="title" v-if="isTip.indexOf(index) === -1">{{ item.title }}</div>
       <div class="label" v-if="isTip.indexOf(index) === -1">
@@ -40,8 +53,6 @@
 </template>
 
 <script>
-
-
 export default {
   name: "RecommendList",
   props: {
@@ -55,28 +66,34 @@ export default {
   data() {
     return {
       isShowPopup: false,
-      isTip: [1],
+      isTip: [],
       isSelected: -1,
-      tipText: ''
+      tipTextList: []
     };
   },
   created() {
-
+    this.whenTipd()
   },
   methods: {
     actions(i) {
-      this.$Bus.$emit('popupVisible')
-      this.$store.state.popupUp = this.data[i].video.info.up;
-      this.isSelected = i
+      this.$Bus.$emit("popupVisible", this.data[i].video.info.up);
+      this.isSelected = i;
     },
     touchStart() {},
     touchEnd() {},
     goTo() {},
-    whenTipd () {
-      this.$Bus.$on('tip', (text) => {
-        this.isTip = this.isSelected
-        this.tipText = text
-      })
+    whenTipd() {
+      this.$Bus.$on("tip", text => {
+        this.isTip.push(this.isSelected);
+        this.tipTextList.push(text);
+      });
+    },
+    reset(i) {
+      let index = this.isTip.indexOf(i)
+      let value = this.tipTextList[index]
+      this.tipTextList.splice(this.tipTextList.indexOf(value), 1)
+      this.isTip.splice(index, 1)
+      
     }
   },
   components: {
@@ -86,6 +103,7 @@ export default {
 
 <style lang="less" scoped>
 #recommend-list {
+  position: relative;
   padding: 15px;
   padding-right: 0;
   padding-top: 0;
@@ -109,10 +127,24 @@ export default {
       }
       .is-tip-bg {
         position: absolute;
-        top: 30px;
+        top: 20px;
         left: 120px;
         width: 100px;
         height: 100px;
+      }
+      .is-tip-info {
+        position: relative;
+        font-size: 30px;
+        color: #fff;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        bottom: 100px;
+        .main {
+          font-size: 35px;
+        }
+        .sub {
+        }
       }
       img {
         width: 350px;
@@ -138,6 +170,20 @@ export default {
             height: 30px;
           }
         }
+      }
+    }
+    .is-tip-reset {
+      font-size: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: lighter;
+      margin-bottom: 50px;
+      img {
+        width: 40px;
+        height: 40px;
+        margin-right: 10px;
+        margin-bottom: 6px;
       }
     }
     .title {

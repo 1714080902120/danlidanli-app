@@ -16,7 +16,7 @@
           <div class="no-like">
             <div class="title">不感兴趣（选择后将减少相似内容推荐）</div>
             <div class="sub-inner">
-              <span class="item" @click="tip($event)" v-waves>UP主：{{ $store.state.popupUp }}</span>
+              <span class="item" @click="tip($event)" v-waves>UP：{{ up }}</span>
               <span class="item" @click="tip($event)" v-waves>分区：日常</span>
               <span class="item" @click="tip($event)" v-waves>频道：首页</span>
               <span class="item" @click="tip($event)" v-waves>不感兴趣</span>
@@ -35,7 +35,8 @@ export default {
   props: {},
   data() {
     return {
-      popupVisible: false
+      popupVisible: false,
+      up: ''
     };
   },
   created() {
@@ -46,12 +47,14 @@ export default {
       this.popupVisible = false;
     },
     ListenPopupVisible() {
-      this.$Bus.$on("popupVisible", () => {
+      this.$Bus.$on("popupVisible", (res) => {
         this.popupVisible = true;
+        this.up = res
       });
     },
     tip (e) {
       this.$Bus.$emit('tip', e.target.innerText)
+      this.popupVisible = false
     }
   },
   watch: {

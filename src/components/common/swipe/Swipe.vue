@@ -59,7 +59,7 @@ export default {
       top: 100px;
       left: 30px;
       font-size: 40px;
-      color: rgb(253, 0, 211);
+      color: rgb(255, 255, 255);
     }
   }
 }

@@ -32,7 +32,7 @@
         </Navbar>
       </div>
     </BaseOuter>
-    <BS ref="scroll" :bounce="false" screenWidth="100%" :screenHeight="height()">
+    <BS ref="scroll" :bounce="false" screenWidth="100%" :screenHeight="height()" :probeType="2">
       <HomeContent/>
     </BS>
     <Popup/>
@@ -58,7 +58,10 @@ export default {
       sendActive: 1
     };
   },
-  created() {
+  mounted() {
+    this.$nextTick(() => {
+      
+    })
   },
   activated() {
     if (

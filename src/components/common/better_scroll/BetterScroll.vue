@@ -22,6 +22,10 @@ export default {
     screenHeight: {
       type: String,
       default: "100vh"
+    },
+    probeType: {
+      type: Number,
+      default: 0
     }
   },
   data() {
@@ -32,6 +36,7 @@ export default {
   mounted() {
     this.$nextTick(() => {
       this.getBetterScroll();
+      this.scroll()
     });
   },
   components: {},
@@ -39,11 +44,20 @@ export default {
     getBetterScroll() {
       this.BS = new BS(this.$refs.wrapper, {
         click: true,
-        bounce: this.bounce
+        bounce: this.bounce,
+        probeType: this.probeType
       });
     },
     refresh() {
       this.BS.refresh();
+    },
+    scroll() {
+      return this.BS.on('scroll', ({ y }) => {
+        return y
+      })
+    },
+    scrollTo(x = 0, y) {
+      return this.BS.scrollTo(x, y)
     }
   }
 };
