@@ -6,7 +6,7 @@ import 'amfe-flexible'
 import MintUI from 'mint-ui'
 import 'mint-ui/lib/style.css'
 import vueWaves from 'common/waves/waves'
-
+import Utils from 'common/utils'
 
 Vue.config.productionTip = false
 Vue.use(MintUI, {
@@ -17,7 +17,7 @@ Vue.use(MintUI, {
 })
 Vue.use(vueWaves)
 Vue.prototype.$Bus = new Vue()
-
+Vue.prototype.$debounce = Utils.debounce
 new Vue({
   router,
   store,

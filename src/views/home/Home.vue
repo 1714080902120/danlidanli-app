@@ -32,10 +32,17 @@
         </Navbar>
       </div>
     </BaseOuter>
-    <BS ref="scroll" :bounce="false" screenWidth="100%" :screenHeight="height()" :probeType="2">
-      <HomeContent/>
+    <BS
+      ref="scroll"
+      :pullDownRefresh="{ threshold: 0, stop: 0 }"
+      :bounce="bounce"
+      screenWidth="100%"
+      :screenHeight="height()"
+      :probeType="2"
+    >
+      <HomeContent />
     </BS>
-    <Popup/>
+    <Popup />
   </div>
 </template>
 
@@ -55,13 +62,17 @@ export default {
         { title: "新时代", path: "/new-date" },
         { title: "学习区", path: "/study" }
       ],
-      sendActive: 1
+      sendActive: 1,
+      bounce: {
+        top: false,
+        bottom: true,
+        left: false,
+        right: false
+      }
     };
   },
   mounted() {
-    this.$nextTick(() => {
-      
-    })
+    this.$nextTick(() => {});
   },
   activated() {
     if (
@@ -84,7 +95,7 @@ export default {
     },
     height() {
       return () => {
-        return `${(window.innerHeight - 130)}px`;
+        return `${window.innerHeight * (1 - 130 / 667)}px`;
       };
     }
   },

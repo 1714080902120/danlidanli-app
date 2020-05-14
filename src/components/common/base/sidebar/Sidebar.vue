@@ -4,7 +4,7 @@
     :class="{ appear: isAppear === true && isDisappear === false, disappear: isDisappear = true && isAppear === false }"
     @click="goDisappear($event)"
   >
-    <BetterScroll ref="scroll" :bounce="false" screenWidth="80%" :screenHeight="height()">
+    <BetterScroll ref="scroll" screenWidth="80%" :screenHeight="height()">
       <div class="inner">
         <SidebarHead :info="userInfo" :items="middleItems" />
         <li

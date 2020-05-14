@@ -49,10 +49,14 @@
         <img @click="actions(index)" src="~assets/img/recommend_list/three_points_dark.svg" alt />
       </div>
     </div>
+    <div class="loading">
+      <img src="~assets/img/recommend_list/pull_up_pink.svg" alt="">
+    </div>
   </div>
 </template>
 
 <script>
+
 export default {
   name: "RecommendList",
   props: {
@@ -93,7 +97,6 @@ export default {
       let value = this.tipTextList[index]
       this.tipTextList.splice(this.tipTextList.indexOf(value), 1)
       this.isTip.splice(index, 1)
-      
     }
   },
   components: {
@@ -209,6 +212,16 @@ export default {
         width: 50px;
         height: 50px;
       }
+    }
+  }
+  .loading {
+    position: relative;
+    height: 200px;
+    width: 200px;
+    bottom: 0;
+    img {
+      width: 50px;
+      height: 50px;
     }
   }
 }

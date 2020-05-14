@@ -22,7 +22,7 @@ export default {
   border-radius: 100%;
   width: 1.5em;
   height: 1.5em;
-  z-index: 9999;
+  z-index: 98;
   left: 340px;
   .load-container {
     position: absolute;

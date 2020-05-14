@@ -58,6 +58,8 @@ export default {
 #base {
   position: relative;
   margin-top: var(--top-margin);
+  z-index: 99;
+  background-color: rgb(79,79,79);
   .head {
     position: relative;
     display: flex;
@@ -100,7 +102,7 @@ export default {
         display: flex;
         align-items: center;
         border-radius: 30px;
-        background-color: rgba(65, 64, 64, 0.6);
+        background-color: rgba(65, 64, 64, 1);
         height: 70px;
         line-height: 70px;
         padding: 10px;
@@ -143,7 +145,7 @@ export default {
   .bottom {
     position: relative;
     margin-top: 20px;
-    background-color: rgba(66, 65, 65, 0.8);
+    background-color: rgba(66, 65, 65, 1);
     position: sticky;
     top: 0;
     left: 0;
