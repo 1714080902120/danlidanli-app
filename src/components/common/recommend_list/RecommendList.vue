@@ -50,13 +50,23 @@
       </div>
     </div>
     <div class="loading">
-      <img src="~assets/img/recommend_list/pull_up_pink.svg" alt="">
+      <div class="left">
+        <div class="text">
+        <span>刷到底了哟~从头再来吧~</span>
+        <span>刷新看新内容</span>
+        </div>
+        <div class="btn">
+          <img src="~assets/img/recommend_list/pull_up_pink.svg" alt @click="backToTop()" />刷新
+        </div>
+        
+      </div>
+      <img src="~assets/img/recommend_list/danlidanli_girl.png" alt />
     </div>
+    <div class="bottm"></div>
   </div>
 </template>
 
 <script>
-
 export default {
   name: "RecommendList",
   props: {
@@ -76,7 +86,7 @@ export default {
     };
   },
   created() {
-    this.whenTipd()
+    this.whenTipd();
   },
   methods: {
     actions(i) {
@@ -93,14 +103,16 @@ export default {
       });
     },
     reset(i) {
-      let index = this.isTip.indexOf(i)
-      let value = this.tipTextList[index]
-      this.tipTextList.splice(this.tipTextList.indexOf(value), 1)
-      this.isTip.splice(index, 1)
+      let index = this.isTip.indexOf(i);
+      let value = this.tipTextList[index];
+      this.tipTextList.splice(this.tipTextList.indexOf(value), 1);
+      this.isTip.splice(index, 1);
+    },
+    backToTop() {
+      this.$Bus.$emit("backToTop");
     }
   },
-  components: {
-  }
+  components: {}
 };
 </script>
 
@@ -216,13 +228,59 @@ export default {
   }
   .loading {
     position: relative;
-    height: 200px;
-    width: 200px;
-    bottom: 0;
-    img {
-      width: 50px;
-      height: 50px;
+    height: 300px;
+    font-size: 30px;
+    display: flex;
+    margin: auto;
+    align-items: center;
+    justify-content: space-between;
+    color: var(--color-tint);
+    margin-bottom: 100px;
+    .left {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      .text {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        span {
+          margin: 10px 0;
+        }
+      }
+      .btn {
+        display: flex;
+        align-items: center;
+        width: 150px;
+        border: 2px solid var(--color-tint);
+        border-radius: 25px;
+        justify-content: center;
+        margin-top: 20px;
+        img {
+          margin: 0;
+          width: 50px;
+          height: 50px;
+        }
+      }
     }
+    img {
+      width: 180px;
+      height: 240px;
+      margin: auto;
+    }
+  }
+  .bottom {
+    position: relative;
+    height: 80px;
+  }
+}
+
+@keyframes rotate {
+  from {
+    transform: rotateZ(0deg);
+  }
+  to {
+    transform: rotateZ(180deg);
   }
 }
 </style>

@@ -5,8 +5,11 @@ const mutations = {
   changeToken (state, payload) {
     state.haveToken = payload
   },
-  popupUp (state, payload) {
-    state.popupUp = payload
+  openSideBar (state, payload) {
+    state.openSideBar = payload
+  },
+  closeSideBar (state, payload) {
+    state.openSideBar = payload
   }
 }
 

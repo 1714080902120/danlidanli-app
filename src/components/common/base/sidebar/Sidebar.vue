@@ -213,6 +213,7 @@ export default {
       let X = window.innerWidth;
       if (e.x > X * 0.8) {
         this.isAppear = false;
+        this.$store.commit('closeSideBar', false)
       }
     },
     touchStart() {

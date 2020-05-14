@@ -4,8 +4,8 @@
       <slot></slot>
     </div>
     <div class="loading" ref="loading">
-      <img src="~assets/img/recommend_list/loading_pink.svg" v-if="toShowImg" alt ref="img" />
-      <Loading v-if="toShowLoading" class="test" />
+      <img src="~assets/img/recommend_list/loading_pink.svg" ref="img" alt />
+      <Loading v-if="toShowLoading" />
     </div>
   </div>
 </template>
@@ -54,15 +54,22 @@ export default {
       BS: null,
       toShowImg: true,
       toShowLoading: false,
-      originPosition: 0
+      originPosition: 0,
+      ifOpenSideBar: false
     };
   },
   mounted() {
     this.$nextTick(() => {
       this.getBetterScroll();
-      this.Loading();
-      this.loadingFinish();
-      this.pullUp();
+    });
+  },
+  activated() {
+    this.$nextTick(() => {
+      if (!this.ifOpenSideBar) {
+        this.Loading();
+        this.loadingFinish();
+        this.pullUp();
+      }
     });
   },
   components: {
@@ -74,8 +81,8 @@ export default {
         click: true,
         bounce: this.bounce,
         probeType: this.probeType,
-        pullUpload: {
-          threshold: 0
+        pullUpLoad: {
+          threshold: 50
         }
       });
     },
@@ -84,56 +91,53 @@ export default {
     },
     loadingFinish() {
       let loading = this.$refs.loading;
-      let img = this.$refs.img
+      let img = this.$refs.img;
       this.$Bus.$on("finishPullDown", () => {
-        let opc = 1
+        this.originPosition = 0;
+        let opc = 1;
         let timer = setInterval(() => {
-          opc -= .2
+          opc -= 0.2;
           if (opc <= 0) {
-            this.toShowImg = true;
+            img.style.opacity = 0;
             this.toShowLoading = false;
-            this.originPosition = 0
-            img.style.transform = ``;
+            img.style.transform = `rotateZ(0deg)`;
             loading.style.transform = `translateY(0px)`;
             clearInterval(timer);
             timer = null;
           }
-          loading.style.opacity = `${opc}`
-        }, 50);
+          loading.style.opacity = `${opc}`;
+        }, 80);
       });
       this.$Bus.$on("finishPullUp", () => {
         this.BS.finishPullUp();
       });
     },
-    BSscroll () {
-      
-    },
     Loading() {
-      let last = 0,
-        now = 0,
-        speed = 5;
+      let last = 0;
+      let now = 0;
+      let speed = 5;
       let loading = this.$refs.loading;
       let img = this.$refs.img;
+      let sendPullDown = this.$debounce(this.pullDownData, 250);
       this.BS.on("scroll", ({ y }) => {
         last = now;
         now = y;
         loading.style.opacity = 1;
+        img.style.opacity = 1;
         if (now >= 0 && now - last >= 0) {
           if (this.originPosition <= 155) {
             this.originPosition += speed;
-            this.BS.on('touchEnd', () => {
-            this.$Bus.$emit('finishPullDown')
-            })
+            this.BS.on("touchEnd", () => {
+              this.$Bus.$emit("finishPullDown");
+            });
           } else if (this.originPosition === 160) {
-            this.toShowImg = false;
+            img.style.opacity = 0;
             this.toShowLoading = true;
-            this.BS.on('touchEnd', () => {
-              this.$debounce(this.pullDownData, 250)();
-            })
-            this.originPosition = 159.999999;
+            sendPullDown();
+            this.originPosition = 160;
           }
         } else {
-          this.toShowImg = true;
+          img.style.opacity = 1;
           this.toShowLoading = false;
           this.originPosition -= speed;
           if (this.originPosition <= 0) {
@@ -144,17 +148,27 @@ export default {
         loading.style.transform = `translateY(${this.originPosition}px)`;
       });
     },
-    scrollTo(x = 0, y) {
-      return this.BS.scrollTo(x, y);
+    scrollTo(x = 0, y, time) {
+      this.BS.scrollTo(x, y, time);
     },
     pullDownData() {
       this.$Bus.$emit("pullDownData");
     },
     pullUp() {
+      let send = this.$debounce(this.pullUpData, 250)
       this.BS.on("pullingUp", () => {
-        this.$Bus.$emit("pullUpData");
+        send()
       });
+    },
+    pullUpData () {
+      this.$Bus.$emit("pullUpData");
     }
+  },
+  watch: {
+    "$store.state.openSideBar"(newVal) {
+      this.ifOpenSideBar = newVal;
+    },
+    immediate: true
   }
 };
 </script>

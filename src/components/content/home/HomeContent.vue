@@ -21,6 +21,7 @@ export default {
   created() {
     this.toGetHomeSwipeData(), this.toGetHomeData(this.page);
     this.pullDownApplyData();
+    this.pullUpApplyData()
   },
   methods: {
     async toGetHomeSwipeData() {
@@ -38,7 +39,9 @@ export default {
     },
     async toGetHomeData(page, type) {
       await getHomeData({ skip: page }).then(res => {
-        console.log(res);
+        if (res.length === 0) {
+          return false
+        }
         if (type === "pullDown") {
           this.homeData.unshift(...res);
         } else {
@@ -47,11 +50,12 @@ export default {
       });
     },
     async pullDownApplyData() {
+      let send = this.$debounce(this.finishPullDown, 20)
       this.$nextTick(() => {
         this.$Bus.$on("pullDownData", async () => {
           this.page += 1;
           await this.toGetHomeData(this.page, "pullDown");
-          this.$debounce(this.finishPullDown, 20)();
+          send();
         });
       });
     },
@@ -59,13 +63,15 @@ export default {
       this.$Bus.$emit("finishPullDown");
     },
     async pullUpApplyData() {
+      let send = this.$debounce(this.finishPullUp, 20)
       this.$Bus.$on("pullUpData", async () => {
         this.page += 1;
         await this.toGetHomeData(this.page, "pullUp");
-        this.$debounce(this.finishPullUp, 20)();
+        send();
       });
     },
     finishPullUp() {
+      this.$Bus.$emit('BSNeedToRefresh')
       this.$Bus.$emit("finishPullUp");
     }
   },

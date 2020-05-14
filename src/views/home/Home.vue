@@ -72,7 +72,10 @@ export default {
     };
   },
   mounted() {
-    this.$nextTick(() => {});
+    this.$nextTick(() => {
+      this.refresh()
+      this.backToTop()
+    });
   },
   activated() {
     if (
@@ -85,6 +88,17 @@ export default {
   methods: {
     goTo(index) {
       this.sendActive = index;
+    },
+    refresh () {
+      this.$Bus.$on('BSNeedToRefresh', () => {
+        this.$refs.scroll.refresh()
+      })
+    },
+    backToTop () {
+      this.$Bus.$on('backToTop', () => {
+        this.$refs.scroll.scrollTo(0, 0, 500)
+        this.$refs.scroll.refresh()
+      })
     }
   },
   computed: {

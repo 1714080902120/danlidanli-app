@@ -41,6 +41,7 @@ export default {
   },
   methods: {
     goAppear() {
+      this.$store.commit('openSideBar', true)
       this.$Bus.$emit("goAppear");
     }
   },

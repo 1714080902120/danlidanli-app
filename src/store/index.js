@@ -9,7 +9,7 @@ export default new Vuex.Store({
   state: {
     userInfo: {},
     haveToken: window.localStorage.getItem('haveToken'),
-    popupUp: ''
+    openSideBar: false
   },
   mutations,
   actions,
