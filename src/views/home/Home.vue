@@ -56,13 +56,13 @@ export default {
   data() {
     return {
       items: [
-        { title: "直播", path: "/live" },
-        { title: "推荐", path: "/recommend" },
-        { title: "热门", path: "/hot" },
-        { title: "追番", path: "/animate" },
-        { title: "影视", path: "/movie" },
-        { title: "新时代", path: "/new-date" },
-        { title: "学习区", path: "/study" }
+        { title: "直播", path: "/home/live" },
+        { title: "推荐", path: "/home/" },
+        { title: "热门", path: "/home/hot" },
+        { title: "追番", path: "/home/animate" },
+        { title: "影视", path: "/home/movie" },
+        { title: "新时代", path: "/home/new-date" },
+        { title: "学习区", path: "/home/study" }
       ],
       sendActive: 1,
       bounce: {
@@ -93,8 +93,11 @@ export default {
     }
   },
   methods: {
-    goTo(index) {
+    goTo(index, path) {
+      // goActive navbar-bottom
       this.sendActive = index;
+      this.$store.commit('offSetItemByClick', this.sendActive)
+      this.$router.replace({ path })
     },
     refresh() {
       this.$Bus.$on("BSNeedToRefresh", () => {
@@ -130,7 +133,13 @@ export default {
     NavbarItem,
     BS,
     Popup
-  }
+  },
+  watch: {
+    '$store.state.offSetItem' (newVal) {
+      this.sendActive = newVal
+    },
+    immediate: true
+  },
 };
 </script>
 

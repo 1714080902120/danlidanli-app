@@ -4,6 +4,9 @@ const routerPush = VueRouter.prototype.push
 VueRouter.prototype.push = function push(location) {
   return routerPush.call(this, location).catch(error=> error)
 }
+VueRouter.prototype.replace = function replace(location) {
+  return routerPush.call(this, location).catch(error=> error)
+}
 const HomeRecommend = () => import('components/content/home/HomeRecommend')
 const Home = () => import('views/home/Home')
 const RegisterOrLogin = () => import('views/RegisterOrLogin')

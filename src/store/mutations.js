@@ -10,6 +10,15 @@ const mutations = {
   },
   closeSideBar (state, payload) {
     state.openSideBar = payload
+  },
+  offSetX (state, payload) {
+    state.offSetX = payload
+  },
+  offSetItem (state, payload) {
+    state.offSetItem += payload
+  },
+  offSetItemByClick (state, payload) {
+    state.offSetItem = payload
   }
 }
 

@@ -1,7 +1,7 @@
 <template>
-  <div id="home-live">
+  <v-touch id="home-live" ref="homeLive">
     testatastastastastas
-  </div>
+  </v-touch>
 </template>
 
 <script>
@@ -12,11 +12,16 @@ export default {
       
     }
   },
+  watch: {
+    '$store.state.offSetX' (newVal) {     
+      this.$refs.homeLive.$el.style.transform = `translateX(${newVal}px)`
+    },
+    immediate: true
+  },
 }
 </script>
 
 <style lang="less" scoped>
   #home-live {
-
   }
 </style>

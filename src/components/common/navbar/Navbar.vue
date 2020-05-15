@@ -41,6 +41,13 @@ export default {
   },
   components: {},
   watch: {
+    '$store.state.offSetX' (newVal) {
+      this.$nextTick(() => {
+        console.log(newVal);
+          
+        this.$refs.bottom.style.transform = `translateX(${-newVal / 2}px)`
+      })
+    },
     'isActive' (newVal) {
       this.$nextTick(() => {        
         this.$refs.bottom.style.transform = `translateX(${75 * (newVal - this.default)}px)`

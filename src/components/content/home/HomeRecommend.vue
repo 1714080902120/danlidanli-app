@@ -1,5 +1,11 @@
 <template>
-  <v-touch @panleft="swiperleft()" @panright="swiperright()" id="home-content" ref="homeRecommend">
+  <v-touch
+    @panleft="panleft()"
+    @panright="panright()"
+    @panend="panend()"
+    id="home-content"
+    ref="homeRecommend"
+  >
     <Swipe :swipeData="swipeData" />
     <RecommendList :data="homeData" />
   </v-touch>
@@ -75,23 +81,38 @@ export default {
       this.$Bus.$emit("BSNeedToRefresh");
       this.$Bus.$emit("finishPullUp");
     },
-    swiperleft() {
+    panleft() {
       this.offsetX -= 1;
       this.$nextTick(() => {
         this.$refs.homeRecommend.$el.style.transform = `translateX(${this
           .offsetX * 2}px)`;
+        this.$store.commit("offSetX", this.offsetX);
       });
     },
-    swiperright() {
+    panright() {
       this.offsetX += 1;
       this.$nextTick(() => {
         this.$refs.homeRecommend.$el.style.transform = `translateX(${this
           .offsetX * 2}px)`;
+        this.$store.commit("offSetX", this.offsetX);
+      });
+    },
+    panend() {
+      this.$nextTick(() => {
         if (this.offsetX > 80) {
-          console.log(111);
-          
+          if (this.$store.state.offSetItem > 0) {
+            this.$store.commit("offSetItem", -1);
+          }
           this.$router.push({ name: "Live" });
+        } else if (this.offsetX < -80) {
+          if (this.$store.state.offSetItem < 6) {
+            this.$store.commit("offSetItem", 1);
+          }
+          this.$router.push({ name: "Hot" });
         }
+        this.offsetX = 0;
+        this.$store.commit("offSetX", 0);
+        this.$refs.homeRecommend.$el.style.transform = `translateX(${0}px)`;
       });
     }
   },
@@ -105,6 +126,5 @@ export default {
 <style lang="less" scoped>
 #home-content {
   background-color: var(--base-bg-color-sec);
-  transition: .1s;
 }
 </style>
