@@ -1,8 +1,8 @@
 <template>
-  <div id="home-content">
+  <v-touch @panleft="swiperleft()" @panright="swiperright()" id="home-content" ref="homeRecommend">
     <Swipe :swipeData="swipeData" />
     <RecommendList :data="homeData" />
-  </div>
+  </v-touch>
 </template>
 
 <script>
@@ -10,18 +10,19 @@ import Swipe from "components/common/swipe/Swipe";
 import { getHomeSwipe, getHomeData } from "network/home";
 import RecommendList from "components/common/recommend_list/RecommendList";
 export default {
-  name: "HomeContent",
+  name: "HomeRecommend",
   data() {
     return {
       swipeData: [],
       homeData: [],
-      page: 0
+      page: 0,
+      offsetX: 0
     };
   },
   created() {
     this.toGetHomeSwipeData(), this.toGetHomeData(this.page);
     this.pullDownApplyData();
-    this.pullUpApplyData()
+    this.pullUpApplyData();
   },
   methods: {
     async toGetHomeSwipeData() {
@@ -40,7 +41,7 @@ export default {
     async toGetHomeData(page, type) {
       await getHomeData({ skip: page }).then(res => {
         if (res.length === 0) {
-          return false
+          return false;
         }
         if (type === "pullDown") {
           this.homeData.unshift(...res);
@@ -50,7 +51,7 @@ export default {
       });
     },
     async pullDownApplyData() {
-      let send = this.$debounce(this.finishPullDown, 20)
+      let send = this.$debounce(this.finishPullDown, 20);
       this.$nextTick(() => {
         this.$Bus.$on("pullDownData", async () => {
           this.page += 1;
@@ -63,7 +64,7 @@ export default {
       this.$Bus.$emit("finishPullDown");
     },
     async pullUpApplyData() {
-      let send = this.$debounce(this.finishPullUp, 20)
+      let send = this.$debounce(this.finishPullUp, 20);
       this.$Bus.$on("pullUpData", async () => {
         this.page += 1;
         await this.toGetHomeData(this.page, "pullUp");
@@ -71,8 +72,27 @@ export default {
       });
     },
     finishPullUp() {
-      this.$Bus.$emit('BSNeedToRefresh')
+      this.$Bus.$emit("BSNeedToRefresh");
       this.$Bus.$emit("finishPullUp");
+    },
+    swiperleft() {
+      this.offsetX -= 1;
+      this.$nextTick(() => {
+        this.$refs.homeRecommend.$el.style.transform = `translateX(${this
+          .offsetX * 2}px)`;
+      });
+    },
+    swiperright() {
+      this.offsetX += 1;
+      this.$nextTick(() => {
+        this.$refs.homeRecommend.$el.style.transform = `translateX(${this
+          .offsetX * 2}px)`;
+        if (this.offsetX > 80) {
+          console.log(111);
+          
+          this.$router.push({ name: "Live" });
+        }
+      });
     }
   },
   components: {
@@ -85,5 +105,6 @@ export default {
 <style lang="less" scoped>
 #home-content {
   background-color: var(--base-bg-color-sec);
+  transition: .1s;
 }
 </style>

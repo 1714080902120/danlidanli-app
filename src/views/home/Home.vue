@@ -38,16 +38,18 @@
       :bounce="bounce"
       screenWidth="100%"
       :screenHeight="height()"
-      :probeType="2"
+      :probeType="3"
     >
-      <HomeContent />
+      <keep-alive>
+        <router-view />
+      </keep-alive>
     </BS>
     <Popup />
   </div>
 </template>
 
 <script>
-import { BaseOuter, Navbar, NavbarItem, BS, HomeContent, Popup } from "./index";
+import { BaseOuter, Navbar, NavbarItem, BS, Popup } from "./index";
 
 export default {
   name: "Home",
@@ -73,8 +75,13 @@ export default {
   },
   mounted() {
     this.$nextTick(() => {
-      this.refresh()
-      this.backToTop()
+      let timer = setTimeout(() => {
+        this.whenStart();
+        clearTimeout(timer);
+        timer = null;
+      }, 100);
+      this.refresh();
+      this.backToTop();
     });
   },
   activated() {
@@ -89,16 +96,20 @@ export default {
     goTo(index) {
       this.sendActive = index;
     },
-    refresh () {
-      this.$Bus.$on('BSNeedToRefresh', () => {
-        this.$refs.scroll.refresh()
-      })
+    refresh() {
+      this.$Bus.$on("BSNeedToRefresh", () => {
+        this.$refs.scroll.refresh();
+      });
     },
-    backToTop () {
-      this.$Bus.$on('backToTop', () => {
-        this.$refs.scroll.scrollTo(0, 0, 500)
-        this.$refs.scroll.refresh()
-      })
+    backToTop() {
+      this.$Bus.$on("backToTop", () => {
+        this.$refs.scroll.scrollTo(0, -10, 500);
+        this.$refs.scroll.refresh();
+      });
+    },
+    whenStart() {
+      this.$refs.scroll.scrollTo(0, -10, 100);
+      this.$refs.scroll.refresh();
     }
   },
   computed: {
@@ -118,7 +129,6 @@ export default {
     Navbar,
     NavbarItem,
     BS,
-    HomeContent,
     Popup
   }
 };

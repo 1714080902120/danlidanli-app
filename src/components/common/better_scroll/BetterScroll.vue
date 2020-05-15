@@ -61,6 +61,7 @@ export default {
   mounted() {
     this.$nextTick(() => {
       this.getBetterScroll();
+      this.scrollTo(0 ,-10, 100)
     });
   },
   activated() {
@@ -113,18 +114,19 @@ export default {
       });
     },
     Loading() {
-      let last = 0;
-      let now = 0;
+      let lastY = 0;
+      let nowY = 0;
       let speed = 5;
       let loading = this.$refs.loading;
       let img = this.$refs.img;
       let sendPullDown = this.$debounce(this.pullDownData, 250);
-      this.BS.on("scroll", ({ y }) => {
-        last = now;
-        now = y;
+      this.BS.on("scroll", (position) => {
+        lastY = nowY;
+        nowY = position.y;
         loading.style.opacity = 1;
         img.style.opacity = 1;
-        if (now >= 0 && now - last >= 0) {
+        if (nowY >= 0 && nowY - lastY >= 0) {
+
           if (this.originPosition <= 155) {
             this.originPosition += speed;
             this.BS.on("touchEnd", () => {
@@ -162,6 +164,8 @@ export default {
     },
     pullUpData () {
       this.$Bus.$emit("pullUpData");
+    },
+    Bus () {
     }
   },
   watch: {

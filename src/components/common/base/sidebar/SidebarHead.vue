@@ -25,6 +25,9 @@
           <span class="coins">硬币：{{info.coin.coins}}</span>
         </div>
       </div>
+      <div class="vip-time">
+        <span>我的大会员</span><span>2020–05–07过期</span><span>〉</span>
+      </div>
       <div class="footer" v-if="items.length > 0">
         <div class="item" v-for="item in items" :key="item.name">
           <span class="num">{{ item.num }}</span>
@@ -190,6 +193,29 @@ export default {
         }
         .coins {
           margin: 0 10px;
+        }
+      }
+    }
+    .vip-time {
+      font-size: 32px;
+      display: flex;
+      align-items: center;
+      height: 100px;
+      line-height: 100px;
+      border-top: 1px solid rgb(95, 95, 95, .8);
+      background-color: rgba(61, 60, 60, 0.6);
+      margin-bottom: -20px;
+      padding-left: 20px;
+      margin-top: 10px;
+      span {
+        &:first-child {
+          font-weight: bold;
+          color: var(--color-tint);
+          margin-right: 20px;
+        }
+        &:last-child {
+          flex: auto;
+          text-align: right;
         }
       }
     }
