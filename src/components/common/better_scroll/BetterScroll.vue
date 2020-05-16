@@ -60,6 +60,8 @@ export default {
   },
   mounted() {
     this.$nextTick(() => {
+      console.log(this.screenHeight);
+      
       this.getBetterScroll();
       this.scrollTo(0 ,-10, 100)
     });
@@ -117,6 +119,7 @@ export default {
       let lastY = 0;
       let nowY = 0;
       let speed = 5;
+      let NavbarTransform = 0;
       let loading = this.$refs.loading;
       let img = this.$refs.img;
       let sendPullDown = this.$debounce(this.pullDownData, 250);
@@ -125,6 +128,7 @@ export default {
         nowY = position.y;
         loading.style.opacity = 1;
         img.style.opacity = 1;
+        // loading加载
         if (nowY >= 0 && nowY - lastY >= 0) {
 
           if (this.originPosition <= 155) {
@@ -145,6 +149,18 @@ export default {
           if (this.originPosition <= 0) {
             this.originPosition = 0;
           }
+        }
+        // home页面顶部随滑动消失出现
+        if (nowY - lastY > 0) {
+          if (NavbarTransform < 0) {
+            NavbarTransform += 1
+          }
+          this.$Bus.$emit('NavbarTransform', NavbarTransform)
+        } else if (nowY - lastY < 0) {
+          if (NavbarTransform > -40) {
+            NavbarTransform -= 1
+          }
+          this.$Bus.$emit('NavbarTransform', NavbarTransform)
         }
         img.style.transform = `rotateZ(-${this.originPosition * 2}deg)`;
         loading.style.transform = `translateY(${this.originPosition}px)`;
@@ -176,6 +192,9 @@ export default {
   watch: {
     "$store.state.openSideBar"(newVal) {
       this.ifOpenSideBar = newVal;
+    },
+    'screenHeight' (newVal) {
+      console.log(newVal);
     },
     immediate: true
   }

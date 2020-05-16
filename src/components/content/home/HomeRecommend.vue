@@ -6,7 +6,7 @@
     id="home-content"
     ref="homeRecommend"
   >
-    <Swipe :swipeData="swipeData" />
+    <Swipe :swipeData="swipeData" @touchstart.native="closePan()" @touchend.native="openPan()"/>
     <RecommendList :data="homeData" />
     <div class="left" ref="left">
       <HomeLive/>
@@ -30,7 +30,8 @@ export default {
       swipeData: [],
       homeData: [],
       page: 0,
-      offsetX: 0
+      offsetX: 0,
+      isLock: false
     };
   },
   created() {
@@ -90,7 +91,14 @@ export default {
       this.$Bus.$emit("BSNeedToRefresh");
       this.$Bus.$emit("finishPullUp");
     },
+    closePan () {
+      this.isLock = true
+    },
+    openPan () {
+      this.isLock = false
+    },
     panleft() {
+      if (this.isLock) return false
       this.offsetX -= 1;
       this.$nextTick(() => {
         this.$refs.homeRecommend.$el.style.transform = `translateX(${this
@@ -99,6 +107,7 @@ export default {
       });
     },
     panright() {
+      if (this.isLock) return false
       this.offsetX += 1;
       this.$nextTick(() => {
         this.$refs.homeRecommend.$el.style.transform = `translateX(${this

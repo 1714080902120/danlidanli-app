@@ -28,17 +28,17 @@
 </template>
 
 <script>
-
 export default {
   name: "Base",
   data() {
     return {};
   },
-  components: {
+  mounted () {
   },
+  components: {},
   methods: {
     goAppear() {
-      this.$store.commit('openSideBar', true)
+      this.$store.commit("openSideBar", true);
       this.$Bus.$emit("goAppear");
     }
   },
@@ -57,7 +57,7 @@ export default {
   position: relative;
   margin-top: var(--top-margin);
   z-index: 99;
-  background-color: rgb(79,79,79);
+  background-color: rgb(79, 79, 79);
   .head {
     position: relative;
     display: flex;
@@ -141,7 +141,6 @@ export default {
     }
   }
   .bottom {
-    position: relative;
     margin-top: 20px;
     background-color: rgba(66, 65, 65, 1);
     position: sticky;

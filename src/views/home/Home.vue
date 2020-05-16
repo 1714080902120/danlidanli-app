@@ -1,6 +1,6 @@
 <template>
-  <div class="home">
-    <BaseOuter ref="nav">
+  <div class="home" ref="home">
+    <BaseOuter ref="base">
       <div slot="center">
         <div class="outer">
           <img src="~assets/img/home/search_dark.svg" alt />
@@ -15,8 +15,8 @@
           <img src="~assets/img/home/mail_dark.svg" alt />
         </span>
       </div>
-      <div slot="bottom">
-        <Navbar :isActive="sendActive">
+      <div class="bottom" slot="bottom">
+        <Navbar class="bottom" :isActive="sendActive">
           <NavbarItem
             slot="navbar"
             :isActive="toActive(index)"
@@ -37,7 +37,7 @@
       :pullDownRefresh="{ threshold: 0, stop: 0 }"
       :bounce="bounce"
       screenWidth="100%"
-      :screenHeight="height()"
+      :screenHeight="BSHeight + 'px'"
       :probeType="3"
     >
       <keep-alive>
@@ -69,9 +69,16 @@ export default {
         top: false,
         bottom: true,
         left: false,
-        right: false
-      }
+        right: false,
+        BSHeight: 0
+      },
+      last: 0
     };
+  },
+  created() {
+    this.BSHeight = window.innerHeight * (1 - 130 / 667)
+    this.$nextTick(() => {
+    })
   },
   mounted() {
     this.$nextTick(() => {
@@ -82,6 +89,7 @@ export default {
       }, 100);
       this.refresh();
       this.backToTop();
+      this.navBarTransform()
     });
   },
   activated() {
@@ -97,14 +105,14 @@ export default {
         clearTimeout(timer);
         timer = null;
       }, 100);
-    })
+    });
   },
   methods: {
     goTo(index, path) {
       // goActive navbar-bottom
       this.sendActive = index;
-      this.$store.commit('offSetItemByClick', this.sendActive)
-      this.$router.replace({ path })
+      this.$store.commit("offSetItemByClick", this.sendActive);
+      this.$router.replace({ path });
     },
     refresh() {
       this.$Bus.$on("BSNeedToRefresh", () => {
@@ -121,19 +129,23 @@ export default {
       this.$refs.scroll.scrollTo(0, -10, 100);
       this.$refs.scroll.refresh();
       this.$nextTick(() => {
-        this.$refs.scroll.scrollEnd()
-      })
+        this.$refs.scroll.scrollEnd();
+      });
+    },
+    navBarTransform() {
+      this.$Bus.$on("NavbarTransform", offsetY => {
+        this.$nextTick(() => {
+          this.BSHeight -= offsetY * 2
+          this.$refs.home.style.transform = `translateY(${offsetY * 2}px)`
+          this.last = offsetY
+        });
+      });
     }
   },
   computed: {
     toActive() {
       return index => {
         return this.sendActive === index;
-      };
-    },
-    height() {
-      return () => {
-        return `${window.innerHeight * (1 - 130 / 667)}px`;
       };
     }
   },
@@ -145,11 +157,11 @@ export default {
     Popup
   },
   watch: {
-    '$store.state.offSetItem' (newVal) {
-      this.sendActive = newVal
+    "$store.state.offSetItem"(newVal) {
+      this.sendActive = newVal;
     },
     immediate: true
-  },
+  }
 };
 </script>
 
