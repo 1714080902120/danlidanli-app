@@ -1,7 +1,13 @@
 <template>
   <div id="tabbar">
     <mt-tabbar class="outer" fixed v-model="selected">
-      <div class="tabbar-item" v-for="item in items" :key="item.name" v-waves>
+      <div
+        class="tabbar-item"
+        v-for="item in items"
+        :key="item.name"
+        @click="goTo(item.path)"
+        v-waves
+      >
         <mt-tab-item class="inner" :class="{ active: selected === item.name }" :id="item.name">
           <img v-if="item.name !== selected" slot="icon" :src="item.icon" />
           <img v-else-if="item.name === selected" slot="icon" :src="item.iconActive" />
@@ -23,39 +29,42 @@ export default {
           name: "首页",
           icon: require("assets/img/base/home_default.svg"),
           iconActive: require("assets/img/base/home_active.svg"),
-          path: ""
+          path: "/"
         },
         {
           name: "频道",
           icon: require("assets/img/base/channel_default.svg"),
           iconActive: require("assets/img/base/channel_active.svg"),
-          path: ""
+          path: "/category"
         },
         {
           name: "动态",
           icon: require("assets/img/base/trends_default.svg"),
           iconActive: require("assets/img/base/trends_active.svg"),
-          path: ""
+          path: "/trends"
         },
         {
           name: "会员购",
           icon: require("assets/img/base/member-shop_default.svg"),
           iconActive: require("assets/img/base/member-shop_active.svg"),
-          path: ""
+          path: "/member-shop"
         }
       ]
     };
   },
+  activated() {
+  },
   methods: {
-    select(name) {
-      this.selected = name;
-    }
+    goTo(path) {
+      this.$router.replace({ path });
+    },
   },
   watch: {
-    selected(newVal) {
-      this.selected = newVal;
-    }
-  }
+    'selected' (newVal) {
+      this.selected = newVal
+    },
+    immediate: true
+  },
 };
 </script>
 

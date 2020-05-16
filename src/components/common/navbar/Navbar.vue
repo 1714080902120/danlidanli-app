@@ -43,8 +43,6 @@ export default {
   watch: {
     '$store.state.offSetX' (newVal) {
       this.$nextTick(() => {
-        console.log(newVal);
-          
         this.$refs.bottom.style.transform = `translateX(${-newVal / 2}px)`
       })
     },

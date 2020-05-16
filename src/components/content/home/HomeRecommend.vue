@@ -8,10 +8,18 @@
   >
     <Swipe :swipeData="swipeData" />
     <RecommendList :data="homeData" />
+    <div class="left" ref="left">
+      <HomeLive/>
+    </div>
+    <div class="right" ref="right">
+      <HomeHot/>
+    </div>
   </v-touch>
 </template>
 
 <script>
+import HomeLive from './HomeLive'
+import HomeHot from './HomeHot'
 import Swipe from "components/common/swipe/Swipe";
 import { getHomeSwipe, getHomeData } from "network/home";
 import RecommendList from "components/common/recommend_list/RecommendList";
@@ -27,8 +35,9 @@ export default {
   },
   created() {
     this.toGetHomeSwipeData(), this.toGetHomeData(this.page);
-    this.pullDownApplyData();
-    this.pullUpApplyData();
+    // this.pullDownApplyData();
+    // this.pullUpApplyData();
+    this.bus()
   },
   methods: {
     async toGetHomeSwipeData() {
@@ -114,11 +123,21 @@ export default {
         this.$store.commit("offSetX", 0);
         this.$refs.homeRecommend.$el.style.transform = `translateX(${0}px)`;
       });
+    },
+    bus () {
+      this.$Bus.$on('whereYouAreNow', (y) => {
+        this.$refs.left.style.opacity = 1;
+        this.$refs.right.style.opacity = 1;
+        this.$refs.left.style.transform = `translate(${-window.innerWidth}px, ${-y}px)`
+        this.$refs.right.style.transform = `translate(${window.innerWidth}px, ${-y}px)`
+      })
     }
   },
   components: {
     Swipe,
-    RecommendList
+    RecommendList,
+    HomeLive,
+    HomeHot
   }
 };
 </script>
@@ -126,5 +145,11 @@ export default {
 <style lang="less" scoped>
 #home-content {
   background-color: var(--base-bg-color-sec);
+  .left, .right {
+    position: absolute;
+    top: 0;
+    opacity: 0;
+    overflow: hidden;
+  }
 }
 </style>

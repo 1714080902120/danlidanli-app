@@ -165,6 +165,11 @@ export default {
     pullUpData () {
       this.$Bus.$emit("pullUpData");
     },
+    scrollEnd () {
+      this.BS.on('scrollEnd', ({ y }) => {
+        this.$Bus.$emit('whereYouAreNow', y)
+      })
+    },
     Bus () {
     }
   },

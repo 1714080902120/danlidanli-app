@@ -190,7 +190,10 @@ export default {
 
             this.isActive = false;
             let timer = setTimeout(() => {
-              this.$router.replace({ name: "Home", params: { type: 'register' } });
+              this.$router.replace({
+                name: "Home",
+                params: { type: "register" }
+              });
               clearTimeout(timer);
               timer = null;
             }, 150);
@@ -212,7 +215,7 @@ export default {
             });
             this.isActive = false;
             let timer = setTimeout(() => {
-              this.$router.replace({ name: "Home", params: { type: 'login' } });
+              this.$router.replace({ name: "Home", params: { type: "login" } });
               clearTimeout(timer);
               timer = null;
             }, 150);
@@ -283,10 +286,15 @@ export default {
     },
     ifEqualToCheckCode() {
       return () => {
-        return this.check > 0 &&
-          this.check !== Utils.Decrypt(window.localStorage.getItem("mailCode"))
-          ? true
-          : false;
+        if (window.localStorage.getItem("mailCode")) {
+          return this.check > 0 &&
+            this.check !==
+              Utils.Decrypt(window.localStorage.getItem("mailCode"))
+            ? true
+            : false;
+        } else {
+          return this.check > 0 ? true : false;
+        }
       };
     },
     ifCheck() {

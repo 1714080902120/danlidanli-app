@@ -1,12 +1,12 @@
 <template>
-  <v-touch id="home-live" ref="homeLive">
-    testatastastastastas1111
+  <v-touch id="home-movie" ref="homeMovie">
+    testatastastastastas111111111111111111111111111111111111111111111111111111111111111111111111
   </v-touch>
 </template>
 
 <script>
 export default {
-  name: 'HomeLive',
+  name: 'HomeMovie',
   data() {
     return {
       
@@ -19,7 +19,6 @@ export default {
 </script>
 
 <style lang="less" scoped>
-  #home-live {
-    overflow: hidden;
+  #home-movie {
   }
 </style>

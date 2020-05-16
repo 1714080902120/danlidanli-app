@@ -91,6 +91,13 @@ export default {
     ) {
       this.$router.go(0);
     }
+    this.$nextTick(() => {
+      let timer = setTimeout(() => {
+        this.whenStart();
+        clearTimeout(timer);
+        timer = null;
+      }, 100);
+    })
   },
   methods: {
     goTo(index, path) {
@@ -113,6 +120,9 @@ export default {
     whenStart() {
       this.$refs.scroll.scrollTo(0, -10, 100);
       this.$refs.scroll.refresh();
+      this.$nextTick(() => {
+        this.$refs.scroll.scrollEnd()
+      })
     }
   },
   computed: {

@@ -24,12 +24,10 @@
     <div class="bottom">
       <slot name="bottom"></slot>
     </div>
-    <Tabbar />
   </div>
 </template>
 
 <script>
-import Tabbar from "./tabbar/Tabbar";
 
 export default {
   name: "Base",
@@ -37,7 +35,6 @@ export default {
     return {};
   },
   components: {
-    Tabbar
   },
   methods: {
     goAppear() {

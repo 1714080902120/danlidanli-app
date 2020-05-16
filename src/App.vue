@@ -4,12 +4,15 @@
     <keep-alive>
       <router-view />
     </keep-alive>
+    <div v-if="active()">
+      <Tabbar />
+    </div>
   </div>
 </template>
 
 <script>
 import Sidebar from "components/common/base/sidebar/Sidebar";
-
+import Tabbar from "components/common/base/tabbar/Tabbar";
 export default {
   name: "App",
   data() {
@@ -17,9 +20,21 @@ export default {
   },
   created() {},
   components: {
-    Sidebar
+    Sidebar,
+    Tabbar
   },
-  methods: {}
+  methods: {},
+  computed: {
+    active() {
+      let path = this.$route.path;
+      let reg = /home|category|trends|member-shop/gi 
+      return () => {
+        return (
+          reg.test(path)
+        );
+      };
+    }
+  }
 };
 </script>
 
