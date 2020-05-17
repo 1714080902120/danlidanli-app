@@ -60,8 +60,6 @@ export default {
   },
   mounted() {
     this.$nextTick(() => {
-      console.log(this.screenHeight);
-      
       this.getBetterScroll();
       this.scrollTo(0 ,-10, 100)
     });
@@ -150,20 +148,20 @@ export default {
             this.originPosition = 0;
           }
         }
+        img.style.transform = `rotateZ(-${this.originPosition * 2}deg)`;
+        loading.style.transform = `translateY(${this.originPosition}px)`;
         // home页面顶部随滑动消失出现
         if (nowY - lastY > 0) {
           if (NavbarTransform < 0) {
             NavbarTransform += 1
           }
-          this.$Bus.$emit('NavbarTransform', NavbarTransform)
+          this.$Bus.$emit('NavbarTransform', { offsetY: NavbarTransform, BSoffsetY: 1 })
         } else if (nowY - lastY < 0) {
           if (NavbarTransform > -40) {
             NavbarTransform -= 1
           }
-          this.$Bus.$emit('NavbarTransform', NavbarTransform)
+          this.$Bus.$emit('NavbarTransform', { offsetY: NavbarTransform, BSoffsetY: -1 })
         }
-        img.style.transform = `rotateZ(-${this.originPosition * 2}deg)`;
-        loading.style.transform = `translateY(${this.originPosition}px)`;
       });
     },
     scrollTo(x = 0, y, time) {
@@ -219,5 +217,8 @@ export default {
       z-index: 99;
     }
   }
+}
+.wrapper::-webkit-scrollbar {
+  display: none;
 }
 </style>

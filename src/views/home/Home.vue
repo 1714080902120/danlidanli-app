@@ -1,5 +1,6 @@
 <template>
   <div class="home" ref="home">
+    <div ref="outer">
     <BaseOuter ref="base">
       <div slot="center">
         <div class="outer">
@@ -37,7 +38,7 @@
       :pullDownRefresh="{ threshold: 0, stop: 0 }"
       :bounce="bounce"
       screenWidth="100%"
-      :screenHeight="BSHeight + 'px'"
+      :screenHeight="height()"
       :probeType="3"
     >
       <keep-alive>
@@ -45,6 +46,8 @@
       </keep-alive>
     </BS>
     <Popup />
+    </div>
+
   </div>
 </template>
 
@@ -69,14 +72,12 @@ export default {
         top: false,
         bottom: true,
         left: false,
-        right: false,
-        BSHeight: 0
+        right: false
       },
-      last: 0
+      extendBS: false
     };
   },
   created() {
-    this.BSHeight = window.innerHeight * (1 - 130 / 667)
     this.$nextTick(() => {
     })
   },
@@ -133,11 +134,14 @@ export default {
       });
     },
     navBarTransform() {
-      this.$Bus.$on("NavbarTransform", offsetY => {
+      this.$Bus.$on("NavbarTransform", ({ offsetY, BSoffsetY }) => {
         this.$nextTick(() => {
-          this.BSHeight -= offsetY * 2
-          this.$refs.home.style.transform = `translateY(${offsetY * 2}px)`
-          this.last = offsetY
+          if (BSoffsetY < 0 && offsetY < -10) {
+            this.extendBS = true
+          } else if (BSoffsetY >= 0) {
+            this.extendBS = false
+          }
+          this.$refs.outer.style.transform = `translateY(${offsetY * 2}px)`
         });
       });
     }
@@ -147,6 +151,11 @@ export default {
       return index => {
         return this.sendActive === index;
       };
+    },
+    height () {
+      return () => {
+        return `${window.innerHeight * (1 - 130 / 667)}px`
+      }
     }
   },
   components: {
@@ -160,6 +169,15 @@ export default {
     "$store.state.offSetItem"(newVal) {
       this.sendActive = newVal;
     },
+    'extendBS' (newVal) {
+      this.$nextTick(() => {
+        if (newVal) {
+          this.$refs.scroll.$el.style.height = `${window.innerHeight * (1 - 130 / 667) + 30}px`
+        } else {
+          this.$refs.scroll.$el.style.height = `${window.innerHeight * (1 - 130 / 667)}px`
+        }
+      })
+    },
     immediate: true
   }
 };
@@ -168,5 +186,9 @@ export default {
 <style lang="less" scoped>
 #home {
   overflow: hidden;
+
+}
+#home::-webkit-scrollbar {
+  display: none;
 }
 </style>

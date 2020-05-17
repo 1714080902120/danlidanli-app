@@ -46,4 +46,7 @@ export default {
   overflow: hidden;
   background-color: var(--base-bg-color-sec);
 }
+#app::-webkit-scrollbar {
+  display: none;
+}
 </style>
