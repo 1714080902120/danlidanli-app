@@ -1,6 +1,6 @@
 <template>
   <v-touch id="home-hot" ref="homeHot">
-    testatastastastastas111111111111111111111111111111111111111111111111111111111111111111111111
+    <video src="http://localhost:4000/bilibili_data/home/recommend_2/BV1NZ4y1j7nw/BV1NZ4y1j7nw.mp4" controls :style="{ width: '100%', height: '100px' }"/>
   </v-touch>
 </template>
 
