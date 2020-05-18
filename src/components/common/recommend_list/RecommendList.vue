@@ -4,9 +4,6 @@
       class="recommend-item"
       v-for="(item, index) in data"
       :key="item._id"
-      @click="goTo()"
-      @touchstart="touchStart($event)"
-      @touchend="touchEnd($event)"
       v-waves
     >
       <div class="cover">
@@ -89,25 +86,26 @@ export default {
     this.whenTipd();
   },
   methods: {
+    // 点击弹出举报
     actions(i) {
       this.$Bus.$emit("popupVisible", this.data[i].video.info.up);
       this.isSelected = i;
     },
-    touchStart() {},
-    touchEnd() {},
-    goTo() {},
+    // 被通知举报了
     whenTipd() {
       this.$Bus.$on("tip", text => {
         this.isTip.push(this.isSelected);
         this.tipTextList.push(text);
       });
     },
+    // 取消举报
     reset(i) {
       let index = this.isTip.indexOf(i);
       let value = this.tipTextList[index];
       this.tipTextList.splice(this.tipTextList.indexOf(value), 1);
       this.isTip.splice(index, 1);
     },
+    // 返回顶部
     backToTop() {
       this.$Bus.$emit("backToTop");
     }

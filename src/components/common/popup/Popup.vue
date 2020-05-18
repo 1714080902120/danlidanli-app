@@ -46,12 +46,14 @@ export default {
     colla() {
       this.popupVisible = false;
     },
+    // 获取Up名字
     ListenPopupVisible() {
       this.$Bus.$on("popupVisible", (res) => {
         this.popupVisible = true;
         this.up = res
       });
     },
+    // 发送举报信息
     tip (e) {
       this.$Bus.$emit('tip', e.target.innerText)
       this.popupVisible = false

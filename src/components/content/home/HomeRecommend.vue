@@ -54,6 +54,7 @@ export default {
         });
       });
     },
+    // 获取列表数据
     async toGetHomeData(page, type) {
       await getHomeData({ skip: page }).then(res => {
         if (res.length === 0) {
@@ -66,6 +67,7 @@ export default {
         }
       });
     },
+    // 下拉获取数据
     async pullDownApplyData() {
       let send = this.$debounce(this.finishPullDown, 20);
       this.$nextTick(() => {
@@ -76,9 +78,11 @@ export default {
         });
       });
     },
+    // 完成下拉
     finishPullDown() {
       this.$Bus.$emit("finishPullDown");
     },
+    // 上拉获取数据
     async pullUpApplyData() {
       let send = this.$debounce(this.finishPullUp, 20);
       this.$Bus.$on("pullUpData", async () => {
@@ -91,13 +95,19 @@ export default {
       this.$Bus.$emit("BSNeedToRefresh");
       this.$Bus.$emit("finishPullUp");
     },
+    // 关闭滑动
     closePan () {
       this.isLock = true
     },
+    // 开启滑动
     openPan () {
       this.isLock = false
     },
+    // 左滑
     panleft() {
+      if (!this.$store.state.loadingLock) {
+        this.$store.commit('changeLoadingLockState', true)
+      }
       if (this.isLock) return false
       this.offsetX -= 1;
       this.$nextTick(() => {
@@ -106,7 +116,11 @@ export default {
         this.$store.commit("offSetX", this.offsetX);
       });
     },
+    // 右滑
     panright() {
+      if (!this.$store.state.loadingLock) {
+        this.$store.commit('changeLoadingLockState', true)
+      }
       if (this.isLock) return false
       this.offsetX += 1;
       this.$nextTick(() => {
@@ -115,6 +129,7 @@ export default {
         this.$store.commit("offSetX", this.offsetX);
       });
     },
+    // 停止滑动
     panend() {
       this.$nextTick(() => {
         if (this.offsetX > 80) {
@@ -131,8 +146,10 @@ export default {
         this.offsetX = 0;
         this.$store.commit("offSetX", 0);
         this.$refs.homeRecommend.$el.style.transform = `translateX(${0}px)`;
+        this.$store.commit('changeLoadingLockState', false)
       });
     },
+    // 中央事务总线
     bus () {
       this.$Bus.$on('whereYouAreNow', (y) => {
         this.$refs.left.style.opacity = 1;

@@ -1,7 +1,7 @@
 <template>
   <div id="loading">
     <div class="load-container load2">
-      <div class="loader">Loading...</div>
+      <div class="loader"></div>
     </div>
   </div>
 </template>

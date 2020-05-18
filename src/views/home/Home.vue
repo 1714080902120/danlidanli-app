@@ -109,23 +109,27 @@ export default {
     });
   },
   methods: {
+    // 路由跳转
     goTo(index, path) {
       // goActive navbar-bottom
       this.sendActive = index;
       this.$store.commit("offSetItemByClick", this.sendActive);
       this.$router.replace({ path });
     },
+    // 刷新
     refresh() {
       this.$Bus.$on("BSNeedToRefresh", () => {
         this.$refs.scroll.refresh();
       });
     },
+    // 返回顶部
     backToTop() {
       this.$Bus.$on("backToTop", () => {
         this.$refs.scroll.scrollTo(0, -10, 500);
         this.$refs.scroll.refresh();
       });
     },
+    // 处于当前
     whenStart() {
       this.$refs.scroll.scrollTo(0, -10, 100);
       this.$refs.scroll.refresh();
@@ -133,6 +137,7 @@ export default {
         this.$refs.scroll.scrollEnd();
       });
     },
+    // 上滑navbar消失特效
     navBarTransform() {
       this.$Bus.$on("NavbarTransform", ({ offsetY, BSoffsetY }) => {
         this.$nextTick(() => {

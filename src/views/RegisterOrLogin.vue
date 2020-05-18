@@ -101,6 +101,7 @@ export default {
         default: require("assets/img/r_or_l/r_or_l_bg_default.png"),
         active: require("assets/img/r_or_l/r_or_l_bg_active.png")
       },
+      // 当前的路由path
       enterType: "",
       hadSend: false,
       time: 60,
@@ -118,6 +119,7 @@ export default {
     this.isActive = true;
   },
   methods: {
+    // 返回
     goBack() {
       this.isActive = false;
       let timer = setTimeout(() => {
@@ -134,6 +136,7 @@ export default {
         (this.mail = ""),
         (this.repassword = "");
     },
+    // 改变当前路由
     go() {
       if (this.enterType === "register") {
         this.enterType = "login";
@@ -147,12 +150,15 @@ export default {
         (this.mail = ""),
         (this.repassword = "");
     },
+    // 聚焦
     whenFocus() {
       this.isFocus = true;
     },
+    // 失焦
     whenBlur() {
       this.isFocus = false;
     },
+    // 发送邮件，获取验证码
     async sendMail() {
       const reg = /@/gi;
       const reg2 = /\.com/i;
@@ -176,6 +182,7 @@ export default {
         return false;
       }
     },
+    // 注册
     async toRegister() {
       const username = this.username;
       const password = this.password;

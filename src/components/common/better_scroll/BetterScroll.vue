@@ -61,13 +61,13 @@ export default {
   mounted() {
     this.$nextTick(() => {
       this.getBetterScroll();
-      this.scrollTo(0 ,-10, 100)
+      this.scrollTo(0, -10, 100);
     });
   },
   activated() {
     this.$nextTick(() => {
       if (!this.ifOpenSideBar) {
-        this.Loading();
+        this.whenScroll();
         this.loadingFinish();
         this.pullUp();
       }
@@ -90,6 +90,7 @@ export default {
     refresh() {
       this.BS.refresh();
     },
+    // 完成加载后组件消失
     loadingFinish() {
       let loading = this.$refs.loading;
       let img = this.$refs.img;
@@ -113,7 +114,8 @@ export default {
         this.BS.finishPullUp();
       });
     },
-    Loading() {
+    // 开启loading和顶部消失特效
+    whenScroll() {
       let lastY = 0;
       let nowY = 0;
       let speed = 5;
@@ -121,78 +123,86 @@ export default {
       let loading = this.$refs.loading;
       let img = this.$refs.img;
       let sendPullDown = this.$debounce(this.pullDownData, 250);
-      this.BS.on("scroll", (position) => {
+      this.BS.on("scroll", position => {
         lastY = nowY;
         nowY = position.y;
         loading.style.opacity = 1;
         img.style.opacity = 1;
         // loading加载
-        if (nowY >= 0 && nowY - lastY >= 0) {
-
-          if (this.originPosition <= 155) {
-            this.originPosition += speed;
-            this.BS.on("touchEnd", () => {
-              this.$Bus.$emit("finishPullDown");
-            });
-          } else if (this.originPosition === 160) {
-            img.style.opacity = 0;
-            this.toShowLoading = true;
-            sendPullDown();
-            this.originPosition = 160;
-          }
-        } else {
-          img.style.opacity = 1;
-          this.toShowLoading = false;
-          this.originPosition -= speed;
-          if (this.originPosition <= 0) {
-            this.originPosition = 0;
+        if (!this.$store.state.loadingLock) {
+          if (nowY >= 0 && nowY - lastY >= 0) {
+            if (this.originPosition <= 155) {
+              this.originPosition += speed;
+              this.BS.on("touchEnd", () => {
+                this.$Bus.$emit("finishPullDown");
+              });
+            } else if (this.originPosition === 160) {
+              img.style.opacity = 0;
+              this.toShowLoading = true;
+              sendPullDown();
+              this.originPosition = 160;
+            }
+          } else {
+            img.style.opacity = 1;
+            this.toShowLoading = false;
+            this.originPosition -= speed;
+            if (this.originPosition <= 0) {
+              this.originPosition = 0;
+            }
           }
         }
+
         img.style.transform = `rotateZ(-${this.originPosition * 2}deg)`;
         loading.style.transform = `translateY(${this.originPosition}px)`;
         // home页面顶部随滑动消失出现
         if (nowY - lastY > 0) {
           if (NavbarTransform < 0) {
-            NavbarTransform += 1
+            NavbarTransform += 1;
           }
-          this.$Bus.$emit('NavbarTransform', { offsetY: NavbarTransform, BSoffsetY: 1 })
+          this.$Bus.$emit("NavbarTransform", {
+            offsetY: NavbarTransform,
+            BSoffsetY: 1
+          });
         } else if (nowY - lastY < 0) {
           if (NavbarTransform > -40) {
-            NavbarTransform -= 1
+            NavbarTransform -= 1;
           }
-          this.$Bus.$emit('NavbarTransform', { offsetY: NavbarTransform, BSoffsetY: -1 })
+          this.$Bus.$emit("NavbarTransform", {
+            offsetY: NavbarTransform,
+            BSoffsetY: -1
+          });
         }
       });
     },
     scrollTo(x = 0, y, time) {
       this.BS.scrollTo(x, y, time);
     },
+    // 下拉请求加载数据
     pullDownData() {
       this.$Bus.$emit("pullDownData");
     },
+    // 上拉请求加载数据
     pullUp() {
-      let send = this.$debounce(this.pullUpData, 250)
+      let send = this.$debounce(this.pullUpData, 250);
       this.BS.on("pullingUp", () => {
-        send()
+        send();
       });
     },
-    pullUpData () {
+    pullUpData() {
       this.$Bus.$emit("pullUpData");
     },
-    scrollEnd () {
-      this.BS.on('scrollEnd', ({ y }) => {
-        this.$Bus.$emit('whereYouAreNow', y)
-      })
+    // 停止滑动时
+    scrollEnd() {
+      this.BS.on("scrollEnd", ({ y }) => {
+        this.$Bus.$emit("whereYouAreNow", y);
+      });
     },
-    Bus () {
-    }
+    Bus() {}
   },
   watch: {
+    // 监测是否打开侧边栏，若打开则静止下拉组件
     "$store.state.openSideBar"(newVal) {
       this.ifOpenSideBar = newVal;
-    },
-    'screenHeight' (newVal) {
-      console.log(newVal);
     },
     immediate: true
   }

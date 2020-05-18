@@ -3,7 +3,6 @@
     <mt-swipe
       v-if="swipeData.length > 0"
       class="mt-swipe"
-      @change="handleChange()"
       :auto="3000"
       :speed="300"
       :showIndicators="false"
@@ -32,7 +31,6 @@ export default {
   },
   created() {},
   methods: {
-    handleChange() {}
   }
 };
 </script>
@@ -45,7 +43,7 @@ export default {
   height: 340px;
   line-height: 340px;
   .mt-swipe {
-    width: 7500px;
+    width: 750px;
     height: 300px;
     border-radius: 10px;
     img {

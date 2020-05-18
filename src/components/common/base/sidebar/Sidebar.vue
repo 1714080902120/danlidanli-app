@@ -185,6 +185,7 @@ export default {
     SidebarHead
   },
   methods: {
+    // 通过是否存在token来获取用户数据
     getData() {
       if (window.localStorage.getItem("haveToken")) {
         getUserData().then(res => {
@@ -200,6 +201,7 @@ export default {
         });
       }
     },
+    // 主要存放中央事物总线
     bus() {
       this.$Bus.$on("goAppear", () => {
         this.isAppear = true;
