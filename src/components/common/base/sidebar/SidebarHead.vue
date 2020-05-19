@@ -26,10 +26,12 @@
         </div>
       </div>
       <div class="vip-time">
-        <span>我的大会员</span><span>2020–05–07过期</span><span>〉</span>
+        <span>我的大会员</span>
+        <span>2020–05–07过期</span>
+        <span>〉</span>
       </div>
       <div class="footer" v-if="items.length > 0">
-        <div class="item" v-for="item in items" :key="item.name">
+        <div class="item" v-for="item in items" :key="item.name" @click="goTo(item.name)" v-waves>
           <span class="num">{{ item.num }}</span>
           <span class="name">{{ item.name }}</span>
         </div>
@@ -67,19 +69,15 @@ export default {
     items: {
       type: Array,
       default: () => {
-        return []
+        return [];
       }
     }
   },
   data() {
-    return {
-    };
+    return {};
   },
-  created() {
-    
-  },
-  activated() {
-  },
+  created() {},
+  activated() {},
   methods: {
     toScan() {},
     register() {
@@ -95,6 +93,20 @@ export default {
         name: "RegisterOrLogin",
         params: { beforePath: this.$route.path, type: "login" }
       });
+    },
+    goTo(name) {
+      if (name !== "动态") {
+        this.$router.push({
+          name: "FansFollows",
+          params: {
+            beforePath: this.$route.path,
+            name
+          }
+        });
+      } else {
+        console.log(name);
+      }
+      this.$Bus.$emit('sidebarDisappear')
     }
   }
 };
@@ -156,7 +168,6 @@ export default {
         }
       }
       .name-level-label {
-        
         display: flex;
         align-items: center;
         margin-top: 40px;
@@ -202,7 +213,7 @@ export default {
       align-items: center;
       height: 100px;
       line-height: 100px;
-      border-top: 1px solid rgb(95, 95, 95, .8);
+      border-top: 1px solid rgb(95, 95, 95, 0.8);
       background-color: rgba(61, 60, 60, 0.6);
       margin-bottom: -20px;
       padding-left: 20px;
@@ -221,13 +232,14 @@ export default {
     }
     .footer {
       display: flex;
-      justify-content: space-around;
+      // justify-content: space-around;
       align-items: center;
       font-size: 30px;
       margin-top: 30px;
       background-color: rgba(61, 60, 60, 0.6);
       padding: 20px 0;
       .item {
+        flex: auto;
         display: flex;
         flex-direction: column;
         text-align: center;

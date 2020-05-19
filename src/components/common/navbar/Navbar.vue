@@ -48,7 +48,7 @@ export default {
     },
     'isActive' (newVal) {
       this.$nextTick(() => {        
-        this.$refs.bottom.style.transform = `translateX(${75 * (newVal - this.default)}px)`
+        this.$refs.bottom.style.transform = `translateX(${2 * (newVal - this.default)}rem)`
       })
     },
     immediate: true,

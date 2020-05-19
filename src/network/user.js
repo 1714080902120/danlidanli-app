@@ -7,6 +7,7 @@ export async function getUserData() {
   })
 }
 
+
 export async function Register ({ username, password }) {
   let data
   await axios({

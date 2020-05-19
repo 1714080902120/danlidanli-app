@@ -5,7 +5,7 @@
     </div>
     <div class="loading" ref="loading">
       <img src="~assets/img/recommend_list/loading_pink.svg" ref="img" alt />
-      <Loading v-if="toShowLoading" />
+      <Loading v-if="toShowLoading" class="inner" ref="innerLoading" />
     </div>
   </div>
 </template>
@@ -131,16 +131,16 @@ export default {
         // loading加载
         if (!this.$store.state.loadingLock) {
           if (nowY >= 0 && nowY - lastY >= 0) {
-            if (this.originPosition <= 155) {
+            if (this.originPosition <= 115) {
               this.originPosition += speed;
               this.BS.on("touchEnd", () => {
                 this.$Bus.$emit("finishPullDown");
               });
-            } else if (this.originPosition === 160) {
+            } else if (this.originPosition === 120) {
               img.style.opacity = 0;
               this.toShowLoading = true;
               sendPullDown();
-              this.originPosition = 160;
+              this.originPosition = 120;
             }
           } else {
             img.style.opacity = 1;
@@ -214,17 +214,21 @@ export default {
   overflow: hidden;
   .loading {
     position: absolute;
-    top: 90px;
+    top: 70px;
     opacity: 0;
     transition: 0.2s;
     img {
       position: absolute;
-      width: 1.5em;
-      height: 1.5em;
+      width: 1.5rem;
+      height: 1.5rem;
       background-color: #fff;
       border-radius: 100%;
-      left: 340px;
+      left: 4.25rem;
       z-index: 99;
+    }
+    .inner {
+      width: .1rem;
+      height: .1rem;
     }
   }
 }

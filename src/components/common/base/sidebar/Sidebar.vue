@@ -194,8 +194,8 @@ export default {
           delete this.userInfo.username;
           this.middleItems = [
             { name: "动态", num: this.userInfo.cardList.length },
-            { name: "关注", num: this.userInfo.baseInfo.fans_follows_likes.follows },
-            { name: "粉丝", num: this.userInfo.baseInfo.fans_follows_likes.fans }
+            { name: "关注", num: this.userInfo.fans_follows.follows.length },
+            { name: "粉丝", num: this.userInfo.fans_follows.fans.length }
           ];
           this.$store.commit("getUserInfo", this.userInfo);
         });

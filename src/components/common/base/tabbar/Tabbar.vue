@@ -70,7 +70,8 @@ export default {
 
 <style lang="less">
 #tabbar {
-  position: relative;
+  position: fixed;
+  bottom: 0;
   display: flex;
   .outer {
     background-color: var(--base-bg-color-sec);

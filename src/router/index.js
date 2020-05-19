@@ -13,6 +13,7 @@ const Category = () => import('views/category/Category')
 const Trends = () => import('views/trends/Trends')
 const MemberShop = () => import('views/member-shop/MemberShop')
 const RegisterOrLogin = () => import('views/RegisterOrLogin')
+const FansFollows = () => import('views/user/FansFollows')
 
 // home子组件
 const HomeRecommend = () => import('components/content/home/HomeRecommend')
@@ -67,6 +68,11 @@ const routes = [
     name: 'RegisterOrLogin',
     component: RegisterOrLogin
   },
+  {
+    path: '/fans-follows',
+    name: 'FansFollows',
+    component: FansFollows
+  }
 ]
 
 const router = new VueRouter({

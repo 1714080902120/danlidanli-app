@@ -104,6 +104,7 @@ export default {
         height: 70px;
         line-height: 70px;
         padding: 10px;
+        margin-bottom: 10px;
         input {
           background-color: transparent;
           border: none;
@@ -131,7 +132,7 @@ export default {
           }
         }
         .mail {
-          margin: 0 0 0 15px;
+          margin: 0 0 0 10px;
           img {
             width: 28px;
             height: 28px;
