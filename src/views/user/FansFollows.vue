@@ -1,31 +1,36 @@
 <template>
   <div id="fans-follows">
-    <div class="back">
-      <div class="go-back" @click="goBack()">
-        <img src="~assets/img/fans_follows/go_back_dark.svg" alt />
-      </div>
-      <div class="close" @click="goBack()" v-waves>
-        <img src="~assets/img/fans_follows/close_dark.svg" alt />我的好友
-      </div>
-    </div>
-    <div class="nav">
-      <div
-        v-for="(item, index) in list"
-        :key="index"
-        :class="{ 'is-active': index === active }"
-        v-waves
-      >
-        <span @click="toActive(index)">{{ item }}</span>
-      </div>
-    </div>
-    <v-touch @swipeleft="swipeLeft()" @swiperight="swipeRight()" class="follows-fans">
-      <v-touch class="follows" :class="{ 'to-left': active === 1, 'back-to': active === 0 }">
-        <div class="search">
-          <img src="~assets/img/home/search_dark.svg" alt />
-          <input type="text" placeholder="搜索我的关注" />
+    <div class="top" :class="{ 'is-focus': isFocus === true }">
+      <div class="back">
+        <div class="go-back" @click="goBack()">
+          <img src="~assets/img/fans_follows/go_back_dark.svg" alt />
         </div>
-        <div class="special-follows">
-          <div class="head" @click="toRotate()">
+        <div class="close" @click="goBack()" v-waves>
+          <img src="~assets/img/fans_follows/close_dark.svg" alt />我的好友
+        </div>
+      </div>
+      <div class="nav">
+        <div
+          v-for="(item, index) in list"
+          :key="index"
+          :class="{ 'is-active': index === active }"
+          v-waves
+        >
+          <span @click="toActive(index)">{{ item }}</span>
+        </div>
+      </div>
+    </div>
+
+    <v-touch class="follows-fans" @swipeleft="swipeLeft()" @swiperight="swipeRight()">
+      <v-touch class="follows" :class="{ 'to-left': active === 1, 'back-to': active === 0 }">
+        <div
+          class="search"
+        >
+          <img src="~assets/img/home/search_dark.svg" alt />
+          <input type="text" placeholder="搜索我的关注" @blur="whenBlur($event)" @focus="whenFocus()" v-model="searchValue" />
+        </div>
+        <div class="special-follows" :class="{ 'is-focus': isFocus === true }">
+          <div class="head" @click="toRotate(0, $event)">
             <img
               src="~assets/img/fans_follows/up_or_down_dark.svg"
               :class="{ 'to-rotate': ifRotate === true, 'to-rotate-back': ifRotate === false }"
@@ -34,8 +39,8 @@
             特别关注
             <sup>{{specialFollows.length}}</sup>
           </div>
-          <ul>
-            <li v-for="item in specialFollows" :key="item.name">
+          <ul ref="specialUl">
+            <li ref="specialLi" v-for="item in specialFollows" :key="item.name">
               <a :href="item.href">
                 <img :src="item.img" alt />
                 <div class="name-desc">
@@ -49,18 +54,18 @@
             </li>
           </ul>
         </div>
-        <div class="default-follows">
-          <div class="head" @click="toRotate()">
+        <div class="default-follows" :class="{ 'is-focus': isFocus === true }">
+          <div class="head" @click="toRotate(1)">
             <img
               src="~assets/img/fans_follows/up_or_down_dark.svg"
-              :class="{ 'to-rotate': ifRotate === true, 'to-rotate-back': ifRotate === false }"
+              :class="{ 'to-rotate': ifRotate2 === true, 'to-rotate-back': ifRotate2 === false }"
               alt
             />
-            特别关注
+            默认分组
             <sup>{{follows.length}}</sup>
           </div>
-          <ul>
-            <li v-for="item in follows" :key="item.name">
+          <ul ref="defaultUl">
+            <li ref="defaultLi" v-for="item in follows" :key="item.name">
               <a :href="item.href">
                 <img :src="item.img" alt />
                 <div class="name-desc">
@@ -74,8 +79,41 @@
             </li>
           </ul>
         </div>
+        <div class="search-result" v-if="isFocus === true">
+          <ul>
+            <li v-for="item in searchResult" :key="item.name">
+              <a :href="item.href">
+                <img :src="item.img" alt />
+                <div class="name-desc">
+                  <span class="name">{{ item.name }}</span>
+                  <span class="desc">{{ item.desc }}</span>
+                </div>
+              </a>
+            </li>
+          </ul>
+          <div class="message" v-if="searchValue !== '' && searchResult.length <= 0">
+            <img src="~assets/img/recommend_list/danlidanli_girl.png" alt="">
+            <span>没有搜到相关内容，请尝试别的搜索词</span>
+          </div>
+        </div>
       </v-touch>
-      <v-touch class="fans" :class="{ 'to-right': active === 0, 'back-to': active === 1 }">123123123</v-touch>
+      <v-touch class="fans" :class="{ 'to-right': active === 0, 'back-to': active === 1 }">
+        <div class="head">共{{ fans.length }}个粉丝</div>
+        <ul>
+          <li v-for="(item, index) in fans" :key="index">
+            <a :href="item.href">
+              <img :src="item.img" alt />
+              <div class="name-desc">
+                <span class="name">{{ item.name }}</span>
+                <span class="desc">{{ item.desc }}</span>
+              </div>
+              <span class="follows-state">
+                <img src="~assets/img/fans_follows/get_dark.svg" alt />关注
+              </span>
+            </a>
+          </li>
+        </ul>
+      </v-touch>
     </v-touch>
   </div>
 </template>
@@ -88,9 +126,20 @@ export default {
       list: ["我的关注", "我的粉丝"],
       active: 0,
       ifRotate: false,
+      ifRotate2: false,
       specialFollows: [],
-      follows: []
+      follows: [],
+      fans: [],
+      isFocus: false,
+      searchResult: [],
+      searchValue: '',
+      send: () => {}
     };
+  },
+  created() {
+    this.getData();
+    // 防抖
+    this.send = this.$debounce(this.search, 1000)
   },
   mounted() {},
   activated() {
@@ -109,6 +158,7 @@ export default {
           return !reg.test(n.name);
         }
       );
+      this.fans = await this.$store.state.userInfo.fans_follows.fans;
     },
     toActive(i) {
       if (this.active === i) return false;
@@ -125,19 +175,61 @@ export default {
       }
     },
     swipeLeft() {
-      console.log(11);
+      this.active = 1;
     },
     swipeRight() {
-      console.log(22);
+      this.active = 0;
     },
-    toRotate() {
-      this.ifRotate = !this.ifRotate;
+    toRotate(index) {
+      if (index === 0) {
+        this.ifRotate = !this.ifRotate;
+        this.$nextTick(() => {
+          let ul = this.$refs.specialUl.style;
+          if (this.ifRotate) {
+            ul.height = "0rem";
+            ul.display = "none";
+          } else {
+            ul.display = "";
+            ul.height = `${this.specialFollows.length * 1.5}rem`;
+          }
+        });
+      } else {
+        this.ifRotate2 = !this.ifRotate2;
+        this.$nextTick(() => {
+          let ul = this.$refs.defaultUl.style;
+          if (this.ifRotate2) {
+            ul.height = "0rem";
+            ul.display = "none";
+          } else {
+            ul.display = "";
+            ul.height = `${this.follows.length * 1.5}rem`;
+          }
+        });
+      }
+    },
+    whenFocus() {
+      this.isFocus = true;
+    },
+    whenBlur() {
+      if (this.searchResult.length > 0) return false
+      this.isFocus = false;
+      this.searchValue = ''
+    },
+    // 模糊查询
+    search() {
+      let reg = new RegExp(this.searchValue, 'gi')
+      this.searchResult = this.$store.state.userInfo.fans_follows.follows.filter(e => {
+        return reg.test(e.name)
+      })
     }
   },
   components: {},
   watch: {
     "$store.state.userInfo"() {
       this.getData();
+    },
+    'searchValue' () {
+      this.send()
     },
     immediate: true
   }
@@ -146,50 +238,148 @@ export default {
 
 <style lang="less" scoped>
 #fans-follows {
-  overflow: hidden;
+  overflow-x: hidden;
   height: 100vh;
-  .back {
-    height: 1.8rem;
-    line-height: 1.8rem;
-    display: flex;
-    .go-back {
-      margin: 0 0.6rem;
-      img {
-        width: 0.5rem;
-        height: 0.5rem;
-      }
-    }
-    .close {
-      img {
-        width: 0.5rem;
-        height: 0.5rem;
-        margin-right: 0.35rem;
-      }
-      font-size: 0.5rem;
-      display: flex;
-      align-items: center;
-    }
+  .is-focus {
+    display: none;
   }
-  .nav {
-    height: 1.1rem;
-    line-height: 1.1rem;
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    font-size: 0.5rem;
-    text-align: center;
-    border-top: 0.03rem solid rgba(30, 30, 30, 0.5);
-    background-color: rgba(70, 69, 69, 0.9);
-    box-shadow: 0 0.03rem 0.03rem rgba(30, 30, 30, 0.5);
-    span {
-      flex: auto;
+  .top {
+    position: sticky;
+    top: 0;
+    background-color: var(--base-bg-color);
+    z-index: 99;
+    transition: .1s ease-in-out;
+    .back {
+      height: 1.8rem;
+      line-height: 1.8rem;
+      display: flex;
+      .go-back {
+        margin: 0 0.6rem;
+        img {
+          width: 0.5rem;
+          height: 0.5rem;
+        }
+      }
+      .close {
+        img {
+          width: 0.5rem;
+          height: 0.5rem;
+          margin-right: 0.35rem;
+        }
+        font-size: 0.5rem;
+        display: flex;
+        align-items: center;
+      }
+    }
+    .nav {
+      height: 1.1rem;
+      line-height: 1.1rem;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      font-size: 0.5rem;
+      text-align: center;
+      border-top: 0.03rem solid rgba(30, 30, 30, 0.5);
+      background-color: rgba(70, 69, 69, 0.9);
+      box-shadow: 0 0.03rem 0.03rem rgba(30, 30, 30, 0.5);
+      span {
+        flex: auto;
+      }
     }
   }
   .follows-fans {
     position: relative;
-    .follows {
-      position: relative;
+
+    .follows,
+    .fans {
+      overflow: hidden;
       overflow-y: scroll;
+      img {
+        width: 0.5rem;
+        height: 0.5rem;
+      }
+      ul {
+        padding-left: 0.2rem;
+        li {
+          display: flex;
+          align-items: center;
+          list-style: none;
+          height: 1.5rem;
+          border-bottom: 0.03rem solid rgba(128, 128, 128, 0.9);
+          a {
+            display: flex;
+            align-items: center;
+            font-size: 0.45rem;
+            img {
+              width: 1rem;
+              height: 1rem;
+              border-radius: 100%;
+              margin-right: 0.5rem;
+            }
+            .name-desc {
+              display: flex;
+              flex-direction: column;
+              width: 5rem;
+              .name {
+                color: var(--color-tint);
+              }
+              .desc {
+                font-weight: lighter;
+                font-size: 0.36rem;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+              }
+            }
+            .follows-state {
+              display: flex;
+              align-items: center;
+              margin-left: 1rem;
+              border-radius: 0.1rem;
+              height: 0.7rem;
+              line-height: 0.7rem;
+              width: 2rem;
+              font-size: 0.3rem;
+              background-color: rgb(110, 110, 110);
+              img {
+                width: 0.5rem;
+                height: 0.5rem;
+                margin-left: 0.25rem;
+                margin-right: 0.02rem;
+              }
+            }
+          }
+        }
+      }
+      .head {
+        display: flex;
+        align-items: center;
+        height: 1.2rem;
+        line-height: 1.2rem;
+        font-weight: bold;
+        font-size: 0.45rem;
+        border-bottom: 0.01rem solid rgba(172, 170, 170, 0.9);
+        img {
+          margin: 0 0.6rem;
+        }
+        sup {
+          font-weight: lighter;
+          margin: 0 0.3rem;
+        }
+      }
+      .message {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        img {
+          width: 5rem;
+          height: 5rem;
+          margin: 1rem auto;
+        }
+        span {
+          font-size: .5rem;
+        }
+      }
       .search {
         height: 1rem;
         line-height: 1rem;
@@ -198,6 +388,7 @@ export default {
         align-items: center;
         background-color: rgba(30, 30, 30, 0.6);
         border-radius: 1rem;
+        transition: 0.3s linear;
         img {
           margin: 0 0.3rem;
           width: 0.7rem;
@@ -211,82 +402,11 @@ export default {
           font-size: 0.45rem;
         }
       }
-      .special-follows, .default-follows {
+      .special-follows,
+      .default-follows {
         margin-top: 0.5rem;
         font-size: 0.5rem;
-        img {
-          width: 0.5rem;
-          height: 0.5rem;
-        }
-        ul {
-          padding-left: 0.2rem;
-          li {
-            display: flex;
-            align-items: center;
-            list-style: none;
-            height: 1.5rem;
-            border-bottom: 0.03rem solid rgba(128, 128, 128, 0.9);
-            a {
-              display: flex;
-              align-items: center;
-              font-size: 0.45rem;
-              img {
-                width: 1rem;
-                height: 1rem;
-                border-radius: 100%;
-                margin-right: 0.5rem;
-              }
-              .name-desc {
-                display: flex;
-                flex-direction: column;
-                width: 5rem;
-                .name {
-                  color: var(--color-tint);
-                }
-                .desc {
-                  font-weight: lighter;
-                  font-size: 0.36rem;
-                  white-space: nowrap;
-                  overflow: hidden;
-                  text-overflow: ellipsis;
-                }
-              }
-              .follows-state {
-                display: flex;
-                align-items: center;
-                margin-left: 1rem;
-                border-radius: .1rem;
-                height: .7rem;
-                line-height: .7rem;
-                width: 2rem;
-                font-size: .3rem;
-                background-color: rgb(110, 110, 110);
-                img {
-                  width: 0.5rem;
-                  height: 0.5rem;
-                  margin-left: .25rem;
-                  margin-right: .02rem;
-                }
-              }
-            }
-          }
-        }
-        .head {
-          display: flex;
-          align-items: center;
-          height: 1.2rem;
-          line-height: 1.2rem;
-          font-weight: bold;
-          font-size: 0.45rem;
-          border-bottom: 0.01rem solid rgba(172, 170, 170, 0.9);
-          img {
-            margin: 0 0.6rem;
-          }
-          sup {
-            font-weight: lighter;
-            margin: 0 0.3rem;
-          }
-        }
+        transition: 0.3s linear;
       }
       .to-rotate {
         transition: 0.3s;
@@ -303,6 +423,20 @@ export default {
     .fans {
       position: absolute;
       top: 0;
+      ul {
+        li {
+          a {
+            .follows-state {
+              color: var(--color-tint);
+              border: 0.04rem solid var(--color-tint);
+              background-color: transparent;
+            }
+          }
+        }
+      }
+    }
+    .fans::-webkit-scrollbar {
+      display: none;
     }
     .to-left {
       transition: 0.12s;
