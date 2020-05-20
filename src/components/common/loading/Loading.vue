@@ -20,14 +20,14 @@ export default {
   position: absolute;
   background-color: #fff;
   border-radius: 100%;
-  width: 1.5rem;
-  height: 1.5rem;
+  width: 0.75rem;
+  height: 0.75rem;
   z-index: 98;
-  left: 4.25rem;
+  left: 4.5rem;
   .load-container {
     position: absolute;
-    top: -.5rem;
-    left: .125rem;
+    top: -.25rem;
+    left: 0.0625rem;
   }
   .load2 .loader,
   .load2 .loader:before,
@@ -40,36 +40,36 @@ export default {
     content: "";
   }
   .load2 .loader:before {
-    width: .65rem;
-    height: 1.275rem;
+    width: 0.325rem;
+    height: 0.6375rem;
     background: #fff;
-    border-radius: 1.275rem 0 0 1.275rem;
-    top: -0.0125rem;
-    left: -0.0125rem;
-    -webkit-transform-origin: .65rem 0.6375rem;
-    transform-origin: .65rem 0.6375rem;
+    border-radius: 0.6375rem 0 0 0.6375rem;
+    top: -0.00625rem;
+    left: -0.00625rem;
+    -webkit-transform-origin: 0.325rem 0.31875rem;
+    transform-origin: 0.325rem 0.31875rem;
     -webkit-animation: load2 2s infinite ease 1.5s;
     animation: load2 2s infinite ease 1.5s;
   }
   .load2 .loader {
     font-size: 11px;
     text-indent: -99999rem;
-    margin: 0.625rem auto;
+    margin: 0.3125rem auto;
     position: relative;
-    width: 1.25rem;
-    height: 1.25rem;
-    box-shadow: inset 0 0 0 .125rem var(--color-tint);
+    width: 0.625rem;
+    height: 0.625rem;
+    box-shadow: inset 0 0 0 0.0625rem var(--color-tint);
 
   }
   .load2 .loader:after {
-    width: .65rem;
-    height: 1.275rem;
+    width: 0.325rem;
+    height: 0.6375rem;
     background: #fff;
-    border-radius: 0 1.275rem 1.275rem 0;
-    top: -0.0125rem;
-    left: 0.6375rem;
-    -webkit-transform-origin: 0px 0.6375rem;
-    transform-origin: 0px 0.6375rem;
+    border-radius: 0 0.6375rem 0.6375rem 0;
+    top: -0.00625rem;
+    left: 0.31875rem;
+    -webkit-transform-origin: 0px 0.31875rem;
+    transform-origin: 0px 0.31875rem;
     -webkit-animation: load2 2s infinite ease;
     animation: load2 2s infinite ease;
   }

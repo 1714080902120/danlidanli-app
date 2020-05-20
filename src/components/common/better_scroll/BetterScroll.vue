@@ -214,16 +214,16 @@ export default {
   overflow: hidden;
   .loading {
     position: absolute;
-    top: 70px;
+    top: 1.34rem;
     opacity: 0;
     transition: 0.2s;
     img {
       position: absolute;
-      width: 1.5rem;
-      height: 1.5rem;
+      width: 0.75rem;
+      height: 0.75rem;
       background-color: #fff;
       border-radius: 100%;
-      left: 4.25rem;
+      left: 4.5rem;
       z-index: 99;
     }
     .inner {

@@ -11,6 +11,7 @@
   --top-margin: 60px;
   --base-bg-color: rgba(85, 85, 85, 1);
   --base-bg-color-sec: rgba(35, 35, 35, .8);
+  --base-bg-color-thr: rgba(63, 63, 63, 1);
 }
 *,
 *::before,

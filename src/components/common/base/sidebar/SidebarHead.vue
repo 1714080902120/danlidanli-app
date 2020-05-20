@@ -7,10 +7,11 @@
             <img :src="`${info.baseInfo.logo.src}${info.baseInfo.logo.name}`" alt />
           </div>
           <div class="wallet-scan">
-            <span class="wallet">
+            <span class="wallet" @click="toWallet()">
               <img src="~assets/img/base/wallet_dark.svg" alt />
             </span>
             <span class="scan">
+              <input type="file" name id @click="toScan()" />
               <img src="~assets/img/base/scan_dark.svg" alt />
             </span>
           </div>
@@ -106,7 +107,16 @@ export default {
       } else {
         console.log(name);
       }
-      this.$Bus.$emit('sidebarDisappear')
+      this.$Bus.$emit("sidebarDisappear");
+    },
+    toWallet() {
+      this.$Bus.$emit("sidebarDisappear");
+      this.$router.push({
+        name: "Wallet",
+        params: {
+          beforePath: this.$route.path
+        }
+      });
     }
   }
 };
@@ -164,6 +174,13 @@ export default {
               width: 90px;
               height: 90px;
             }
+            input {
+              position: absolute;
+              width: 1rem;
+              height: 1rem;
+              border-radius: 100%;
+              opacity: 0;
+            }
           }
         }
       }
@@ -189,7 +206,7 @@ export default {
         .label {
           height: 32px;
           line-height: 32px;
-          background-color: rgb(255, 66, 97);
+          background-color: var(--color-tint);
           color: rgb(243, 237, 237);
           border-radius: 6px;
         }
