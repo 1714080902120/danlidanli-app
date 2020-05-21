@@ -7,6 +7,16 @@ export async function getUserData() {
   })
 }
 
+// 短信验证
+export async function Send ({ phoneNumber }) {
+  return await axios({
+    url: '/user/send',
+    method: 'post',
+    data: {
+      phoneNumber
+    }
+  })
+}
 
 export async function Register ({ username, password }) {
   let data

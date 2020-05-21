@@ -8,36 +8,43 @@
       <div class="content">
         <div class="name">
           <span class="words">真实姓名</span>
-          <input type="text" name id="name" placeholder="未填写" />
+          <input type="text" name id="name" placeholder="未填写" v-model="name" />
         </div>
         <div class="phone-verify">
           <div class="phone">
             <span class="words">手机号</span>
-            <input type="text" name id="phone" placeholder="未填写" />
+            <input type="text" name id="phone" placeholder="未填写" v-model="phone" />
           </div>
           <div class="verify">
             <div class="words">
               <span class="word">验证码</span>
-              <span class="get-verify" @click="getVerify()">获取</span>
+              <span class="get-verify" ref="verify" @click="sendVerification()">{{verifyState}}</span>
             </div>
-            <input type="text" name id="verify" placeholder="未填写" />
+            <input type="text" name id="verify" placeholder="未填写" v-model="verify" />
           </div>
         </div>
         <div class="type-num">
           <div class="type">
             <span class="words">证件类型</span>
-            <span class="select-type" @click="select()">{{type}}</span>
+            <span class="select-type" @click="select()">{{type()}}</span>
           </div>
           <div class="num">
             <span class="words">证件号码</span>
-            <input type="text" name id="num" placeholder="未填写" />
+            <input type="text" name id="num" placeholder="未填写" v-model="ID" />
           </div>
         </div>
         <div class="upload">
           <div class="upload-title">上传证件照</div>
           <div class="main">
-            <div class="item" v-for="item in list" :key="item.left.title">
+            <div class="item" v-for="(item, index) in list" :key="item.left.title">
               <div class="left">
+                <input
+                  type="file"
+                  :id="item.left.title"
+                  accept="image/gif, image/jpg, image/png"
+                  @change="showImg($event, index)"
+                  multiple
+                />
                 <span>{{item.left.title}}</span>
                 <span>
                   <img :src="item.left.img" alt />
@@ -64,13 +71,36 @@
       </div>
       <div class="footer">
         <span class="footer-title">提交表示以了解并同意bilibili实名认证注意事项</span>
-        <span class="btn">提交</span>
+        <span class="btn" @click="goTo()">提交</span>
       </div>
+    </div>
+    <div class="cropper" style="text-align:center">
+      <vueCropper
+        ref="cropper"
+        :img="option.img"
+        :outputSize="option.size"
+        :outputType="option.outputType"
+        :info="true"
+        :full="option.full"
+        :canMove="option.canMove"
+        :canMoveBox="option.canMoveBox"
+        :original="option.original"
+        :autoCrop="option.autoCrop"
+        :fixed="option.fixed"
+        :fixedNumber="option.fixedNumber"
+        :centerBox="option.centerBox"
+        :infoTrue="option.infoTrue"
+        :fixedBox="option.fixedBox"
+      ></vueCropper>
     </div>
   </div>
 </template>
 
 <script>
+import { Send } from "network/user";
+import { Toast } from "mint-ui";
+import Utils from "common/utils";
+
 export default {
   name: "BBellVerify",
   data() {
@@ -78,6 +108,11 @@ export default {
       isActive: false,
       popupTitle: "规则说明",
       isSelected: 0,
+      name: "",
+      phone: "137*****901",
+      verify: "",
+      verifyState: "获取",
+      ID: "",
       careList: [
         {
           title: "注意事项",
@@ -141,7 +176,26 @@ export default {
           }
         }
       ],
-      type: "身份证▼"
+      IDType: 0,
+      // 裁剪组件的基础配置option
+      option: {
+        img: "", // 裁剪图片的地址
+        info: true, // 裁剪框的大小信息
+        outputSize: 1, // 裁剪生成图片的质量
+        outputType: "png", // 裁剪生成图片的格式
+        canScale: true, // 图片是否允许滚轮缩放
+        autoCrop: true, // 是否默认生成截图框
+        // autoCropWidth: 300, // 默认生成截图框宽度
+        // autoCropHeight: 200, // 默认生成截图框高度
+        fixedBox: false, // 固定截图框大小 不允许改变
+        fixed: true, // 是否开启截图框宽高固定比例
+        fixedNumber: [7, 5], // 截图框的宽高比例
+        full: true, // 是否输出原图比例的截图
+        canMoveBox: true, // 截图框能否拖动
+        original: false, // 上传图片按照原始比例渲染
+        centerBox: false, // 截图框是否被限制在图片里面
+        infoTrue: true // true 为展示真实输出图片宽高 false 展示看到的截图框宽高
+      }
     };
   },
   created() {
@@ -154,11 +208,101 @@ export default {
     goBack() {
       this.isActive = false;
       let timer = setTimeout(() => {
-        this.$router.replace({ path: "/wallet/b-bell" });
+        this.$router.replace({ path: "/wallet/b-bell-detail" });
         clearTimeout(timer);
         timer = null;
       }, 300);
+    },
+    async sendVerification() {
+      if (this.verifyState !== "获取") return false;
+      this.$nextTick(() => {
+        this.verifyState = 60;
+        this.$refs.verify.style.backgroundColor = "rgb(100, 100, 100)";
+        let timer = setInterval(() => {
+          this.verifyState -= 1;
+          if (this.verifyState === 1) {
+            this.verifyState = "获取";
+            this.$refs.verify.style.backgroundColor = "var(--color-tint)";
+            clearInterval(timer);
+            timer = null;
+          }
+        }, 1000);
+      });
+      await Send({ phoneNumber: this.phone }).then(res => {
+        if (res === -1) {
+          Toast({
+            message: "发送失败，请确认手机号码是否正确",
+            position: "middle",
+            duration: 5000
+          });
+        } else {
+          window.sessionStorage.setItem("verify", Utils.Encrypt(res));
+          Toast({
+            message: "发送成功！",
+            position: "middle",
+            duration: 5000
+          });
+        }
+      });
+    },
+    goTo() {
+      if (
+        Utils.Decrypt(window.sessionStorage.getItem("verify")) === this.verify
+      ) {
+        console.log(111);
+      }
+    },
+    showImg(e, i) {
+      let _this = this;
+      let files = e.target.files[0];
+      if (!e || !window.FileReader) return; // 看支持不支持FileReader
+      let reader = new FileReader();
+      reader.readAsDataURL(files); // 这里是最关键的一步，转换就在这里
+      reader.onloadend = function() {
+        _this.$nextTick(() => {
+          _this.option.img = this.result
+          let cropper = _this.$refs.cropper
+          
+          cropper.startCrop()
+          cropper.goAutoCrop()
+        })
+        _this.list[i].left.img = this.result;
+      };
     }
+  },
+  computed: {
+    type() {
+      return () => {
+        let type = "";
+        switch (this.IDType) {
+          case 0:
+            type = "身份证▼";
+            break;
+          case 1:
+            type = "港澳居民来往内地通行证";
+            break;
+          case 2:
+            type = "台湾居民来往大陆通行证";
+            break;
+          case 3:
+            type = "护照（中国签发）";
+            break;
+          case 4:
+            type = "外国人永久居住证";
+            break;
+          case 5:
+            type = "其他国家或地区身份证";
+            break;
+        }
+        return type;
+      };
+    }
+  },
+  watch: {
+    IDType(newVal) {
+      console.log(newVal);
+    },
+    immediate: true
   }
 };
 </script>
@@ -204,7 +348,7 @@ export default {
         justify-content: space-between;
         height: 1.2rem;
         line-height: 1.2rem;
-        padding: 0 .5rem;
+        padding: 0 0.5rem;
         border-top: 0.01rem solid rgb(37, 37, 37);
         input {
           background-color: transparent;
@@ -215,31 +359,43 @@ export default {
           outline: none;
         }
       }
-      .name, .phone-verify, .type-num {
-        margin-bottom: .4rem;
+      .name,
+      .phone-verify,
+      .type-num {
+        margin-bottom: 0.4rem;
       }
       .phone-verify {
         .verify {
           display: flex;
           justify-content: space-between;
-          .get-verify {
-            position: relative;
-            font-size: .4rem;
-            background-color: var(--color-tint);
-            color: #fff;
-            width: 3rem;
-            height: 1rem;
-            line-height: 1rem;
-            border-radius: .4rem;
+          .words {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            .get-verify {
+              position: relative;
+              font-size: 0.4rem;
+              background-color: var(--color-tint);
+              color: #fff;
+              width: 1.6rem;
+              height: 0.8rem;
+              text-align: center;
+              line-height: 0.8rem;
+              border-radius: 0.4rem;
+              margin-left: 0.6rem;
+            }
           }
         }
       }
       .type-num {
       }
       .upload {
-        padding: 0 .5rem;
+        padding: 0 0.5rem;
         background-color: var(--base-bg-color-thr);
+        padding-top: 0.5rem;
         .upload-title {
+          font-size: 0.5rem;
+          margin-bottom: 1rem;
         }
         .main {
           display: flex;
@@ -247,31 +403,76 @@ export default {
           .item {
             display: flex;
             justify-content: space-between;
-            img {
-              // width: 1rem;
-              height: 1rem;
-            }
             .left,
             .right {
+              font-size: 0.35rem;
               display: flex;
               flex-direction: column;
+              margin-bottom: 0.4rem;
+              img {
+                margin-top: 0.1rem;
+                height: 2.2rem;
+                width: 4rem;
+              }
             }
             .left {
+              position: relative;
+              input {
+                position: absolute;
+                width: 4rem;
+                top: 0.5rem;
+                height: 2.2rem;
+                opacity: 0;
+              }
             }
             .right {
-            }
-          }
-        }
-        .care {
-          .care-item {
-            .care-title {
-              img {
-                width: 0.5rem;
-                height: 0.5rem;
+              span {
+                &:first-child {
+                  margin-left: 0.2rem;
+                }
               }
             }
           }
         }
+        .care {
+          margin-top: 0.5rem;
+          .care-item {
+            margin-bottom: 1rem;
+            padding-bottom: 0.01rem;
+            .care-title {
+              display: flex;
+              align-items: center;
+              margin: 0.5rem 0;
+              img {
+                width: 0.5rem;
+                height: 0.5rem;
+                margin: 0 0.1rem 0 0;
+              }
+            }
+            p {
+              font-size: 0.4rem;
+              margin: 0.2rem 0.25rem;
+            }
+          }
+        }
+      }
+    }
+    .footer {
+      display: flex;
+      align-items: center;
+      flex-direction: column;
+      .footer-title {
+        color: var(--color-tint);
+      }
+      .btn {
+        margin: 1rem 0;
+        margin-top: 0.5rem;
+        width: 7rem;
+        text-align: center;
+        border-radius: 0.2rem;
+        height: 1.3ren;
+        line-height: 1.3rem;
+        background-color: var(--base-bg-color-thr);
       }
     }
   }
@@ -281,6 +482,10 @@ export default {
   .active {
     transition: 0.3s ease-in-out;
     transform: translateX(0rem);
+  }
+  .cropper {
+    width: auto;
+    height: 10rem;
   }
 }
 </style>

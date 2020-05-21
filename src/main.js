@@ -8,6 +8,7 @@ import 'mint-ui/lib/style.css'
 import vueWaves from 'common/waves/waves'
 import Utils from 'common/utils'
 import VueTouch from 'vue-touch'
+import VueCropper from 'vue-cropper'
 Vue.use(VueTouch, {name: 'v-touch'})
 Vue.config.productionTip = false
 Vue.use(MintUI, {
@@ -17,6 +18,7 @@ Vue.use(MintUI, {
   }
 })
 Vue.use(vueWaves)
+Vue.use(VueCropper)
 Vue.prototype.$Bus = new Vue()
 Vue.prototype.$debounce = Utils.debounce
 new Vue({
