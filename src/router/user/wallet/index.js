@@ -1,17 +1,20 @@
 const Wallet = () => import('views/user/wallet/Wallet')
 
 // wallet子组件
-const BCoin = () => import('components/content/user/wallet/BCoin')
-const BCard = () => import('components/content/user/wallet/BCard')
-const BConsumer = () => import('components/content/user/wallet/BConsumer')
-const BDiscount = () => import('components/content/user/wallet/BDiscount')
-const BPackage = () => import('components/content/user/wallet/BPackage')
-const BScore = () => import('components/content/user/wallet/BScore')
-const RedPacket = () => import('components/content/user/wallet/RedPacket')
-const SimKey = () => import('components/content/user/wallet/SimKey')
-const BBell = () => import('components/content/user/wallet/BBell')
+const BCoin = () => import('components/content/user/wallet/coin/BCoin')
+const BCard = () => import('components/content/user/wallet/card/BCard')
+const BConsumer = () => import('components/content/user/wallet/consumer/BConsumer')
+const BDiscount = () => import('components/content/user/wallet/discount/BDiscount')
+const BPackage = () => import('components/content/user/wallet/package/BPackage')
+const BScore = () => import('components/content/user/wallet/score/BScore')
+const RedPacket = () => import('components/content/user/wallet/red-packet/RedPacket')
+const SimKey = () => import('components/content/user/wallet/sim-key/SimKey')
+const BBell = () => import('components/content/user/wallet/bell/BBell')
 const WalletMain = () => import('components/content/user/wallet/WalletMain')
 const ConsumerDetail = () => import('components/content/user/wallet/consumer/ConsumerDetail')
+const BBellDetail = () => import('components/content/user/wallet/bell/BBellDetail')
+const BBellCashOut = () => import('components/content/user/wallet/bell/BBellCashOut')
+const BBellVerify = () => import('components/content/user/wallet/bell/BBellVerify')
 
 export default {
   path: '/wallet',
@@ -71,6 +74,21 @@ export default {
       path: 'consumer-detail',
       name: 'ConsumerDetail',
       component: ConsumerDetail
+    },
+    {
+      path: 'b-bell-detail',
+      name: 'BBellDetail',
+      component: BBellDetail
+    },
+    {
+      path: 'b-bell-cash-out',
+      name: 'BBellCashOut',
+      component: BBellCashOut
+    },
+    {
+      path: 'b-bell-verify',
+      name: 'BBellVerify',
+      component: BBellVerify
     }
   ]
 }
