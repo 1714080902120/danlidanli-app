@@ -18,15 +18,24 @@
           <div class="verify">
             <div class="words">
               <span class="word">验证码</span>
-              <span class="get-verify" ref="verify" @click="sendVerification()">{{verifyState}}</span>
+              <span
+                class="get-verify"
+                ref="verify"
+                @click="sendVerification()"
+                v-waves
+              >{{verifyState}}</span>
             </div>
             <input type="text" name id="verify" placeholder="未填写" v-model="verify" />
           </div>
         </div>
-        <div class="type-num">
+        <div class="type-nation-num">
           <div class="type">
             <span class="words">证件类型</span>
             <span class="select-type" @click="select()">{{type()}}</span>
+          </div>
+          <div class="nation" v-if="IDType === 5">
+            <span class="words">国家或地区</span>
+            <span class="select-nation" @click="selectNation()">{{nationType()}}</span>            
           </div>
           <div class="num">
             <span class="words">证件号码</span>
@@ -71,27 +80,16 @@
       </div>
       <div class="footer">
         <span class="footer-title">提交表示以了解并同意bilibili实名认证注意事项</span>
-        <span class="btn" @click="goTo()">提交</span>
+        <span class="btn" @click="goTo()" v-waves>提交</span>
       </div>
     </div>
-    <div class="cropper" style="text-align:center">
-      <vueCropper
-        ref="cropper"
-        :img="option.img"
-        :outputSize="option.size"
-        :outputType="option.outputType"
-        :info="true"
-        :full="option.full"
-        :canMove="option.canMove"
-        :canMoveBox="option.canMoveBox"
-        :original="option.original"
-        :autoCrop="option.autoCrop"
-        :fixed="option.fixed"
-        :fixedNumber="option.fixedNumber"
-        :centerBox="option.centerBox"
-        :infoTrue="option.infoTrue"
-        :fixedBox="option.fixedBox"
-      ></vueCropper>
+    <Cropper :options="option" />
+    <div class="popup">
+      <mt-popup v-model="popupVisible" popup-transition="popup-fade">
+        <ul>
+          <li v-for="(item, index) in liActive" :key="item" @click="selectType(index)">{{item}}</li>
+        </ul>
+      </mt-popup>
     </div>
   </div>
 </template>
@@ -100,12 +98,14 @@
 import { Send } from "network/user";
 import { Toast } from "mint-ui";
 import Utils from "common/utils";
+import Cropper from "components/common/cropper/VueCropper";
 
 export default {
   name: "BBellVerify",
   data() {
     return {
       isActive: false,
+      popupVisible: false,
       popupTitle: "规则说明",
       isSelected: 0,
       name: "",
@@ -113,6 +113,10 @@ export default {
       verify: "",
       verifyState: "获取",
       ID: "",
+      nationID: 0,
+      nationList: ['未选择▼', '美国', '加拿大', '比利时', '法国', '澳大利亚', '日本', '新加坡', '韩国', '马来西亚', '英国', '意大利', '德国' ],
+      li: ['身份证', '港澳居民来往内地通行证', '台湾居民来往大陆通行证', '护照（中国签发）', '外国人永久居住证', '其他国家或地区身份证'],
+      liActive: [],
       careList: [
         {
           title: "注意事项",
@@ -183,32 +187,37 @@ export default {
         info: true, // 裁剪框的大小信息
         outputSize: 1, // 裁剪生成图片的质量
         outputType: "png", // 裁剪生成图片的格式
-        canScale: true, // 图片是否允许滚轮缩放
+        canScale: false, // 图片是否允许滚轮缩放
         autoCrop: true, // 是否默认生成截图框
-        // autoCropWidth: 300, // 默认生成截图框宽度
-        // autoCropHeight: 200, // 默认生成截图框高度
+        // autoCropWidth: 150, // 默认生成截图框宽度
+        // autoCropHeight: 100, // 默认生成截图框高度
         fixedBox: false, // 固定截图框大小 不允许改变
         fixed: true, // 是否开启截图框宽高固定比例
         fixedNumber: [7, 5], // 截图框的宽高比例
-        full: true, // 是否输出原图比例的截图
+        full: false, // 是否输出原图比例的截图
         canMoveBox: true, // 截图框能否拖动
         original: false, // 上传图片按照原始比例渲染
         centerBox: false, // 截图框是否被限制在图片里面
-        infoTrue: true // true 为展示真实输出图片宽高 false 展示看到的截图框宽高
+        infoTrue: true, // true 为展示真实输出图片宽高 false 展示看到的截图框宽高
+        id: 0,
       }
     };
   },
   created() {
     this.isActive = true;
+    this.Bus();
   },
   activated() {
     this.isActive = true;
+  },
+  components: {
+    Cropper
   },
   methods: {
     goBack() {
       this.isActive = false;
       let timer = setTimeout(() => {
-        this.$router.replace({ path: "/wallet/b-bell-detail" });
+        this.$router.replace({ path: "/wallet/b-bell-cash-out" });
         clearTimeout(timer);
         timer = null;
       }, 300);
@@ -247,7 +256,7 @@ export default {
     },
     goTo() {
       if (
-        Utils.Decrypt(window.sessionStorage.getItem("verify")) === this.verify
+        window.sessionStorage.getItem("verify") && Utils.Decrypt(window.sessionStorage.getItem("verify")) === this.verify
       ) {
         console.log(111);
       }
@@ -259,48 +268,71 @@ export default {
       let reader = new FileReader();
       reader.readAsDataURL(files); // 这里是最关键的一步，转换就在这里
       reader.onloadend = function() {
-        _this.$nextTick(() => {
-          _this.option.img = this.result
-          let cropper = _this.$refs.cropper
-          
-          cropper.startCrop()
-          cropper.goAutoCrop()
-        })
-        _this.list[i].left.img = this.result;
+        _this.option.id = i
+        _this.option.img = this.result;
+        // _this.list[i].left.img = this.result
+        _this.finishCrop(i);
       };
+    },
+    Bus() {
+      this.$Bus.$on("cancelCrop", () => {
+        this.option.img = "";
+      });
+    },
+    finishCrop(i) {
+      this.$Bus.$on("finishCrop", res => {
+        this.option.img = "";
+        if (res.id === i) {
+          this.list[i].left.img = res.data;
+        }
+
+      });
+    },
+    select () {
+      this.liActive = this.li
+      this.popupVisible = true
+    },
+    selectType (i) {
+      if (this.liActive.length === this.li.length) {
+        this.IDType = i
+      } else {
+        this.nationID = i
+      }
+
+      this.popupVisible = false
+    },
+    selectNation () {
+      this.liActive = this.nationList
+      this.popupVisible = true
     }
   },
   computed: {
     type() {
       return () => {
         let type = "";
-        switch (this.IDType) {
-          case 0:
-            type = "身份证▼";
-            break;
-          case 1:
-            type = "港澳居民来往内地通行证";
-            break;
-          case 2:
-            type = "台湾居民来往大陆通行证";
-            break;
-          case 3:
-            type = "护照（中国签发）";
-            break;
-          case 4:
-            type = "外国人永久居住证";
-            break;
-          case 5:
-            type = "其他国家或地区身份证";
-            break;
-        }
+        type = this.li[this.IDType] + '▼'
+        return type;
+      };
+    },
+    nationType() {
+      return () => {
+        let type = "";
+        type = this.nationList[this.nationID]
         return type;
       };
     }
   },
   watch: {
     IDType(newVal) {
-      console.log(newVal);
+      if (newVal === 5) {
+        this.list.forEach((e, i) => {
+          e.right.img = require(`assets/img/wallet/B_bell/B_bell_exm_special_${i + 1}.png`)
+        })
+      } else {
+        this.list.forEach((e, i) => {
+          e.right.img = require(`assets/img/wallet/B_bell/B_bell_exm_${i + 1}.png`)
+        })        
+      }
     },
     immediate: true
   }
@@ -309,6 +341,7 @@ export default {
 
 <style lang="less" scoped>
 #B-bell-verify {
+  position: relative;
   .inner {
     font-size: 0.45rem;
     overflow-x: hidden;
@@ -342,7 +375,9 @@ export default {
       .phone,
       .verify,
       .type,
-      .num {
+      .num,
+      .nation {
+        transition: .4s linear;
         background-color: var(--base-bg-color-thr);
         display: flex;
         justify-content: space-between;
@@ -361,7 +396,7 @@ export default {
       }
       .name,
       .phone-verify,
-      .type-num {
+      .type-nation-num {
         margin-bottom: 0.4rem;
       }
       .phone-verify {
@@ -483,9 +518,27 @@ export default {
     transition: 0.3s ease-in-out;
     transform: translateX(0rem);
   }
-  .cropper {
-    width: auto;
-    height: 10rem;
+  .popup {
+    ul {
+      display: flex;
+      flex-direction: column;
+      height: 7.2rem;
+      overflow: hidden;
+      overflow-y: scroll;
+      li {
+        text-align: center;
+        border-bottom: .01rem solid rgba(100, 100, 100, .3);
+        list-style: none;
+        width: 7rem;
+        height: 1.2rem;
+        font-size: .4rem;
+        color: #000;
+        line-height: 1.2rem;
+      }
+    }
+    ul::-webkit-scrollbar {
+      display: none;
+    }
   }
 }
 </style>

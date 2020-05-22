@@ -178,12 +178,7 @@ export default {
           });
           break;
         case 2:
-          this.$router.push({
-            path: "/wallet/b-card",
-            query: {
-              beforePath
-            }
-          });
+          window.location.href = 'https://www.bilibili.com/blackboard/activity-jhccmob.html'
           break;
         case 3:
           this.$router.push({

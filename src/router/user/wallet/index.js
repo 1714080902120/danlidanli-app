@@ -15,6 +15,8 @@ const ConsumerDetail = () => import('components/content/user/wallet/consumer/Con
 const BBellDetail = () => import('components/content/user/wallet/bell/BBellDetail')
 const BBellCashOut = () => import('components/content/user/wallet/bell/BBellCashOut')
 const BBellVerify = () => import('components/content/user/wallet/bell/BBellVerify')
+const BCoinDetail = () => import('components/content/user/wallet/coin/BCoinDetail')
+
 
 export default {
   path: '/wallet',
@@ -89,6 +91,11 @@ export default {
       path: 'b-bell-verify',
       name: 'BBellVerify',
       component: BBellVerify
+    },
+    {
+      path: 'b-coin-detail',
+      name: 'BCoinDetail',
+      component: BCoinDetail
     }
   ]
 }
