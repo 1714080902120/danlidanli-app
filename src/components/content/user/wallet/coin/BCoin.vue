@@ -1,5 +1,5 @@
 <template>
-  <div id="B-bell-coin">
+  <div id="B-coin">
     <div class="inner" :class="{ 'active': isActive === true }">
       <div class="head">
         <span class="back" @click="goBack()">‹</span>
@@ -68,14 +68,14 @@ export default {
       this.$router.push({ path: "/wallet/b-coin-detail" });
     },
     take() {
-      this.$router.push({ path: "/wallet/b-bell-cash-out" });
+      this.$router.push({ path: "/wallet/b-coin-recharge" });
     }
   }
 };
 </script>
 
 <style lang="less" scoped>
-#B-bell-coin {
+#B-coin {
   .inner {
     color: rgb(155, 153, 153);
     overflow-x: hidden;
