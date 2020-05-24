@@ -141,12 +141,7 @@ export default {
           });
           break;
         case 2:
-          this.$router.push({
-            path: "/wallet/b-score",
-            query: {
-              beforePath
-            }
-          });
+          window.location.href = 'https://big.bilibili.com/mobile/coin'
           break;
         case 3:
           this.$router.push({
