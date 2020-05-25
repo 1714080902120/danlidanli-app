@@ -43,9 +43,6 @@ export default {
       popupVisible: false,
     };
   },
-  created() {
-    this.isActive = true;
-  },
   activated() {
     this.isActive = true;
   },
@@ -76,6 +73,7 @@ export default {
 
 <style lang="less" scoped>
 #B-coin {
+  position: relative;
   .inner {
     color: rgb(155, 153, 153);
     overflow-x: hidden;
@@ -191,7 +189,7 @@ export default {
     }
   }
   .active {
-    transition: 0.3s ease-in-out;
+    transition: .3s ease-in-out;
     transform: translateX(0rem);
   }
   .popup {

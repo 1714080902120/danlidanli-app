@@ -112,7 +112,7 @@ export default {
       this.offsetX -= 1;
       this.$nextTick(() => {
         this.$refs.homeRecommend.$el.style.transform = `translateX(${this
-          .offsetX * 2}px)`;
+          .offsetX / 5}rem)`;
         this.$store.commit("offSetX", this.offsetX);
       });
     },
@@ -125,19 +125,19 @@ export default {
       this.offsetX += 1;
       this.$nextTick(() => {
         this.$refs.homeRecommend.$el.style.transform = `translateX(${this
-          .offsetX * 2}px)`;
+          .offsetX / 5}rem)`;
         this.$store.commit("offSetX", this.offsetX);
       });
     },
     // 停止滑动
     panend() {
       this.$nextTick(() => {
-        if (this.offsetX > 80) {
+        if (this.offsetX > 30) {
           if (this.$store.state.offSetItem > 0) {
             this.$store.commit("offSetItem", -1);
           }
           this.$router.push({ name: "Live" });
-        } else if (this.offsetX < -80) {
+        } else if (this.offsetX < -30) {
           if (this.$store.state.offSetItem < 6) {
             this.$store.commit("offSetItem", 1);
           }

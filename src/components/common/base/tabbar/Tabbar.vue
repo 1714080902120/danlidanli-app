@@ -52,7 +52,10 @@ export default {
       ]
     };
   },
-  activated() {
+  created() {
+    if (this.$route.query.beforePath === '/wallet/b-discount') {
+      this.selected = '会员购'
+    }
   },
   methods: {
     goTo(path) {

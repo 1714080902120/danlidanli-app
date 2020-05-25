@@ -8,9 +8,15 @@
         </div>
         <div class="navbar">
           <mt-navbar class="nav-bar" v-model="selected">
-            <mt-tab-item class="nav-bar-item" id="1">转出</mt-tab-item>
-            <mt-tab-item class="nav-bar-item" id="2">转入</mt-tab-item>
-            <mt-tab-item class="nav-bar-item" id="3">冻结</mt-tab-item>
+            <mt-tab-item class="nav-bar-item" id="1">
+              <span>转出</span>
+            </mt-tab-item>
+            <mt-tab-item class="nav-bar-item" id="2">
+              <span>转入</span>
+            </mt-tab-item>
+            <mt-tab-item class="nav-bar-item" id="3">
+              <span>冻结</span>
+            </mt-tab-item>
           </mt-navbar>
         </div>
       </div>
@@ -101,6 +107,15 @@ export default {
         .nav-bar {
           .nav-bar-item {
             color: #000;
+            border-color: transparent !important;
+          }
+          .is-selected {
+            color: var(--color-tint) !important;
+            span {
+              position: relative;
+              padding-bottom: 0.3rem;
+              border-bottom: 0.05rem solid var(--color-tint);
+            }
           }
           background-color: var(--base-item-color-white);
         }
@@ -122,8 +137,7 @@ export default {
             }
           }
           .item {
-            height: 1.6rem !important;
-            padding-top: .2rem;
+            height: 1.2rem !important;
             background-color: var(--base-item-color-white) !important;
           }
         }

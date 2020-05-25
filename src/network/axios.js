@@ -3,7 +3,7 @@ import Axios from 'axios';
 export default function (options) {
   return new Promise((resolve, reject) => {
     let instance = Axios.create({
-      baseURL: 'http://localhost:4000',
+      baseURL: 'http://39.106.222.159:4000/',
       timeout: 3000
     })
     instance.interceptors.request.use(config => {

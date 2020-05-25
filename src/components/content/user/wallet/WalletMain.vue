@@ -125,7 +125,7 @@ export default {
       const beforePath = this.$route.path;
       switch (i) {
         case 0:
-          this.$router.push({
+          this.$router.replace({
             path: "/wallet/b-coin",
             query: {
               beforePath
