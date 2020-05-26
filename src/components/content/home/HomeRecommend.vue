@@ -1,25 +1,25 @@
 <template>
   <v-touch
+    @swipeleft="swipeLeft()"
+    @swiperight="swipeRight()"
     @panleft="panleft()"
     @panright="panright()"
     @panend="panend()"
     id="home-content"
     ref="homeRecommend"
   >
-    <Swipe :swipeData="swipeData" @touchstart.native="closePan()" @touchend.native="openPan()"/>
+    <Swipe :swipeData="swipeData" @touchstart.native="closePan()" @touchend.native="openPan()" />
     <RecommendList :data="homeData" />
     <div class="left" ref="left">
-      <HomeLive/>
+      <component v-if="$route.path === '/home/'" :is="apps[0].app.default"></component>
     </div>
     <div class="right" ref="right">
-      <HomeHot/>
+      <component v-if="$route.path === '/home/'" :is="apps[1].app.default"></component>
     </div>
   </v-touch>
 </template>
 
 <script>
-import HomeLive from './HomeLive'
-import HomeHot from './HomeHot'
 import Swipe from "components/common/swipe/Swipe";
 import { getHomeSwipe, getHomeData } from "network/home";
 import RecommendList from "components/common/recommend_list/RecommendList";
@@ -31,14 +31,23 @@ export default {
       homeData: [],
       page: 0,
       offsetX: 0,
-      isLock: false
+      isLock: false,
+      cmps: ["HomeLive", "HomeHot"],
+      apps: []
     };
   },
   created() {
     this.toGetHomeSwipeData(), this.toGetHomeData(this.page);
     // this.pullDownApplyData();
     // this.pullUpApplyData();
-    this.bus()
+    this.cmps.forEach(app => {
+      this.apps.push({ app: require(`./${app}.vue`) });
+    });
+  },
+  activated() {
+    if (this.$route.path === "/home/") {
+      this.bus();
+    }
   },
   methods: {
     async toGetHomeSwipeData() {
@@ -96,19 +105,51 @@ export default {
       this.$Bus.$emit("finishPullUp");
     },
     // 关闭滑动
-    closePan () {
-      this.isLock = true
+    closePan() {
+      this.isLock = true;
     },
     // 开启滑动
-    openPan () {
-      this.isLock = false
+    openPan() {
+      this.isLock = false;
+    },
+    // 往左快滑
+    swipeLeft() {
+      if (!this.$store.state.loadingLock) {
+        this.$store.commit("changeLoadingLockState", true);
+      }
+      if (this.isLock) return false;
+      this.$store.commit("offSetItem", 1);
+      this.$nextTick(() => {
+        this.$refs.homeRecommend.$el.style.transform = `translateX(-10rem)`;
+        this.$router.push({ name: "HomeHot" });
+        this.offsetX = 0;
+        this.$store.commit("offSetX", 0);
+        this.$refs.homeRecommend.$el.style.transform = `translateX(${0}px)`;
+        this.$store.commit("changeLoadingLockState", false);
+      });
+    },
+    // 往右快滑
+    swipeRight() {
+      if (!this.$store.state.loadingLock) {
+        this.$store.commit("changeLoadingLockState", true);
+      }
+      if (this.isLock) return false;
+      this.$store.commit("offSetItem", -1);
+      this.$nextTick(() => {
+        this.$refs.homeRecommend.$el.style.transform = `translateX(10rem)`;
+        this.$router.push({ name: "HomeLive" });
+        this.offsetX = 0;
+        this.$store.commit("offSetX", 0);
+        this.$refs.homeRecommend.$el.style.transform = `translateX(${0}px)`;
+        this.$store.commit("changeLoadingLockState", false);
+      });
     },
     // 左滑
     panleft() {
       if (!this.$store.state.loadingLock) {
-        this.$store.commit('changeLoadingLockState', true)
+        this.$store.commit("changeLoadingLockState", true);
       }
-      if (this.isLock) return false
+      if (this.isLock) return false;
       this.offsetX -= 1;
       this.$nextTick(() => {
         this.$refs.homeRecommend.$el.style.transform = `translateX(${this
@@ -119,9 +160,9 @@ export default {
     // 右滑
     panright() {
       if (!this.$store.state.loadingLock) {
-        this.$store.commit('changeLoadingLockState', true)
+        this.$store.commit("changeLoadingLockState", true);
       }
-      if (this.isLock) return false
+      if (this.isLock) return false;
       this.offsetX += 1;
       this.$nextTick(() => {
         this.$refs.homeRecommend.$el.style.transform = `translateX(${this
@@ -136,34 +177,36 @@ export default {
           if (this.$store.state.offSetItem > 0) {
             this.$store.commit("offSetItem", -1);
           }
-          this.$router.push({ name: "Live" });
+          this.$router.push({ name: "HomeLive" });
         } else if (this.offsetX < -30) {
           if (this.$store.state.offSetItem < 6) {
             this.$store.commit("offSetItem", 1);
           }
-          this.$router.push({ name: "Hot" });
+          this.$router.push({ name: "HomeHot" });
         }
         this.offsetX = 0;
         this.$store.commit("offSetX", 0);
         this.$refs.homeRecommend.$el.style.transform = `translateX(${0}px)`;
-        this.$store.commit('changeLoadingLockState', false)
+        this.$store.commit("changeLoadingLockState", false);
       });
     },
     // 中央事务总线
-    bus () {
-      this.$Bus.$on('whereYouAreNow', (y) => {
-        this.$refs.left.style.opacity = 1;
-        this.$refs.right.style.opacity = 1;
-        this.$refs.left.style.transform = `translate(${-window.innerWidth}px, ${-y}px)`
-        this.$refs.right.style.transform = `translate(${window.innerWidth}px, ${-y}px)`
-      })
+    bus() {
+      this.$Bus.$on("whereYouAreNow", y => {
+        this.$nextTick(() => {
+          this.$refs.left.style.opacity = 1;
+          this.$refs.right.style.opacity = 1;
+          this.$refs.left.style.transform = `translate(${-window.innerWidth}px, ${-y}px)`;
+          this.$refs.right.style.transform = `translate(${
+            window.innerWidth
+          }px, ${-y}px)`;
+        });
+      });
     }
   },
   components: {
     Swipe,
-    RecommendList,
-    HomeLive,
-    HomeHot
+    RecommendList
   }
 };
 </script>
@@ -171,7 +214,8 @@ export default {
 <style lang="less" scoped>
 #home-content {
   background-color: var(--base-bg-color-sec);
-  .left, .right {
+  .left,
+  .right {
     position: absolute;
     top: 0;
     opacity: 0;

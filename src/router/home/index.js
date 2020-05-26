@@ -8,20 +8,20 @@ const HomeMovie = () => import('components/content/home/HomeMovie')
 const HomeNewDate = () => import('components/content/home/HomeNewDate')
 const HomeStudy = () => import('components/content/home/HomeStudy')
 
-export default   {
+export default {
   path: '/home',
   component: Home,
   children: [
     {
       path: '',
-      name: 'Home',
+      name: 'HomeRecommend',
       component: HomeRecommend
     },
-    { path: "live", name: 'Live', component: HomeLive },
-    { path: "hot", name: 'Hot', component: HomeHot },
-    { path: "animate", name: 'Animate', component: HomeAnimate },
-    { path: "movie", name: 'Movie', component: HomeMovie },
-    { path: "new-date", name: 'NewDate', component: HomeNewDate },
-    { path: "study", name: 'Study', component: HomeStudy }
+    { path: "live", name: 'HomeLive', component: HomeLive },
+    { path: "hot", name: 'HomeHot', component: HomeHot },
+    { path: "animate", name: 'HomeAnimate', component: HomeAnimate },
+    { path: "movie", name: 'HomeMovie', component: HomeMovie },
+    { path: "new-date", name: 'HomeNewDate', component: HomeNewDate },
+    { path: "study", name: 'HomeStudy', component: HomeStudy }
   ]
 }
