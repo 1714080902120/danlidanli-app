@@ -31,6 +31,9 @@ export default {
   created() {
     this.isActive = true;
   },
+  activated() {
+    this.isActive = true
+  },
   methods: {
     goBack() {
       this.isActive = false;

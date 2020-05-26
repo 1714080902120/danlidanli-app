@@ -1,21 +1,18 @@
 <template>
-  <div id="B-bell-detail">
+  <div id="red-packet-detail">
     <div class="inner" :class="{ 'active': isActive === true }">
       <div class="nav">
         <div class="head">
           <span class="back" @click="goBack()">‹</span>
-          <span class="title">明细</span>
+          <span class="title">流水明细</span>
         </div>
         <div class="navbar">
           <mt-navbar class="nav-bar" v-model="selected">
             <mt-tab-item class="nav-bar-item" id="1">
-              <span>转出</span>
+              <span>收益</span>
             </mt-tab-item>
             <mt-tab-item class="nav-bar-item" id="2">
-              <span>转入</span>
-            </mt-tab-item>
-            <mt-tab-item class="nav-bar-item" id="3">
-              <span>冻结</span>
+              <span>提现</span>
             </mt-tab-item>
           </mt-navbar>
         </div>
@@ -28,12 +25,6 @@
             </div>
           </mt-tab-container-item>
           <mt-tab-container-item class="item-outer" id="2">
-            <mt-cell class="item" title="活动奖励" label="2019-10-21 16:26:17" value="+4.3 贝壳"></mt-cell>
-            <div class="footer">
-              <img src="~assets/img/wallet/B_bell/B_bell_detail.png" alt />已经到底啦_(:з"∠)_
-            </div>
-          </mt-tab-container-item>
-          <mt-tab-container-item class="item-outer" id="3">
             <div class="footer">
               <img src="~assets/img/wallet/B_bell/B_bell_detail.png" alt />已经到底啦_(:з"∠)_
             </div>
@@ -63,7 +54,7 @@ export default {
     goBack() {
       this.isActive = false;
       let timer = setTimeout(() => {
-        this.$router.replace({ path: "/wallet/b-bell" });
+        this.$router.replace({ path: "/wallet/red-packet" });
         clearTimeout(timer);
         timer = null;
       }, 300);
@@ -73,7 +64,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
-#B-bell-detail {
+#red-packet-detail {
   .inner {
     overflow-x: hidden;
     color: #000;
@@ -90,23 +81,28 @@ export default {
       .head {
         display: flex;
         align-items: center;
+        justify-content: space-between;
         height: 1.6rem;
         line-height: 1.6rem;
-        justify-content: space-between;
         background-color: var(--base-item-color-white);
         .back {
           padding-left: 0.5rem;
         }
         .title {
-          margin-right: 4.65rem;
+          margin-right: 4rem;
           font-size: 0.45rem;
+          text-align: center;
         }
       }
       .navbar {
         .nav-bar {
+          padding: 0 3rem;
           .nav-bar-item {
             color: #000;
             border-color: transparent !important;
+            span {
+              font-size: 0.45rem !important;
+            }
           }
           .is-selected {
             color: var(--color-tint) !important;

@@ -17,7 +17,7 @@ const BBellCashOut = () => import('components/content/user/wallet/bell/BBellCash
 const BBellVerify = () => import('components/content/user/wallet/bell/BBellVerify')
 const BCoinDetail = () => import('components/content/user/wallet/coin/BCoinDetail')
 const BCoinRecharge = () => import('components/content/user/wallet/coin/BCoinRecharge')
-
+const RedPacketDetail = () => import('components/content/user/wallet/red-packet/RedPacketDetail')
 
 export default {
   path: '/wallet',
@@ -102,6 +102,11 @@ export default {
       path: 'b-coin-recharge',
       name: 'BCoinRecharge',
       component: BCoinRecharge
+    },
+    {
+      path: 'red-packet-detail',
+      name: 'RedPacketDetail',
+      component: RedPacketDetail
     }
   ]
 }

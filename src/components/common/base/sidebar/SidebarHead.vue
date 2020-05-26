@@ -45,7 +45,7 @@
           <span class="sub">让你体验到私人定制</span>
         </div>
         <div class="right">
-          <input class="scan" type="file" name id @click="toScan()" />
+          <input class="scan" type="file" name id accept="image/*" @click="toScan()" />
           <img src="~assets/img/base/scan_dark.svg" alt />
         </div>
       </div>

@@ -141,7 +141,9 @@ export default {
           });
           break;
         case 2:
-          window.location.href = 'https://big.bilibili.com/mobile/coin'
+          this.$router.push({
+            path: "/wallet/b-score"
+          });
           break;
         case 3:
           this.$router.push({
@@ -173,7 +175,7 @@ export default {
           });
           break;
         case 2:
-          window.location.href = 'https://www.bilibili.com/blackboard/activity-jhccmob.html'
+          this.$router.push({ path: "/wallet/b-card" });
           break;
         case 3:
           this.$router.push({
