@@ -206,6 +206,7 @@ export default {
 <style lang="less" scoped>
 #wallet-main {
   position: relative;
+  font-weight: bold;
   .inner {
     transition: 0.3s ease-in-out;
     transform: translateX(10rem);

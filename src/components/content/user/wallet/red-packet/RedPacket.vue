@@ -281,8 +281,10 @@ export default {
           align-items: center;
           justify-content: space-between;
           flex-wrap: wrap;
+                    font-weight: bold;
           .item,
           input {
+            
             transition: 0.4s ease-in-out;
             width: 3.05rem;
             height: 1.3rem;

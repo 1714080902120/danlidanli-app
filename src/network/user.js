@@ -29,16 +29,20 @@ export async function Register ({ username, password }) {
     }
   }).then(res => {
     if (res.err === 0) {
-      data = '注册成功'
-      getToken({ username, password }).catch(err => {
-        data = '服务器炸了'
-        console.log(err)
+      getToken({ username, password }).catch(() => {
+        data = -1
       })
     } else {
-      data = res.data
+      data = res.err
     }
   })
-  return data
+  if (data === -2) {
+    return Promise.reject('用户名已存在~')
+  } else if (data === -1) {
+    return Promise.reject('服务器炸了')
+  } else {
+    return Promise.resolve('注册成功')
+  }
 }
 export async function sendMail ({ mail }) {
   return await axios({
@@ -68,10 +72,12 @@ export async function getToken({ username, password }) {
   if (data.token) {
     window.localStorage.setItem('token', 'Bearer ' + data.token)
     window.localStorage.setItem('haveToken', true)
-    return '登陆成功'
+    // return '登陆成功'
+    return Promise.resolve('登陆成功')
   } else {
     window.localStorage.setItem('token', '')
     window.localStorage.setItem('haveToken', false)
-    return '登陆失败'
+    // return '登陆失败'
+    return Promise.reject('登陆失败')
   }
 }

@@ -50,7 +50,7 @@
         </span>
       </div>
       <div class="mail-check" v-if="enterType === 'register'">
-        <span class="check" :class="{ isWrong: ifEqualToCheckCode() }">
+        <span class="check">
           <input type="text" name id="check" v-model="check" placeholder="请输入验证码" />
         </span>
         <span class="check-btn" v-if="hadSend === false" @click="sendMail($event)">获取验证码</span>
@@ -194,11 +194,10 @@ export default {
               position: "middle",
               duration: 3000
             });
-
             this.isActive = false;
             let timer = setTimeout(() => {
               this.$router.replace({
-                name: "Home",
+                name: "HomeRecommend",
                 params: { type: "register" }
               });
               clearTimeout(timer);
@@ -211,6 +210,7 @@ export default {
               position: "middle",
               duration: 3000
             });
+            return false
           });
       } else if (this.enterType === "login") {
         getToken({ username, password })
@@ -222,7 +222,10 @@ export default {
             });
             this.isActive = false;
             let timer = setTimeout(() => {
-              this.$router.replace({ name: "Home", params: { type: "login" } });
+              this.$router.replace({
+                name: "HomeRecommend",
+                params: { type: "login" }
+              });
               clearTimeout(timer);
               timer = null;
             }, 150);
@@ -294,20 +297,26 @@ export default {
     ifEqualToCheckCode() {
       return () => {
         if (window.localStorage.getItem("mailCode")) {
-          return this.check > 0 &&
+          if (
             this.check !==
-              Utils.Decrypt(window.localStorage.getItem("mailCode"))
-            ? true
-            : false;
+            Utils.Decrypt(window.localStorage.getItem("mailCode"))
+          ) {
+            return true;
+          } else if (
+            this.check ===
+            Utils.Decrypt(window.localStorage.getItem("mailCode"))
+          ) {
+            return false;
+          }
         } else {
-          return this.check > 0 ? true : false;
+          return false;
         }
       };
     },
     ifCheck() {
       return () => {
         if (this.enterType === "register") {
-          return this.check !== "";
+          return this.check.split("") <= 0;
         } else if (this.enterType === "login") {
           return false;
         }
