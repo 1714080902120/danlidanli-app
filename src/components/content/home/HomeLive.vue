@@ -15,7 +15,7 @@
 </template>
 
 <script>
-// import { getHomeSwipe, getHomeData } from "network/home";
+// import { getHomeSwipe, getHomeData } from "network/live";
 export default {
   name: "HomeLive",
   data() {

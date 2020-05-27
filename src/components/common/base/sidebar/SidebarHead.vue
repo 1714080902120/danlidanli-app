@@ -11,7 +11,7 @@
               <img src="~assets/img/base/wallet_dark.svg" alt />
             </span>
             <span class="scan">
-              <input type="file" name id @click="toScan()" />
+              <input type="file" name id @click="toScan()" capture="camcorder" />
               <img src="~assets/img/base/scan_dark.svg" alt />
             </span>
           </div>
@@ -45,7 +45,7 @@
           <span class="sub">让你体验到私人定制</span>
         </div>
         <div class="right">
-          <input class="scan" type="file" name id accept="image/*" @click="toScan()" />
+          <input class="scan" type="file" name id capture="camcorder" @click="toScan()" />
           <img src="~assets/img/base/scan_dark.svg" alt />
         </div>
       </div>
