@@ -195,17 +195,19 @@ export default {
           font-size: 36px;
         }
         .level {
-          height: 32px;
-          line-height: 32px;
+          font-size: 16px;
+          height: 26px;
+          line-height: 26px;
           margin: 0 10px;
           border: 2px solid #fff;
           color: rgb(252, 252, 252);
-          border-radius: 8px;
+          border-radius: 6px;
           padding: 0 8px;
         }
         .label {
-          height: 32px;
-          line-height: 32px;
+          font-size: 22px;
+          height: 30px;
+          line-height: 30px;
           background-color: var(--color-tint);
           color: rgb(243, 237, 237);
           border-radius: 6px;

@@ -116,7 +116,7 @@ export default {
     goBack() {
       this.isActive = false;
       let timer = setTimeout(() => {
-        this.$router.replace({ path: this.$route.params.beforePath });
+        this.$router.replace({ path: '/home/' });
         clearTimeout(timer);
         timer = null;
       }, 300);

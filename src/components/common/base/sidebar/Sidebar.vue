@@ -271,7 +271,7 @@ export default {
     }
   }
   .tabbar-outer {
-    position: absolute;
+    position: fixed;
     display: flex;
     bottom: 0;
     background-color: var(--base-bg-color);

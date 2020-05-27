@@ -37,17 +37,22 @@ export default {
     position: sticky;
     top: 0;
     height: 1.6rem;
-    line-height: 1.6rem;
     background-color: var(--base-bg-color-thr);
+    display: flex;
+    align-items: center;
     .back {
+      padding-bottom: 0.1rem;
       margin: 0 0.5rem;
     }
     .title {
+      display: flex;
+      align-items: center;
       font-size: 0.45rem;
       img {
-        width: 0.3rem;
-        height: 0.3rem;
+        width: 0.35rem;
+        height: 0.35rem;
         margin-right: 0.2rem;
+        padding-bottom: 0.05rem;
       }
     }
   }
