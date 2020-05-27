@@ -29,13 +29,13 @@
       </div>
     </BetterScroll>
     <div class="tabbar-outer">
-      <span class="set">
+      <span class="set" @click="set()">
         <img slot="icon" src="~assets/img/base/set_dark.svg" />设置
       </span>
-      <span class="theme">
+      <span class="theme" @click="theme()">
         <img slot="icon" src="~assets/img/base/theme_dark.svg" />主题
       </span>
-      <span class="skip">
+      <span class="skip" @click="skip()">
         <img slot="icon" src="~assets/img/base/sun.svg" />夜间
       </span>
     </div>
@@ -220,6 +220,15 @@ export default {
     },
     touchStart() {
       // console.log(e);
+    },
+    set() {
+      this.$router.push({ path: '/set' })
+    },
+    theme() {
+      this.$router.push({ path: '/theme' })
+    },
+    skip () {
+      this.$router.push({ path: '/skip' })
     }
   },
   computed: {

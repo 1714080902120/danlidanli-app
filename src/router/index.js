@@ -4,7 +4,7 @@ import Category from './category/index'
 import Home from './home/index'
 import MemberShop from './member-shop/index'
 import Trends from './trends/index'
-import { RorL, ForF } from './other/index'
+import { RorL, ForF, bigMember, set, theme, skip } from './other/index'
 import Wallet from './user/wallet/index'
 
 const routerPush = VueRouter.prototype.push
@@ -28,7 +28,11 @@ const routes = [
   MemberShop,
   RorL,
   ForF,
-  Wallet
+  Wallet,
+  bigMember,
+  set,
+  theme,
+  skip
 ]
 
 const router = new VueRouter({

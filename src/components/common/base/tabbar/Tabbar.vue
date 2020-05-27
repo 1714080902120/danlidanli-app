@@ -71,18 +71,19 @@ export default {
 };
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
 #tabbar {
   position: fixed;
   bottom: 0;
   display: flex;
   .outer {
-    background-color: var(--base-bg-color-sec);
+    background-color: var(--base-bg-color-sec) !important;
     display: flex;
     flex: auto;
     .tabbar-item {
       flex: auto;
       .inner {
+        border: 0;
         color: var(--color-txt);
       }
       .active {

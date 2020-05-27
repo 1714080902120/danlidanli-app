@@ -11,7 +11,7 @@
               <img src="~assets/img/base/wallet_dark.svg" alt />
             </span>
             <span class="scan">
-              <input type="file" name id @click="toScan()" capture="camcorder" />
+              <input type="file" name id @click="toScan()" capture="camera" />
               <img src="~assets/img/base/scan_dark.svg" alt />
             </span>
           </div>
@@ -26,7 +26,7 @@
           <span class="coins">硬币：{{info.coin.coins}}</span>
         </div>
       </div>
-      <div class="vip-time">
+      <div class="vip-time" @click="bigMember()">
         <span>我的大会员</span>
         <span>2020–05–07过期</span>
         <span>〉</span>
@@ -45,7 +45,7 @@
           <span class="sub">让你体验到私人定制</span>
         </div>
         <div class="right">
-          <input class="scan" type="file" name id capture="camcorder" @click="toScan()" />
+          <input class="scan" type="file" name id capture="camera" @click="toScan()" />
           <img src="~assets/img/base/scan_dark.svg" alt />
         </div>
       </div>
@@ -117,6 +117,10 @@ export default {
           beforePath: this.$route.path
         }
       });
+    },
+    bigMember () {
+      this.$router.push({ path: '/big-member' })
+      this.$Bus.$emit("sidebarDisappear");
     }
   }
 };
