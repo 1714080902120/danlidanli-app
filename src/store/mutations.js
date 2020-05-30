@@ -30,6 +30,9 @@ const mutations = {
   // 控制下拉刷新组件是否开启， 在HomeRecommend等在同一navbar中的组件用到
   changeLoadingLockState (state, payload) {
     state.loadingLock = payload
+  },
+  logout (state) {
+    state.userInfo = {}
   }
 }
 

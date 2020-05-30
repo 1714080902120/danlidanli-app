@@ -178,8 +178,7 @@ export default {
       this.bus();
     });
   },
-  activated() {
-  },
+  activated() {},
   components: {
     BetterScroll,
     SidebarHead
@@ -215,20 +214,23 @@ export default {
       let X = window.innerWidth;
       if (e.x > X * 0.8) {
         this.isAppear = false;
-        this.$store.commit('closeSideBar', false)
+        this.$store.commit("closeSideBar", false);
       }
     },
     touchStart() {
       // console.log(e);
     },
     set() {
-      this.$router.push({ path: '/set' })
+      this.$Bus.$emit("sidebarDisappear");
+      this.$router.push({ path: "/set" });
     },
     theme() {
-      this.$router.push({ path: '/theme' })
+      this.$Bus.$emit("sidebarDisappear");
+      this.$router.push({ path: "/theme" });
     },
-    skip () {
-      this.$router.push({ path: '/skip' })
+    skip() {
+      this.$Bus.$emit("sidebarDisappear");
+      this.$router.push({ path: "/skip" });
     }
   },
   computed: {
@@ -240,12 +242,12 @@ export default {
     }
   },
   watch: {
-    '$store.state.loginState' () {
-      this.getData()
+    "$store.state.loginState"() {
+      this.getData();
     },
     deep: true,
     immediate: true
-  },
+  }
 };
 </script>
 

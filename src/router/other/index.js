@@ -1,9 +1,9 @@
 const RegisterOrLogin = () => import('views/RegisterOrLogin')
 const FansFollows = () => import('views/user/FansFollows')
 const BigMember = () => import('components/content/user/big-member/BigMember')
-const UserSet = () => import('components/content/user/big-member/BigMember')
-const Theme = () => import('components/content/user/big-member/BigMember')
-const Skip = () => import('components/content/user/big-member/BigMember')
+const UserSet = () => import('components/content/user/set-theme-skip/Set')
+const Theme = () => import('components/content/user/set-theme-skip/Theme')
+const Skip = () => import('components/content/user/set-theme-skip/Skip')
 
 
 const RorL = {

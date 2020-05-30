@@ -96,7 +96,8 @@ export default {
   activated() {
     if (
       this.$route.params.type === "register" ||
-      this.$route.params.type === "login"
+      this.$route.params.type === "login" ||
+      this.$route.params.type === 'logout'
     ) {
       this.$router.go(0);
     }
