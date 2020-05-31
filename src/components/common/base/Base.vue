@@ -57,7 +57,7 @@ export default {
   position: relative;
   margin-top: var(--top-margin);
   z-index: 99;
-  background-color: rgb(79, 79, 79);
+  background-color: var(--base-bg-color);
   .head {
     position: relative;
     display: flex;
@@ -100,7 +100,7 @@ export default {
         display: flex;
         align-items: center;
         border-radius: 30px;
-        background-color: rgba(65, 64, 64, 1);
+        background-color: rgba(58, 58, 58, 1);
         height: 70px;
         line-height: 70px;
         padding: 10px;

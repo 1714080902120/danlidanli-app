@@ -1,5 +1,5 @@
 <template>
-  <div id="B-card">
+  <div id="set">
     <div class="head">
       <span class="back" @click="close()">
         <img src="~assets/img/fans_follows/go_back_dark.svg" alt />
@@ -7,14 +7,19 @@
       <span class="title">设置</span>
     </div>
     <div class="content">
-      <span class="outer" v-for="listItem in list" :key="listItem.col">
-        <li class="inner" v-for="item in listItem.items" :key="item" @click="detail()" v-waves>
+      <span class="outer" v-for="(listItem, index) in list" :key="listItem.col">
+        <li class="inner" v-for="(item, indey) in listItem.items" :key="item" @click="detail(index, indey)" v-waves>
           <span>{{ item }}</span>
           <span>〉</span>
         </li>
       </span>
     </div>
     <div class="footer" @click="logout()" v-waves>退出登录</div>
+    <div class="popup">
+      <mt-popup class="pop" v-model="popupVisible" position="right">
+        <component :is="app.default"></component>
+      </mt-popup>
+    </div>
   </div>
 </template>
 
@@ -22,9 +27,17 @@
 import { Toast } from "mint-ui";
 
 export default {
-  name: "BScore",
+  name: "Set",
   data() {
     return {
+      cmps: [
+        ["AccountInformation", "SecurityPrivacy", "ReceivingInformation"],
+        ["HomeRecommendSet", "PlaySettings", "OfflineSettings", "PursuitSettings"],
+        ["DynamicSettings", "PushSettings", "MessageSettings", "ClearStorage", "OtherSettings"],
+        ["MyService", "Help", "UserAgreement", "PrivacyPolicy", "PrivacySettings"]
+      ],
+      app: '',
+      popupVisible: false,
       list: [
         {
           col: "0",
@@ -51,11 +64,17 @@ export default {
       ]
     };
   },
+  created() {
+    this.Bus()
+  },
   methods: {
     close() {
       this.$router.go(-1);
     },
-    detail() {},
+    detail(x, y) {
+      this.app = require(`./${this.cmps[x][y]}.vue`);
+      this.popupVisible = true
+    },
     logout() {
       window.localStorage.removeItem("haveToken");
       window.localStorage.removeItem("token");
@@ -71,13 +90,18 @@ export default {
         position: "middle",
         duration: 3000
       });
+    },
+    Bus () {
+      this.$Bus.$on('closeSetPopup', () => {
+        this.popupVisible = false
+      })
     }
   }
 };
 </script>
 
 <style lang="less" scoped>
-#B-card {
+#set {
   background-color: var(--base-bg-color-sec) !important;
   width: 10rem;
   height: 17.7rem;
@@ -123,7 +147,7 @@ export default {
       margin-top: 0.4rem;
       background-color: rgb(50, 50, 50);
       &:last-child {
-        margin-bottom: .4rem;
+        margin-bottom: 0.4rem;
       }
       .inner {
         margin: 0 0.2rem;
@@ -153,7 +177,13 @@ export default {
     justify-content: center;
     text-align: center;
     background-color: rgb(50, 50, 50);
-    margin-bottom: .5rem;
+    margin-bottom: 0.5rem;
+  }
+  .popup {
+    .pop {
+      width: 10rem;
+      height: 100vh;
+    }
   }
 }
 #B-card::-webkit-scrollbar {

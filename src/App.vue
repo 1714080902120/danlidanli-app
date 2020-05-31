@@ -44,7 +44,7 @@ export default {
 @import "assets/css/mint-ui-reset/base.less";
 #app {
   overflow: hidden;
-  background-color: var(--base-bg-color-sec);
+  background-color: var(--base-bg-color);
 }
 #app::-webkit-scrollbar {
   display: none;

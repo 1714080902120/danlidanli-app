@@ -167,7 +167,7 @@ export default {
         position: relative;
         display: flex;
         justify-content: space-between;
-        font-size: 10px;
+        font-size: .3rem;
         bottom: 45px;
         margin-left: 10px;
         color: rgb(238, 235, 235);
