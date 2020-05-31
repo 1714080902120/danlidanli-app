@@ -1,4 +1,6 @@
 import axios from './axios'
+import $http from 'axios'
+
 
 export async function getUserData() {
   return await axios({
@@ -6,7 +8,6 @@ export async function getUserData() {
     method: 'get'
   })
 }
-
 // 短信验证
 export async function Send ({ phoneNumber }) {
   return await axios({
@@ -17,6 +18,12 @@ export async function Send ({ phoneNumber }) {
     }
   })
 }
+
+// 获取当前ip和地址
+export async function  City() {
+  return $http.post('/apis/cityjson?ie=utf-8',{})
+}
+
 
 export async function Register ({ username, password }) {
   let data

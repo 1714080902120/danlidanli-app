@@ -22,6 +22,8 @@
 
 <script>
 import { Toast } from "mint-ui";
+import { City } from 'network/user'
+import * as sysTool from "common/systemTool";
 
 export default {
   name: "Help",
@@ -50,6 +52,19 @@ export default {
         }
       ]
     };
+  },
+  created() {
+    City().then(res => {
+      console.log(res);
+      
+    })
+    this.brower = sysTool.GetCurrentBrowser();
+      this.os = sysTool.GetOs();
+      console.log(
+        "浏览器，操作系统，：",
+        this.brower,
+        this.os
+      );
   },
   methods: {
     closeService() {
