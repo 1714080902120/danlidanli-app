@@ -38,8 +38,8 @@ export default {
   },
   created() {
     this.toGetHomeSwipeData(), this.toGetHomeData(this.page);
-    // this.pullDownApplyData();
-    // this.pullUpApplyData();
+    this.pullDownApplyData();
+    this.pullUpApplyData();
     this.cmps.forEach(app => {
       this.apps.push({ app: require(`./${app}.vue`) });
     });

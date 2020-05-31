@@ -8,7 +8,13 @@
     </div>
     <div class="content">
       <span class="outer" v-for="(listItem, index) in list" :key="listItem.col">
-        <li class="inner" v-for="(item, indey) in listItem.items" :key="item" @click="detail(index, indey)" v-waves>
+        <li
+          class="inner"
+          v-for="(item, indey) in listItem.items"
+          :key="item"
+          @click="detail(index, indey)"
+          v-waves
+        >
           <span>{{ item }}</span>
           <span>〉</span>
         </li>
@@ -32,11 +38,28 @@ export default {
     return {
       cmps: [
         ["AccountInformation", "SecurityPrivacy", "ReceivingInformation"],
-        ["HomeRecommendSet", "PlaySettings", "OfflineSettings", "PursuitSettings"],
-        ["DynamicSettings", "PushSettings", "MessageSettings", "ClearStorage", "OtherSettings"],
-        ["MyService", "Help", "UserAgreement", "PrivacyPolicy", "PrivacySettings"]
+        [
+          "HomeRecommendSet",
+          "PlaySettings",
+          "OfflineSettings",
+          "PursuitSettings"
+        ],
+        [
+          "DynamicSettings",
+          "PushSettings",
+          "MessageSettings",
+          "ClearStorage",
+          "OtherSettings"
+        ],
+        [
+          "MyService",
+          "Help",
+          "UserAgreement",
+          "PrivacyPolicy",
+          "PrivacySettings"
+        ]
       ],
-      app: '',
+      app: "",
       popupVisible: false,
       list: [
         {
@@ -65,7 +88,7 @@ export default {
     };
   },
   created() {
-    this.Bus()
+    this.Bus();
   },
   methods: {
     close() {
@@ -73,7 +96,7 @@ export default {
     },
     detail(x, y) {
       this.app = require(`./${this.cmps[x][y]}.vue`);
-      this.popupVisible = true
+      this.popupVisible = true;
     },
     logout() {
       window.localStorage.removeItem("haveToken");
@@ -91,10 +114,10 @@ export default {
         duration: 3000
       });
     },
-    Bus () {
-      this.$Bus.$on('closeSetPopup', () => {
-        this.popupVisible = false
-      })
+    Bus() {
+      this.$Bus.$on("closeSetPopup", () => {
+        this.popupVisible = false;
+      });
     }
   }
 };

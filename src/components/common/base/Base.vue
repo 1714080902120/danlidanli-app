@@ -127,15 +127,15 @@ export default {
         .download {
           margin: 0 0 0 -10px;
           img {
-            width: 28px;
-            height: 28px;
+            width: .7rem;
+            height: .7rem;
           }
         }
         .mail {
           margin: 0 0 0 10px;
           img {
-            width: 28px;
-            height: 28px;
+            width: .7rem;
+            height: .7rem;
           }
         }
       }

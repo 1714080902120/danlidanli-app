@@ -281,4 +281,13 @@ export default {
     transform: rotateZ(180deg);
   }
 }
+
+img[lazy="loading"] {
+  height: 3.2rem;
+  margin: auto;
+  background-image: url("~assets/img/base/bilibili_user_logo_bg.svg");
+  background-position: center center;
+  background-size: 80% 80%;
+  background-repeat: no-repeat;
+}
 </style>

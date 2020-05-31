@@ -147,7 +147,7 @@ export default {
           } else if (BSoffsetY >= 0) {
             this.extendBS = false
           }
-          this.$refs.outer.style.transform = `translateY(${offsetY * 4.5}px)`
+          this.$refs.outer.style.transform = `translateY(${offsetY * .105}rem)`
         });
       });
     }
@@ -178,9 +178,9 @@ export default {
     'extendBS' (newVal) {
       this.$nextTick(() => {
         if (newVal) {
-          this.$refs.scroll.$el.style.height = `${window.innerHeight * (1 - 130 / 667) + 40}px`
+          this.$refs.scroll.$el.style.height = `18.1rem`
         } else {
-          this.$refs.scroll.$el.style.height = `${window.innerHeight * (1 - 130 / 667)}px`
+          this.$refs.scroll.$el.style.height = `18rem`
         }
       })
     },

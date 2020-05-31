@@ -1,5 +1,5 @@
 <template>
-  <div id="security-privacy">
+  <div id="home-recommend-settings">
     <div class="head">
       <span class="back" @click="closeService()">
         <img src="~assets/img/fans_follows/go_back_dark.svg" alt />
@@ -11,7 +11,7 @@
 
 <script>
 export default {
-  name: "SecurityPrivacy",
+  name: "HomeRecommendSettings",
   data() {
     return {};
   },
@@ -24,7 +24,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
-#security-privacy {
+#home-recommend-settings {
   background-color: rgb(255, 255, 255);
   width: 10rem;
   height: 100vh;
