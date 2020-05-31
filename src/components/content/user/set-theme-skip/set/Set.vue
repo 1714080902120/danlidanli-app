@@ -60,7 +60,7 @@ export default {
         ]
       ],
       app: "",
-      popupVisible: false,
+      popupVisible: true,
       list: [
         {
           col: "0",
@@ -88,6 +88,7 @@ export default {
     };
   },
   created() {
+    this.app = require(`./Help.vue`)
     this.Bus();
   },
   methods: {
@@ -125,7 +126,7 @@ export default {
 
 <style lang="less" scoped>
 #set {
-  background-color: var(--base-bg-color-sec) !important;
+  background-color: var(--base-set-bg-color);
   width: 10rem;
   height: 17.7rem;
   font-size: 0.4rem;

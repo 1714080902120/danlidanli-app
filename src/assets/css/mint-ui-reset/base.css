@@ -7,3 +7,6 @@
   background-color: #353434 !important;
   border-radius: 2px !important;
 }
+.mint-toast {
+  z-index: 9999 !important;
+}

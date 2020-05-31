@@ -14,6 +14,8 @@
   --base-bg-color-thr: rgba(63, 63, 63, 1);
   --base-bg-color-white: rgba(230,230,230, 1);
   --base-item-color-white: rgba(241,241,241, 1);
+  --base-set-item-color: rgb(50, 50, 50);
+  --base-set-bg-color: rgb(39, 39, 39);
 }
 *,
 *::before,
