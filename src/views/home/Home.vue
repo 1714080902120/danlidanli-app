@@ -160,7 +160,7 @@ export default {
     },
     height () {
       return () => {
-        return `${window.innerHeight * (1 - 130 / 667)}px`
+        return `14.6rem`
       }
     }
   },
@@ -178,9 +178,9 @@ export default {
     'extendBS' (newVal) {
       this.$nextTick(() => {
         if (newVal) {
-          this.$refs.scroll.$el.style.height = `18.1rem`
-        } else {
           this.$refs.scroll.$el.style.height = `18rem`
+        } else {
+          this.$refs.scroll.$el.style.height = `14.6rem`
         }
       })
     },

@@ -199,9 +199,9 @@ export default {
           font-size: 36px;
         }
         .level {
-          font-size: 20px;
-          height: 26px;
-          line-height: 26px;
+          font-size: .1rem;
+          height: .3rem;
+          line-height: .3rem;
           margin: 0 10px;
           border: 2px solid #fff;
           color: rgb(252, 252, 252);

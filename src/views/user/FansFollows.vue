@@ -23,11 +23,15 @@
 
     <v-touch class="follows-fans" @swipeleft="swipeLeft()" @swiperight="swipeRight()">
       <v-touch class="follows" :class="{ 'to-left': active === 1, 'back-to': active === 0 }">
-        <div
-          class="search"
-        >
+        <div class="search">
           <img src="~assets/img/home/search_dark.svg" alt />
-          <input type="text" placeholder="搜索我的关注" @blur="whenBlur($event)" @focus="whenFocus()" v-model="searchValue" />
+          <input
+            type="text"
+            placeholder="搜索我的关注"
+            @blur="whenBlur($event)"
+            @focus="whenFocus()"
+            v-model="searchValue"
+          />
         </div>
         <div class="special-follows" :class="{ 'is-focus': isFocus === true }">
           <div class="head" @click="toRotate(0, $event)">
@@ -41,7 +45,7 @@
           </div>
           <ul ref="specialUl">
             <li ref="specialLi" v-for="item in specialFollows" :key="item.name">
-              <a :href="item.href">
+              <a href="javascript:;" @click="toPersonalDetail(item.name, item.href)">
                 <img :src="item.img" alt />
                 <div class="name-desc">
                   <span class="name">{{ item.name }}</span>
@@ -66,7 +70,7 @@
           </div>
           <ul ref="defaultUl">
             <li ref="defaultLi" v-for="item in follows" :key="item.name">
-              <a :href="item.href">
+              <a href="javascript:;" @click="toPersonalDetail(item.name, item.href)">
                 <img :src="item.img" alt />
                 <div class="name-desc">
                   <span class="name">{{ item.name }}</span>
@@ -82,7 +86,7 @@
         <div class="search-result" v-if="isFocus === true">
           <ul>
             <li v-for="item in searchResult" :key="item.name">
-              <a :href="item.href">
+              <a href="javascript:;" @click="toPersonalDetail(item.name, item.href)">
                 <img :src="item.img" alt />
                 <div class="name-desc">
                   <span class="name">{{ item.name }}</span>
@@ -92,7 +96,7 @@
             </li>
           </ul>
           <div class="message" v-if="searchValue !== '' && searchResult.length <= 0">
-            <img src="~assets/img/recommend_list/danlidanli_girl.png" alt="">
+            <img src="~assets/img/recommend_list/danlidanli_girl.png" alt />
             <span>没有搜到相关内容，请尝试别的搜索词</span>
           </div>
         </div>
@@ -101,7 +105,7 @@
         <div class="head">共{{ fans.length }}个粉丝</div>
         <ul>
           <li v-for="(item, index) in fans" :key="index">
-            <a :href="item.href">
+            <a href="javascript:;" @click="toPersonalDetail(item.name, item.href)">
               <img :src="item.img" alt />
               <div class="name-desc">
                 <span class="name">{{ item.name }}</span>
@@ -115,6 +119,21 @@
         </ul>
       </v-touch>
     </v-touch>
+    <div class="popup">
+        <mt-popup class="pop" v-model="popupVisible" position="right">
+          <div class="pop-content-head">
+            <span class="back" @click="closePop()">‹</span>
+            <span class="title" @click="closeSe()">
+              {{ activePerson.name }}的个人空间
+            </span>
+          </div>
+          <div class="pop-content-main">
+            <iframe class="frame" :src="activePerson.href">
+              <a :href="activePerson.href">你的浏览器不支持iframe页面嵌套，请点击这里访问页面内容。</a>
+            </iframe>
+          </div>
+        </mt-popup>
+    </div>
   </div>
 </template>
 
@@ -123,6 +142,11 @@ export default {
   name: "FansFollows",
   data() {
     return {
+      popupVisible: false,
+      activePerson: {
+        name: '',
+        href: ''
+      },
       list: ["我的关注", "我的粉丝"],
       active: 0,
       ifRotate: false,
@@ -132,14 +156,14 @@ export default {
       fans: [],
       isFocus: false,
       searchResult: [],
-      searchValue: '',
+      searchValue: "",
       send: () => {}
     };
   },
   created() {
     this.getData();
     // 防抖
-    this.send = this.$debounce(this.search, 1000)
+    this.send = this.$debounce(this.search, 1000);
   },
   mounted() {},
   activated() {
@@ -211,16 +235,28 @@ export default {
       this.isFocus = true;
     },
     whenBlur() {
-      if (this.searchResult.length > 0) return false
+      if (this.searchResult.length > 0) return false;
       this.isFocus = false;
-      this.searchValue = ''
+      this.searchValue = "";
     },
     // 模糊查询
     search() {
-      let reg = new RegExp(this.searchValue, 'gi')
-      this.searchResult = this.$store.state.userInfo.fans_follows.follows.filter(e => {
-        return reg.test(e.name)
-      })
+      let reg = new RegExp(this.searchValue, "gi");
+      this.searchResult = this.$store.state.userInfo.fans_follows.follows.filter(
+        e => {
+          return reg.test(e.name);
+        }
+      );
+    },
+    toPersonalDetail(name, href) {
+      this.activePerson = {
+        name,
+        href
+      }
+      this.popupVisible = true
+    },
+    closePop () {
+      this.popupVisible = false
     }
   },
   components: {},
@@ -228,8 +264,8 @@ export default {
     "$store.state.userInfo"() {
       this.getData();
     },
-    'searchValue' () {
-      this.send()
+    searchValue() {
+      this.send();
     },
     immediate: true
   }
@@ -248,7 +284,7 @@ export default {
     top: 0;
     background-color: var(--base-bg-color);
     z-index: 99;
-    transition: .1s ease-in-out;
+    transition: 0.1s ease-in-out;
     .back {
       height: 1.8rem;
       line-height: 1.8rem;
@@ -377,7 +413,7 @@ export default {
           margin: 1rem auto;
         }
         span {
-          font-size: .5rem;
+          font-size: 0.5rem;
         }
       }
       .search {
@@ -455,6 +491,45 @@ export default {
   .is-active {
     color: var(--color-tint);
     border-bottom: 0.06rem solid var(--color-tint);
+  }
+
+  .popup {
+    .pop {
+      width: 10rem;
+      height: 18rem;
+      .pop-content-head {
+        position: relative;
+        height: 1.6rem;
+        background-color: var(--base-bg-color-thr);
+        display: flex;
+        align-items: center;
+        .back {
+          padding-bottom: 0.1rem;
+          margin: 0 0.5rem;
+        }
+        .title {
+          display: flex;
+          align-items: center;
+          font-size: 0.45rem;
+          img {
+            width: 0.35rem;
+            height: 0.35rem;
+            margin-right: 0.2rem;
+            padding-bottom: 0.05rem;
+          }
+        }
+      }
+      .pop-content-main {
+        .frame {
+          overflow: hidden;
+          width: 10rem;
+          height: 16.3rem;
+        }
+        .frame::-webkit-scrollbar {
+          width: 0 !important;
+        }
+      }
+    }
   }
 }
 #fans-follows::-webkit-scrollbar {

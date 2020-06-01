@@ -61,7 +61,7 @@ export default {
   mounted() {
     this.$nextTick(() => {
       this.getBetterScroll();
-      this.scrollTo(0, -10, 100);
+      this.scrollTo(0, -1, 100);
     });
   },
   activated() {

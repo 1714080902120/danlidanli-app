@@ -1,6 +1,6 @@
 <template>
   <div id="popup">
-    <mt-popup v-model="popupVisible" position="bottom">
+    <mt-popup class="pop" v-model="popupVisible" position="middle" popup-transition="popup-fade">
       <div class="inner">
         <div class="header" @click="addToBackLook()">添加至稍后再看</div>
         <div class="content">
@@ -36,7 +36,7 @@ export default {
   data() {
     return {
       popupVisible: false,
-      up: ''
+      up: ""
     };
   },
   created() {
@@ -48,15 +48,15 @@ export default {
     },
     // 获取Up名字
     ListenPopupVisible() {
-      this.$Bus.$on("popupVisible", (res) => {
+      this.$Bus.$on("popupVisible", res => {
         this.popupVisible = true;
-        this.up = res
+        this.up = res;
       });
     },
     // 发送举报信息
-    tip (e) {
-      this.$Bus.$emit('tip', e.target.innerText)
-      this.popupVisible = false
+    tip(e) {
+      this.$Bus.$emit("tip", e.target.innerText);
+      this.popupVisible = false;
     }
   },
   watch: {
@@ -68,64 +68,68 @@ export default {
 
 <style lang="less" scoped>
 #popup {
-  .inner {
-    width: 750px;
-    height: 800px;
-    display: flex;
-    flex-direction: column;
-    font-size: 30px;
-    font-family: "FangSong_GB2312";
-    font-weight: lighter;
-    color: rgb(197, 192, 192);
-    .header {
-      position: relative;
-      height: 100px;
-      line-height: 100px;
-      margin-left: 40px;
-      border-bottom: 2px solid rgba(90, 90, 90, 0.8);
-    }
-    .content {
-      flex: auto;
-      margin: 20px 0 20px 40px;
-      .give-back,
-      .no-like {
-        display: flex;
-        flex-direction: column;
-        .title {
-          margin: 20px 0;
-        }
+  .pop {
+    border-radius: .2rem !important;
+    .inner {
+      width: 9rem;
+      height: 800px;
+      display: flex;
+      flex-direction: column;
+      font-size: 30px;
+      font-family: "FangSong_GB2312";
+      font-weight: lighter;
+      color: rgb(197, 192, 192);
+      background-color: #353434;
+      .header {
+        position: relative;
+        height: 100px;
+        line-height: 100px;
+        margin-left: 40px;
         border-bottom: 2px solid rgba(90, 90, 90, 0.8);
-        .sub-inner {
-          flex: auto;
+      }
+      .content {
+        flex: auto;
+        margin: 20px 0 20px 40px;
+        .give-back,
+        .no-like {
           display: flex;
-          flex-wrap: wrap;
-          justify-content: space-around;
-          margin-left: -40px;
-          margin-bottom: 20px;
-          .item {
-            width: 40%;
-            height: 70px;
-            line-height: 70px;
-            text-align: center;
-            border: 2px solid rgba(80, 80, 80, 0.8);
-            border-radius: 7px;
-            margin: 10px 0;
-            overflow: hidden;
-            white-space: nowrap;
-            text-overflow: ellipsis;
+          flex-direction: column;
+          .title {
+            margin: 20px 0;
+          }
+          border-bottom: 2px solid rgba(90, 90, 90, 0.8);
+          .sub-inner {
+            flex: auto;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+            margin-left: -40px;
+            margin-bottom: 20px;
+            .item {
+              width: 40%;
+              height: 70px;
+              line-height: 70px;
+              text-align: center;
+              border: 2px solid rgba(80, 80, 80, 0.8);
+              border-radius: 7px;
+              margin: 10px 0;
+              overflow: hidden;
+              white-space: nowrap;
+              text-overflow: ellipsis;
+            }
           }
         }
+        .no-like {
+          border-bottom: 0;
+        }
       }
-      .no-like {
-        border-bottom: 0;
+      .footer {
+        text-align: center;
+        height: 90px;
+        line-height: 90px;
+        border-top: 10px solid rgba(80, 80, 80, 0.8);
+        margin-bottom: 50px;
       }
-    }
-    .footer {
-      text-align: center;
-      height: 90px;
-      line-height: 90px;
-      border-top: 10px solid rgba(80, 80, 80, 0.8);
-      margin-bottom: 50px;
     }
   }
 }
