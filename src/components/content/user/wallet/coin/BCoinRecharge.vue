@@ -402,8 +402,8 @@ export default {
       }
     }
     .footer {
-      position: fixed;
-      bottom: 0.5rem;
+      position: relative;
+      bottom: -3.6rem;
       z-index: 999;
       margin-left: 0.5rem;
       .footer-agreement {

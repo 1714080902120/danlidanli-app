@@ -354,9 +354,8 @@ export default {
       }
     }
     .footer {
-      position: fixed;
-      bottom: 0.3rem;
-      z-index: 999;
+      position: relative;
+      bottom: -1.3rem;
       margin-left: 0.5rem;
       .footer-agreement {
         display: flex;

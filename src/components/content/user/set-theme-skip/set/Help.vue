@@ -17,18 +17,31 @@
         </li>
       </ul>
     </div>
+    <div class="popup">
+      <mt-popup class="pop" v-model="popupVisible" position="right">
+        <div class="pop-head">
+          <span class="back" @click="closePop()">
+            <img src="~assets/img/fans_follows/go_back_dark.svg" alt />
+          </span>
+          <span class="title">{{ activeItem }}</span>
+        </div>
+      </mt-popup>
+    </div>
   </div>
 </template>
 
 <script>
 import { Toast } from "mint-ui";
-import { City } from 'network/user'
+import { City } from "network/user";
 import * as sysTool from "common/systemTool";
 
 export default {
   name: "Help",
   data() {
     return {
+      popupVisible: true,
+      activeItem: "网络诊断",
+      activeIndex: 2,
       list: [
         {
           name: "版本更新",
@@ -56,27 +69,22 @@ export default {
   created() {
     City().then(res => {
       console.log(res);
-      
-    })
-    this.brower = sysTool.GetCurrentBrowser();
-      this.os = sysTool.GetOs();
-      console.log(
-        "浏览器，操作系统，：",
-        this.brower,
-        this.os
-      );
+    });
   },
   methods: {
     closeService() {
       this.$Bus.$emit("closeSetPopup");
     },
+    closePop() {},
     detail(i) {
+      this.activeIndex = i;
+      this.activeItem = this.list[i].name;
       switch (i) {
         case 0:
           break;
         case 1:
           Toast({
-            message: "自己不会看手机配置？跑这来看啥",
+            message: `浏览器：${sysTool.GetCurrentBrowser()}，手机：${sysTool.GetOs()}`,
             position: "middle",
             duration: 3000
           });
@@ -85,7 +93,7 @@ export default {
           break;
         case 3:
           Toast({
-            message: "想重置？没门！",
+            message: "想重置？没门",
             position: "middle",
             duration: 3000
           });
@@ -113,7 +121,8 @@ export default {
   background-color: var(--base-set-bg-color);
   width: 10rem;
   height: 100vh;
-  .head {
+  .head,
+  .pop-head {
     position: relative;
     height: 1.6rem;
     background-color: var(--base-bg-color-thr);
@@ -162,6 +171,12 @@ export default {
           }
         }
       }
+    }
+  }
+  .popup {
+    .pop {
+      width: 10rem;
+      height: 100vh;
     }
   }
 }
