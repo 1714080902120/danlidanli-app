@@ -25,8 +25,8 @@ export default {
     margin-top: -21px;
     margin-left: -21px;
     .circular {
-      width: 1.2rem;
-      height: 1.2rem;
+      width: 1rem;
+      height: 1rem;
       animation: loading-rotate 4s linear infinite;
       .path {
         animation: loading-dash 3s ease-in-out infinite;

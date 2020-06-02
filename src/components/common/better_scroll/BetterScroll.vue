@@ -164,7 +164,7 @@ export default {
             BSoffsetY: 1
           });
         } else if (nowY - lastY < 0) {
-          if (NavbarTransform > -20) {
+          if (NavbarTransform > -10) {
             NavbarTransform -= 1;
           }
           this.$Bus.$emit("NavbarTransform", {

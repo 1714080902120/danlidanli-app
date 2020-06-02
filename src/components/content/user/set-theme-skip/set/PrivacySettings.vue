@@ -4,7 +4,7 @@
       <span class="back" @click="closeService()">
         <img src="~assets/img/fans_follows/go_back_dark.svg" alt />
       </span>
-      <span class="title">哔哩哔哩用户协议</span>
+      <span class="title">隐私权限设置</span>
     </div>
   </div>
 </template>

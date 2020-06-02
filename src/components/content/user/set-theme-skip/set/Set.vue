@@ -60,7 +60,7 @@ export default {
         ]
       ],
       app: "",
-      popupVisible: true,
+      popupVisible: false,
       list: [
         {
           col: "0",

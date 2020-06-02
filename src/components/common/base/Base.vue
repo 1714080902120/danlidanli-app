@@ -144,7 +144,7 @@ export default {
   .bottom {
     margin-top: 20px;
     background-color: rgba(66, 65, 65, 1);
-    position: sticky;
+    position: relative;
     top: 0;
     left: 0;
   }

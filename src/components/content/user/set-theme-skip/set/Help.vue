@@ -17,9 +17,16 @@
         </li>
       </ul>
     </div>
-    <div class="popup">
-      <mt-popup class="pop" v-model="popupVisible" position="right">
-        <div class="pop-head">
+    <div class="popup" ref="pop">
+      <mt-popup
+        class="pop"
+        :style="{ width: popWid, height: popHei }"
+        v-model="popupVisible"
+        :position="position"
+        :modal="false"
+        popup-transition="popup-fade"
+      >
+        <div class="pop-head" v-if="activeIndex !== 0">
           <span class="back" @click="closePop()">
             <img src="~assets/img/fans_follows/go_back_dark.svg" alt />
           </span>
@@ -29,19 +36,50 @@
           <div class="network-cute" v-if="activeIndex === 2">
             <div class="network-test">
               <span :class="{ select: isSelected === 0 }" @click="testNetwork()" v-waves>开始测试</span>
-              <span :class="{ select: isSelected === 1 }" @click="copyTestResult()" v-waves>复制测试结果</span>
+              <span
+                class="copy"
+                :class="{ select: isSelected === 1 }"
+                :data-clipboard-text="JSON.stringify(showTestData)"
+                @click="copyTestResult"
+                v-waves
+              >复制测试结果</span>
             </div>
             <div class="ip-city">
               <span class="ip">{{ ipCity.ip }}</span>;
               <span class="city">{{ ipCity.city }}</span>
             </div>
-            <div class="test-data">
+            <div class="test-data" v-if="showTestData.length > 0">
               <ul>
                 <li v-for="(item, index) in showTestData" :key="index">
-                  <p v-for="(p, indey) in item" :key="indey">{{ p }}</p>
+                  <p v-if="item[0].link !== ''">{{ item[0].link }}</p>
+                  <p v-if="item[0].time !== ''">{{ item[0].time }}</p>
+                  <p v-if="item[0].ping !== ''">{{ item[0].ping }}</p>
+                  <p v-if="item[0].connectTimeHttp !== ''">{{ item[0].connectTimeHttp }}</p>
+                  <p v-if="item[0].connectTimeHttps !== ''">{{ item[0].connectTimeHttps }}</p>
+                  <p v-if="item[0].speed !== ''">{{ item[0].speed }}</p>
                 </li>
               </ul>
             </div>
+          </div>
+          <div class="update-test" v-if="activeIndex === 0">
+            <div class="update-test-title">升级提醒</div>
+            <div class="update-test-content">
+              <div class="update-test-content-first">
+                <p v-for="(item, index) in updateMessage[0]" :key="index">{{ item }}</p>
+              </div>
+              <div class="update-test-content-second">
+                <p v-for="(item, index) in updateMessage[1]" :key="index">{{ item }}</p>
+              </div>
+            </div>
+            <div class="update-test-footer">
+              <span class="update-test-cancel" @click="updateCancel()" v-waves>以后再说</span>
+              <span class="update-test-submit" @click="updateSubmit()" v-waves>增量更新（42.7MB）</span>
+            </div>
+          </div>
+          <div class="join-us" v-if="activeIndex === 5">
+            <iframe class="frame" src="https://www.bilibili.com/html/join.html">
+              <a href="https://www.bilibili.com/html/join.html">你的浏览器不支持iframe页面嵌套，请点击这里访问页面内容。</a>
+            </iframe>
           </div>
         </div>
       </mt-popup>
@@ -49,6 +87,7 @@
     <div class="loading">
       <Loading v-show="startTestNetwork" ref="loading" />
     </div>
+    <div class="modal" v-if="popupVisible === true"></div>
   </div>
 </template>
 
@@ -57,17 +96,22 @@ import { Toast } from "mint-ui";
 import { City } from "network/user";
 import * as sysTool from "common/systemTool";
 import Loading from "components/common/loading/Loading2";
+import Clipboard from "clipboard";
 
 export default {
   name: "Help",
   data() {
     return {
-      startTestNetwork: true,
-      popupVisible: true,
+      // pop基础配置
+      position: "middle",
+      popWid: "7rem",
+      popHei: "50vh",
+      startTestNetwork: false,
+      popupVisible: false,
       isSelected: 0,
       activeItem: "网络诊断",
       ipCity: {},
-      activeIndex: 2,
+      activeIndex: 0,
       list: [
         {
           name: "版本更新",
@@ -93,7 +137,7 @@ export default {
       showTestData: [],
       testData: [
         {
-          link: 'account.bilibili.com/110.43.34.66',
+          link: "account.bilibili.com/110.43.34.66",
           time: "lookupTime=21",
           ping: "ping=success(2065ms)",
           connectTimeHttp: "connectTimeHttp=19",
@@ -180,6 +224,15 @@ export default {
           connectTimeHttps: "",
           speed: ""
         }
+      ],
+      updateMessage: [
+        ["版本：6.1.0", "更新包体积：89.3MB", "增量包包体积：42.7MB"],
+        [
+          "更新内容：",
+          "-视频稿件支持UP主添加关注按钮",
+          "-UP主空间一键联播支持播放记忆，再续前缘不断档",
+          "-UP主空间支持视频稿件排序，快速找到你想看的作品"
+        ]
       ]
     };
   },
@@ -196,6 +249,10 @@ export default {
       this.activeItem = this.list[i].name;
       switch (i) {
         case 0:
+          this.position = "middle";
+          this.popWid = "7rem";
+          this.popHei = "50vh";
+          this.popupVisible = true;
           break;
         case 1:
           Toast({
@@ -211,6 +268,9 @@ export default {
               ip: data.cip,
               city: data.cname
             };
+            this.position = "right";
+            this.popWid = "10rem";
+            this.popHei = "100vh";
             this.popupVisible = true;
           });
           break;
@@ -222,8 +282,17 @@ export default {
           });
           break;
         case 4:
+          Toast({
+            message: "不开源，想得美~略略略~",
+            position: "middle",
+            duration: 3000
+          });
           break;
         case 5:
+          this.position = "right";
+          this.popWid = "10rem";
+          this.popHei = "100vh";
+          this.popupVisible = true;
           break;
       }
     },
@@ -233,6 +302,8 @@ export default {
       let timer = setInterval(() => {
         this.showTestData.push(this.testData.splice(0, 1));
         if (this.testData.length <= 0) {
+          this.startTestNetwork = false;
+          this.isSelected = 1;
           clearInterval(timer);
           timer = null;
         }
@@ -240,11 +311,40 @@ export default {
     },
     copyTestResult() {
       this.isSelected = 1;
+      let clipboard = new Clipboard(".copy");
+      clipboard.on("success", () => {
+        Toast({
+          message: "复制成功",
+          position: "middle",
+          duration: 3000
+        });
+        this.testData = [].concat(this.testData, this.showTestData).flat(1);
+        this.showTestData = [];
+        clipboard.destroy();
+      });
+      clipboard.on("error", () => {
+        Toast({
+          message: "复制失败",
+          position: "middle",
+          duration: 3000
+        });
+        clipboard.destroy();
+      });
+    },
+    updateCancel() {
+      this.popupVisible = false;
+    },
+    updateSubmit() {
+      Toast({
+        message: "不好意思，没完成~~",
+        position: "middle",
+        duration: 3000
+      });
     }
   },
   computed: {
     judge() {
-      let reg = /0|3/;
+      let reg = /0|3|4/;
       return i => {
         return !reg.test(i);
       };
@@ -261,6 +361,7 @@ export default {
   background-color: var(--base-set-bg-color);
   width: 10rem;
   height: 100vh;
+  overflow-y: scroll;
   .head,
   .pop-head {
     position: relative;
@@ -315,8 +416,6 @@ export default {
   }
   .popup {
     .pop {
-      width: 10rem;
-      height: 100vh;
       background-color: var(--base-set-bg-color);
       .pop-content {
         margin: 0.2rem;
@@ -342,6 +441,7 @@ export default {
               }
             }
             .select {
+              transition: 0.3s;
               color: var(--color-tint);
               border-color: var(--color-tint);
             }
@@ -349,7 +449,7 @@ export default {
           .ip-city {
             display: flex;
             align-items: center;
-            margin: 0.3rem 0 0 0.1rem;
+            margin: 0.3rem 0 0.2rem 0.1rem;
             font-size: 0.35rem;
             display: flex;
             span {
@@ -357,8 +457,11 @@ export default {
             }
           }
           .test-data {
+            position: relative;
             overflow: hidden;
+            overflow-y: scroll;
             margin-left: 0.1rem;
+            height: 14rem;
             ul {
               display: flex;
               overflow-y: scroll;
@@ -367,12 +470,70 @@ export default {
                 list-style: none;
                 display: flex;
                 flex-direction: column;
-                margin: 0.3rem 0;
+                margin: 0.2rem 0;
                 p {
                   margin: 0.1rem 0;
                 }
               }
             }
+            ul::-webkit-scrollbar {
+              display: none;
+            }
+          }
+          .test-data::-webkit-scrollbar {
+            display: none;
+          }
+        }
+        .update-test {
+          display: flex;
+          flex-direction: column;
+          .update-test-title {
+            font-size: 0.6rem;
+            color: var(--color-tint);
+            text-align: center;
+            margin: 0.3rem auto;
+            height: 1.2rem;
+            line-height: 1.2rem;
+            width: 4.5rem;
+            border-bottom: 0.06rem solid var(--color-tint);
+          }
+          .update-test-content {
+            display: flex;
+            font-size: 0.4rem;
+            flex-direction: column;
+            margin: 0 0.5rem;
+            .update-test-content-first {
+              margin-bottom: 0.4rem;
+            }
+            .update-test-content-second {
+              margin-bottom: 0.3rem;
+            }
+          }
+          .update-test-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            .update-test-cancel,
+            .update-test-submit {
+              width: 3.15rem;
+              height: 1rem;
+              line-height: 1rem;
+              border-radius: 0.1rem;
+              text-align: center;
+              background-color: rgba(92, 92, 92, 0.2);
+            }
+            .update-test-submit {
+              background-color: var(--color-tint);
+              font-size: 0.3rem;
+              color: #fff;
+            }
+          }
+        }
+        .join-us {
+          margin: -0.2rem;
+          .frame {
+            width: 10rem;
+            height: 16.3rem;
           }
         }
       }
@@ -380,8 +541,16 @@ export default {
   }
   .loading {
     position: relative;
-    top: -8.4rem;
-    left: 6rem;
+    top: -8.3rem;
+    left: 6.5rem;
+  }
+  .modal {
+    position: absolute;
+    top: 0;
+    width: 10rem;
+    height: 100vh;
+    z-index: 2000;
+    background-color: rgba(0, 0, 0, 0.5);
   }
 }
 </style>

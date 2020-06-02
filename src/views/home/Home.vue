@@ -73,8 +73,7 @@ export default {
         bottom: true,
         left: false,
         right: false
-      },
-      extendBS: false
+      }
     };
   },
   created() {
@@ -140,14 +139,9 @@ export default {
     },
     // 上滑navbar消失特效
     navBarTransform() {
-      this.$Bus.$on("NavbarTransform", ({ offsetY, BSoffsetY }) => {
+      this.$Bus.$on("NavbarTransform", ({ offsetY }) => {
         this.$nextTick(() => {
-          if (BSoffsetY < 0 && offsetY < -10) {
-            this.extendBS = true
-          } else if (BSoffsetY >= 0) {
-            this.extendBS = false
-          }
-          this.$refs.outer.style.transform = `translateY(${offsetY * .105}rem)`
+          this.$refs.outer.style.transform = `translateY(${offsetY * .21}rem)`
         });
       });
     }
@@ -160,7 +154,7 @@ export default {
     },
     height () {
       return () => {
-        return `14.6rem`
+        return `17rem`
       }
     }
   },
@@ -174,15 +168,6 @@ export default {
   watch: {
     "$store.state.offSetItem"(newVal) {
       this.sendActive = newVal;
-    },
-    'extendBS' (newVal) {
-      this.$nextTick(() => {
-        if (newVal) {
-          this.$refs.scroll.$el.style.height = `18rem`
-        } else {
-          this.$refs.scroll.$el.style.height = `14.6rem`
-        }
-      })
     },
     immediate: true
   }
