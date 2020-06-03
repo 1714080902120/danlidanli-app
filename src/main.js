@@ -9,6 +9,7 @@ import vueWaves from 'common/waves/waves'
 import Utils from 'common/utils'
 import VueTouch from 'vue-touch'
 import VueCropper from 'vue-cropper'
+import Back from 'common/h5+/back.js'
 Vue.config.productionTip = false
 
 
@@ -26,5 +27,6 @@ Vue.prototype.$debounce = Utils.debounce
 new Vue({
   router,
   store,
+  Back,
   render: h => h(App)
 }).$mount('#app')
