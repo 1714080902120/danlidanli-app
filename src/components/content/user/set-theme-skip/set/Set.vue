@@ -60,7 +60,7 @@ export default {
         ]
       ],
       app: "",
-      popupVisible: false,
+      popupVisible: true,
       list: [
         {
           col: "0",
@@ -88,7 +88,7 @@ export default {
     };
   },
   created() {
-    this.app = require(`./Help.vue`)
+    this.app = require(`./PrivacySettings.vue`)
     this.Bus();
   },
   methods: {

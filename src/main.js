@@ -9,10 +9,8 @@ import vueWaves from 'common/waves/waves'
 import Utils from 'common/utils'
 import VueTouch from 'vue-touch'
 import VueCropper from 'vue-cropper'
-
 Vue.config.productionTip = false
 
-// 复制内容
 
 Vue.use(VueTouch, { name: 'v-touch' })
 Vue.use(MintUI, {
