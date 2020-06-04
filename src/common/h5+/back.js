@@ -25,7 +25,7 @@ document.addEventListener('plusready', function () {
           Toast({
             message: '再按一次退出应用',
             position: 'middle',
-            duration: 3000
+            duration: 1500
           })
           first = new Date().getTime()
         }

@@ -144,7 +144,7 @@
             {{ item.name }}
           </li>
         </ul>
-        <div class="pop-footer" v-waves>{{payType + charge}}</div>
+        <div class="pop-footer" @click="pay()" v-waves>{{payType + charge}}</div>
       </mt-popup>
     </div>
     <div class="popup-3">
@@ -162,6 +162,9 @@
 </template>
 
 <script>
+/* eslint-disable no-undef */
+
+
 export default {
   name: "BCoinRecharge",
   data() {
@@ -227,10 +230,25 @@ export default {
           type: require("assets/img/wallet/Antpay.svg"),
           name: "花呗"
         }
-      ]
+      ],
+      channel: null
     };
   },
-  created() {
+  created() {},
+  mounted() {
+    function plusReady() {
+      //uni-app中将此function里的代码放入vue页面的onLoad生命周期中
+      // 获取支付通道
+      plus.payment.getChannels(
+        function(channels) {
+          channel = channels[0];
+        },
+        function(e) {
+          alert("获取支付通道失败：" + e.message);
+        }
+      );
+    }
+    document.addEventListener("plusready", plusReady, false);
   },
   activated() {
     this.isActive = true;
@@ -250,9 +268,6 @@ export default {
     instruction(i) {
       this.popState = i;
       this.popupVisible = true;
-    },
-    take() {
-      console.log(111);
     },
     select(i) {
       this.isSelect = i;
@@ -275,14 +290,64 @@ export default {
       this.payType = this.popList[i].name;
     },
     cancelPay() {
-      this.popup3Visible = true
+      this.popup3Visible = true;
     },
-    cancel () {
-      this.popup3Visible = false
-      this.popupVisible = false
+    cancel() {
+      this.popup3Visible = false;
+      this.popupVisible = false;
     },
-    goOn () {
-      this.popup3Visible = false
+    goOn() {
+      this.popup3Visible = false;
+    },
+    pay() {
+      let id = "alipay";
+      if (this.popSelectID === 1) {
+        id = "wxpay";
+      }
+      // 2. 发起支付请求
+      // 从服务器请求支付订单
+      var ALIPAYSERVER =
+        "http://demo.dcloud.net.cn/helloh5/payment/alipay.php?total=";
+      var WXPAYSERVER =
+        "http://demo.dcloud.net.cn/helloh5/payment/wxpay.php?total=";
+      var PAYSERVER = "";
+      if (id == "alipay") {
+        PAYSERVER = ALIPAYSERVER;
+      } else if (id == "wxpay") {
+        PAYSERVER = WXPAYSERVER;
+      } else {
+        plus.nativeUI.alert("不支持此支付通道！", null, "捐赠");
+        return;
+      }
+      var xhr = new plus.net.XMLHttpRequest(); //uni-app中请使用uni的request api联网
+      xhr.onreadystatechange = function() {
+        switch (xhr.readyState) {
+          case 4:
+            if (xhr.status == 200) {
+              plus.payment.request(
+                this.channel,
+                xhr.responseText,
+                function(result) {
+                  alert(result);
+
+                  plus.nativeUI.alert("支付成功！", function() {
+                    back();
+                  });
+                },
+                function(error) {
+                  plus.nativeUI.alert("支付失败：" + error.code);
+                }
+              );
+            } else {
+              alert("获取订单信息失败！");
+            }
+            break;
+          default:
+            break;
+        }
+      };
+      xhr.open("GET", PAYSERVER);
+      xhr.send();
     }
   }
 };
@@ -573,7 +638,7 @@ export default {
       display: flex;
       flex-direction: column;
       align-items: center;
-      border-radius: .3rem;
+      border-radius: 0.3rem;
       img {
         position: relative;
         width: 5rem;
@@ -587,7 +652,7 @@ export default {
       }
       .pop-3-sub {
         font-size: 0.45rem;
-        margin-bottom: .2rem;
+        margin-bottom: 0.2rem;
       }
       .btn {
         display: flex;
@@ -595,15 +660,15 @@ export default {
         align-items: center;
         span {
           color: rgb(128, 126, 126);
-          font-size: .45rem;
+          font-size: 0.45rem;
           text-align: center;
           width: 3rem;
           height: 1rem;
           line-height: 1rem;
-          border-radius: .2rem;
-          border: .03rem solid rgba(128, 126, 126, .8);
+          border-radius: 0.2rem;
+          border: 0.03rem solid rgba(128, 126, 126, 0.8);
           &:last-child {
-            margin-left: .5rem;
+            margin-left: 0.5rem;
             color: var(--color-tint);
             border-color: var(--color-tint);
           }

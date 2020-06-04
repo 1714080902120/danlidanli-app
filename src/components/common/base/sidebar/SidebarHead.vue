@@ -199,7 +199,7 @@ export default {
           font-size: 36px;
         }
         .level {
-          font-size: .1rem;
+          font-size: .24rem;
           height: .3rem;
           line-height: .3rem;
           margin: 0 10px;
