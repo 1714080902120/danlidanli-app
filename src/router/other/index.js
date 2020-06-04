@@ -4,7 +4,7 @@ const BigMember = () => import('components/content/user/big-member/BigMember')
 const UserSet = () => import('components/content/user/set-theme-skip/set/Set')
 const Theme = () => import('components/content/user/set-theme-skip/theme/Theme')
 const Skip = () => import('components/content/user/set-theme-skip/skip/Skip')
-
+const scan = () => import('components/common/scan/Scan')
 
 const RorL = {
   path: '/registerOrLogin',
@@ -42,11 +42,18 @@ const theme = {
   component: Theme
 }
 
+const Scan = {
+  path: '/scan',
+  name: 'Scan',
+  component: scan
+}
+
 export {
   RorL,
   ForF,
   bigMember,
   set,
   theme,
-  skip
+  skip,
+  Scan
 }

@@ -1,6 +1,5 @@
 /* eslint-disable no-undef */
 
-document.addEventListener('plusready', () => {
   var _self = this;
   var cmr = plus.camera.getCamera();
   var fmt = cmr.supportedImageFormats[0];
@@ -14,4 +13,3 @@ document.addEventListener('plusready', () => {
   },
     function (error) { alert(error) },
     { format: fmt });
-})

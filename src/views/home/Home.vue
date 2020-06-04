@@ -125,13 +125,13 @@ export default {
     // 返回顶部
     backToTop() {
       this.$Bus.$on("backToTop", () => {
-        this.$refs.scroll.scrollTo(0, -10, 500);
+        this.$refs.scroll.scrollTo(0, 0, 500);
         this.$refs.scroll.refresh();
       });
     },
     // 处于当前
     whenStart() {
-      this.$refs.scroll.scrollTo(0, -10, 100);
+      this.$refs.scroll.scrollTo(0, 0, 100);
       this.$refs.scroll.refresh();
       this.$nextTick(() => {
         this.$refs.scroll.scrollEnd();

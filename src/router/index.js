@@ -4,7 +4,7 @@ import Category from './category/index'
 import Home from './home/index'
 import MemberShop from './member-shop/index'
 import Trends from './trends/index'
-import { RorL, ForF, bigMember, set, theme, skip } from './other/index'
+import { RorL, ForF, bigMember, set, theme, skip, Scan } from './other/index'
 import Wallet from './user/wallet/index'
 
 const routerPush = VueRouter.prototype.push
@@ -32,11 +32,12 @@ const routes = [
   bigMember,
   set,
   theme,
-  skip
+  skip,
+  Scan
 ]
 
 const router = new VueRouter({
-  mode: 'history',
+  // mode: 'history',
   base: process.env.BASE_URL,
   routes
 })

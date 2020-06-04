@@ -11,8 +11,7 @@
               <img src="~assets/img/base/wallet_dark.svg" alt />
             </span>
             <span class="scan">
-              <input type="file" name id @click="toScan()" capture="camera" />
-              <img src="~assets/img/base/scan_dark.svg" alt />
+              <img @click="toScan()" src="~assets/img/base/scan_dark.svg" alt />
             </span>
           </div>
         </div>
@@ -45,8 +44,7 @@
           <span class="sub">让你体验到私人定制</span>
         </div>
         <div class="right">
-          <input class="scan" type="file" name id capture="camera" @click="toScan()" />
-          <img src="~assets/img/base/scan_dark.svg" alt />
+          <img @click="toScan()" src="~assets/img/base/scan_dark.svg" alt />
         </div>
       </div>
       <div class="footer">
@@ -80,7 +78,16 @@ export default {
   created() {},
   activated() {},
   methods: {
-    toScan() {},
+    toScan() {
+      /* eslint-disable no-undef */
+      this.$Bus.$emit("sidebarDisappear");
+      let h = location.href;
+      let n = h.indexOf("#");
+      let r = h.substr(n);
+      h = h.replace(r, "#/scan");
+      let ws = plus.webview.create(h);
+      ws.show();
+    },
     register() {
       this.$Bus.$emit("sidebarDisappear");
       this.$router.replace({
@@ -118,8 +125,8 @@ export default {
         }
       });
     },
-    bigMember () {
-      this.$router.push({ path: '/big-member' })
+    bigMember() {
+      this.$router.push({ path: "/big-member" });
       this.$Bus.$emit("sidebarDisappear");
     }
   }
@@ -132,7 +139,7 @@ export default {
   border-bottom: 1px solid rgb(95, 95, 95);
   background-image: url("~assets/img/base/bilibili_user_logo_bg.svg");
   background-size: 70%;
-  background-position: 2.4rem .6rem;
+  background-position: 2.4rem 0.6rem;
   background-repeat: no-repeat;
   .have-token {
     padding-top: 70px;
@@ -199,9 +206,9 @@ export default {
           font-size: 36px;
         }
         .level {
-          font-size: .24rem;
-          height: .3rem;
-          line-height: .3rem;
+          font-size: 0.24rem;
+          height: 0.3rem;
+          line-height: 0.3rem;
           margin: 0 10px;
           border: 2px solid #fff;
           color: rgb(252, 252, 252);
