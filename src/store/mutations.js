@@ -33,6 +33,9 @@ const mutations = {
   },
   logout (state) {
     state.userInfo = {}
+  },
+  getUuid (state, payload) {
+    state.uuid = payload
   }
 }
 

@@ -1,53 +1,52 @@
 <template>
   <div class="home" ref="home">
     <div ref="outer">
-    <BaseOuter ref="base">
-      <div slot="center">
-        <div class="outer">
-          <img src="~assets/img/home/search_dark.svg" alt />
-          <input type="text" name id />
+      <BaseOuter ref="base">
+        <div slot="center">
+          <div class="outer">
+            <img src="~assets/img/home/search_dark.svg" alt />
+            <input type="text" name id />
+          </div>
         </div>
-      </div>
-      <div class="home-right" slot="right">
-        <span class="download">
-          <img src="~assets/img/base/download_dark.svg" alt />
-        </span>
-        <span class="mail">
-          <img src="~assets/img/home/mail_dark.svg" alt />
-        </span>
-      </div>
-      <div class="bottom" slot="bottom">
-        <Navbar class="bottom" :isActive="sendActive">
-          <NavbarItem
-            slot="navbar"
-            :isActive="toActive(index)"
-            v-for="(item, index) in items"
-            :key="item.title"
-          >
-            <div
-              class="navbar-item"
-              @click="goTo(index, item.path)"
-              slot="navbar-item"
-            >{{ item.title }}</div>
-          </NavbarItem>
-        </Navbar>
-      </div>
-    </BaseOuter>
-    <BS
-      ref="scroll"
-      :pullDownRefresh="{ threshold: 0, stop: 0 }"
-      :bounce="bounce"
-      screenWidth="100%"
-      :screenHeight="height()"
-      :probeType="3"
-    >
-      <keep-alive>
-        <router-view />
-      </keep-alive>
-    </BS>
-    <Popup />
+        <div class="home-right" slot="right">
+          <span class="download">
+            <img src="~assets/img/base/download_dark.svg" alt />
+          </span>
+          <span class="mail">
+            <img src="~assets/img/home/mail_dark.svg" alt />
+          </span>
+        </div>
+        <div class="bottom" slot="bottom">
+          <Navbar class="bottom" :isActive="sendActive">
+            <NavbarItem
+              slot="navbar"
+              :isActive="toActive(index)"
+              v-for="(item, index) in items"
+              :key="item.title"
+            >
+              <div
+                class="navbar-item"
+                @click="goTo(index, item.path)"
+                slot="navbar-item"
+              >{{ item.title }}</div>
+            </NavbarItem>
+          </Navbar>
+        </div>
+      </BaseOuter>
+      <BS
+        ref="scroll"
+        :pullDownRefresh="{ threshold: 0, stop: 0 }"
+        :bounce="bounce"
+        screenWidth="100%"
+        :screenHeight="height()"
+        :probeType="3"
+      >
+        <keep-alive>
+          <router-view />
+        </keep-alive>
+      </BS>
+      <Popup />
     </div>
-
   </div>
 </template>
 
@@ -77,8 +76,7 @@ export default {
     };
   },
   created() {
-    this.$nextTick(() => {
-    })
+    this.$nextTick(() => {});
   },
   mounted() {
     this.$nextTick(() => {
@@ -89,14 +87,14 @@ export default {
       }, 100);
       this.refresh();
       this.backToTop();
-      this.navBarTransform()
+      this.navBarTransform();
     });
   },
   activated() {
     if (
       this.$route.params.type === "register" ||
       this.$route.params.type === "login" ||
-      this.$route.params.type === 'logout'
+      this.$route.params.type === "logout"
     ) {
       this.$router.go(0);
     }
@@ -141,7 +139,7 @@ export default {
     navBarTransform() {
       this.$Bus.$on("NavbarTransform", ({ offsetY }) => {
         this.$nextTick(() => {
-          this.$refs.outer.style.transform = `translateY(${offsetY * .21}rem)`
+          this.$refs.outer.style.transform = `translateY(${offsetY * 0.21}rem)`;
         });
       });
     }
@@ -152,10 +150,10 @@ export default {
         return this.sendActive === index;
       };
     },
-    height () {
+    height() {
       return () => {
-        return `17rem`
-      }
+        return `17rem`;
+      };
     }
   },
   components: {
@@ -177,7 +175,6 @@ export default {
 <style lang="less" scoped>
 #home {
   overflow: hidden;
-
 }
 #home::-webkit-scrollbar {
   display: none;

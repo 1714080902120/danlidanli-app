@@ -207,6 +207,8 @@ export default {
   components: {
     Swipe,
     RecommendList
+  },
+  watch: {
   }
 };
 </script>

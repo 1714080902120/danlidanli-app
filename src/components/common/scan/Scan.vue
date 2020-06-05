@@ -49,7 +49,7 @@ export default {
       storage: "",
       imgSrc: "",
       uuid: "",
-      dataUrl: ''
+      dataUrl: ""
     };
   },
   created() {},
@@ -96,6 +96,9 @@ export default {
       function onmarked(type, result, file) {
         result = result.replace(/\n/g, "");
         that.storage = result;
+
+        that.$store.commit("getUuid", that.storage);
+
         if (plus.webview.all().length > 1) {
           // 扫码成功后关闭当前的webview
           let ws = plus.webview.currentWebview();
@@ -139,6 +142,9 @@ export default {
               this.scan.cancel();
               this.scan.close();
               this.storage = result;
+
+              this.$store.commit("getUuid", this.storage);
+
               if (plus.webview.all().length > 1) {
                 // 扫码成功后关闭当前的webview
                 let ws = plus.webview.currentWebview();
@@ -155,24 +161,59 @@ export default {
         }
       );
     },
+    // 获取二维码base64并转换为普通图片
     getDataUrl(dataUrl) {
-      this.dataUrl = dataUrl
-
+      let filename = new Date().getTime();
+      this.dataUrl = (function base64DataToBlob(dataUrl) {
+        //去掉url的头，并转换为byte
+        var bytes = window.atob(dataUrl.split(",")[1]);
+        //处理异常,将ascii码小于0的转换为大于0
+        var ab = new ArrayBuffer(bytes.length);
+        var ia = new Uint8Array(ab);
+        for (var i = 0; i < bytes.length; i++) {
+          ia[i] = bytes.charCodeAt(i);
+        }
+        return new Blob([ia], { type: "image/png" });
+      })(dataUrl);
+      Toast({
+        message: "由于后台未开发该模块，因此改为下载头像",
+        duration: 3000,
+        position: "middle"
+      });
     },
-    press () {
-      plus.gallery.save( this.dataUrl, () => {
-        Toast({
-          message: '保存成功~',
-          duration: 3000,
-          position: 'bottom'
-        })
-      }, err => {
-        Toast({
-          message: err,
-          duration: 10000,
-          position: 'bottom'
-        })
-      })
+    press() {
+      let dtask = plus.downloader.createDownload(this.imgSrc, {}, function(
+        d,
+        status
+      ) {
+        // 下载完成
+        if (status == 200) {
+          plus.gallery.save(
+            d.filename,
+            () => {
+              Toast({
+                message: "下载成功",
+                duration: 3000,
+                position: "bottom"
+              });
+            },
+            err => {
+              Toast({
+                message: "下载失败",
+                duration: 10000,
+                position: "bottom"
+              });
+            }
+          );
+        } else {
+          Toast({
+            message: "下载失败",
+            duration: 3000,
+            position: "bottom"
+          });
+        }
+      });
+      dtask.start();
     }
   },
   components: {

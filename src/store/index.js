@@ -18,7 +18,9 @@ export default new Vuex.Store({
     // navbar组件当前活跃的按钮及路由
     offSetItem: 1,
     // 判断是否开启下拉刷新
-    loadingLock: false
+    loadingLock: false,
+    // 扫码前往的uuid
+    uuid: ''
   },
   mutations,
   actions,

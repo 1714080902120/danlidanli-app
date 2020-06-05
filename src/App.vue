@@ -27,13 +27,18 @@ export default {
   computed: {
     active() {
       let path = this.$route.path;
-      let reg = /home|category|trends|member-shop/gi 
+      let reg = /home|category|trends|member-shop/gi;
       return () => {
-        return (
-          reg.test(path)
-        );
+        return reg.test(path);
       };
     }
+  },
+  watch: {
+    "$store.state.uuid"(newVal) {
+      if (newVal === "") return false;
+      this.$router.push({ path: "/personal-space" });
+    },
+    immediate: true
   }
 };
 </script>
