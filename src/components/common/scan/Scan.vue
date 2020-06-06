@@ -96,13 +96,18 @@ export default {
       function onmarked(type, result, file) {
         result = result.replace(/\n/g, "");
         that.storage = result;
-
+        that.scan.cancel();
+        that.scan.close();
         that.$store.commit("getUuid", that.storage);
-
         if (plus.webview.all().length > 1) {
           // 扫码成功后关闭当前的webview
-          let ws = plus.webview.currentWebview();
-          plus.webview.close(ws);
+          plus.webview.currentWebview().addEventListener(
+            "close",
+            () => {
+              that.$router.replace({ path: "/personal-space" });
+            },
+            false
+          );
         }
       }
     },
@@ -144,11 +149,16 @@ export default {
               this.storage = result;
 
               this.$store.commit("getUuid", this.storage);
-
+              let that = this;
               if (plus.webview.all().length > 1) {
                 // 扫码成功后关闭当前的webview
-                let ws = plus.webview.currentWebview();
-                plus.webview.close(ws);
+                plus.webview.currentWebview().addEventListener(
+                  "close",
+                  () => {
+                    that.$router.replace({ path: "/personal-space" });
+                  },
+                  false
+                );
               }
             },
             error => {

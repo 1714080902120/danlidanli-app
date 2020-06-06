@@ -16,7 +16,6 @@ Vue.config.productionTip = false
 Vue.use(VueTouch, { name: 'v-touch' })
 Vue.use(MintUI, {
   lazyload: {
-    preload: 0,
     loading: '~assets/img/base/bilibili_user_logo_bg.svg'
   }
 })
