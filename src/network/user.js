@@ -20,7 +20,7 @@ export async function Send ({ phoneNumber }) {
 }
 
 // 获取当前ip和地址
-export async function  City() {
+export async function City() {
   return $http.post('/apis/cityjson?ie=utf-8',{})
 }
 

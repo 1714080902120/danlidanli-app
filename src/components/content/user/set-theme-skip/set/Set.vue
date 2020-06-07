@@ -88,7 +88,7 @@ export default {
     };
   },
   created() {
-    this.app = require(`./PrivacySettings.vue`)
+    this.app = require(`./OtherSettings.vue`)
     this.Bus();
   },
   methods: {

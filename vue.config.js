@@ -21,7 +21,7 @@ module.exports = {
   devServer: {
     proxy: {//配置跨域
       '/apis': {
-        target: 'http://pv.sohu.com',//搜狐的域名
+        target: 'https://pv.sohu.com',//搜狐的域名
         ws: true,
         changOrigin: true,//允许跨域
         pathRewrite: {
