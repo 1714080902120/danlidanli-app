@@ -54,8 +54,8 @@ export default {
   name: "OtherSettings",
   data() {
     return {
-      popupVisible: true,
-      value: [true, false],
+      popupVisible: false,
+      value: [false, false],
       setType: 0,
       list: [
         { title: "默认图片质量", sub: "清晰（质量高，图片更清晰）" },
@@ -91,7 +91,6 @@ export default {
     };
   },
   created() {
-    this.popSelectedData = this.popData[0];
   },
   methods: {
     close() {

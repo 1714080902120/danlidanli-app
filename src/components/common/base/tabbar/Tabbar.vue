@@ -53,21 +53,21 @@ export default {
     };
   },
   created() {
-    if (this.$route.query.beforePath === '/wallet/b-discount') {
-      this.selected = '会员购'
+    if (this.$route.query.beforePath === "/wallet/b-discount") {
+      this.selected = "会员购";
     }
   },
   methods: {
     goTo(path) {
       this.$router.replace({ path });
-    },
+    }
   },
   watch: {
-    'selected' (newVal) {
-      this.selected = newVal
+    selected(newVal) {
+      this.selected = newVal;
     },
     immediate: true
-  },
+  }
 };
 </script>
 
@@ -76,15 +76,29 @@ export default {
   position: fixed;
   bottom: 0;
   display: flex;
-  .outer {
-    background-color: var(--base-bg-color-sec) !important;
+  .is-fixed {
+    background-color: rgba(56, 55, 55, 0.96) !important;
     display: flex;
-    flex: auto;
+    align-items: center;
+    height: 1.2rem;
+    text-align: center;
+    background-image: none !important;
+    // padding-top: 0 !important;
     .tabbar-item {
       flex: auto;
       .inner {
         border: 0;
         color: var(--color-txt);
+        display: flex;
+        flex-direction: column;
+        .mint-tab-item-label {
+        }
+        /deep/ .mint-tab-item-icon {
+          margin: auto;
+          img {
+            height: 0.5rem;
+          }
+        }
       }
       .active {
         color: var(--color-tint);

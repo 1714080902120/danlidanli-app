@@ -88,7 +88,7 @@ export default {
     };
   },
   created() {
-    this.app = require(`./OtherSettings.vue`)
+    this.app = require(`./MessageSettings.vue`)
     this.Bus();
   },
   methods: {

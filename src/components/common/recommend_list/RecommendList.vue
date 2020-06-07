@@ -176,7 +176,7 @@ export default {
           align-items: center;
           flex: auto;
           &:nth-child(2) {
-            margin: 0 20px 0 0;
+            margin: 0 20px 0 -.15rem;
           }
           img {
             width: 30px;
@@ -200,7 +200,7 @@ export default {
       }
     }
     .title {
-      font-size: 30px;
+      font-size: .35rem;
       overflow: hidden;
       white-space: nowrap;
       text-overflow: ellipsis;

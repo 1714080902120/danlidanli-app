@@ -237,7 +237,7 @@ export default {
     height() {
       return () => {
         const height = window.innerHeight;
-        return `${height - 55}px`;
+        return `${height - 44}px`;
       };
     }
   },
@@ -293,7 +293,7 @@ export default {
     padding-left: 20px;
     box-shadow: 0 -2px 1px rgb(65, 64, 64);
     span {
-      height: 110px;
+      height: 90px;
       line-height: 110px;
       flex: auto;
       display: flex;
