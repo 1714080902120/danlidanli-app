@@ -40,7 +40,7 @@ export default {
   name: "ClearStorage",
   data() {
     return {
-      popupVisible: true
+      popupVisible: false
     };
   },
   methods: {

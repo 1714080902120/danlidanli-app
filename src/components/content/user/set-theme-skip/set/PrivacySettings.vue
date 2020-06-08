@@ -327,6 +327,7 @@ export default {
   }
   .action-sheet {
     /deep/ .sheet {
+      z-index: 9999 !important;
       background-color: var(--base-set-bg-color);
       /deep/ .mint-actionsheet-list {
         .mint-actionsheet-listitem {
@@ -360,7 +361,7 @@ export default {
     top: 0;
     width: 10rem;
     height: 100vh;
-    z-index: 2002;
+    z-index: 9998;
     background-color: rgba(0, 0, 0, 0.5);
   }
 }

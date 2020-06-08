@@ -88,7 +88,7 @@ export default {
     };
   },
   created() {
-    this.app = require(`./MessageSettings.vue`)
+    this.app = require(`./PursuitSettings.vue`)
     this.Bus();
   },
   methods: {
@@ -128,7 +128,7 @@ export default {
 #set {
   background-color: var(--base-set-bg-color);
   width: 10rem;
-  height: 17.7rem;
+  height: 100vh;
   font-size: 0.4rem;
   overflow-x: hidden;
   .head {
@@ -138,6 +138,7 @@ export default {
     background-color: rgb(54, 54, 54);
     display: flex;
     align-items: center;
+    z-index: 200;
     .back {
       padding-bottom: 0.1rem;
       margin: 0 0.5rem;
