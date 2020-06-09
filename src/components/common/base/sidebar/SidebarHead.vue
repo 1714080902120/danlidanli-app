@@ -142,7 +142,7 @@ export default {
   background-position: 2.4rem 0.6rem;
   background-repeat: no-repeat;
   .have-token {
-    padding-top: 70px;
+    padding-top: .5rem;
     display: flex;
     flex-direction: column;
     .header {
@@ -175,15 +175,15 @@ export default {
           .wallet {
             margin: 0 10px;
             img {
-              margin: 10px 0;
-              width: 70px;
-              height: 70px;
+              margin: .1rem 0;
+              width: .8rem;
+              height: .8rem;
             }
           }
           .scan {
             img {
-              width: 90px;
-              height: 90px;
+              width: 1rem;
+              height: 1rem;
             }
             input {
               position: absolute;
@@ -203,10 +203,10 @@ export default {
         .name {
           height: 40px;
           line-height: 40px;
-          font-size: 36px;
+          font-size: .4rem;
         }
         .level {
-          font-size: 0.24rem;
+          font-size: 0.18rem;
           height: 0.3rem;
           line-height: 0.3rem;
           margin: 0 10px;
@@ -216,9 +216,8 @@ export default {
           padding: 0 8px;
         }
         .label {
-          font-size: 22px;
-          height: 30px;
-          line-height: 30px;
+          font-size: .3rem;
+          height: .32rem;
           background-color: var(--color-tint);
           color: rgb(243, 237, 237);
           border-radius: 6px;
@@ -238,7 +237,7 @@ export default {
       }
     }
     .vip-time {
-      font-size: 32px;
+      font-size: .35rem;
       display: flex;
       align-items: center;
       height: 100px;
@@ -262,9 +261,8 @@ export default {
     }
     .footer {
       display: flex;
-      // justify-content: space-around;
       align-items: center;
-      font-size: 30px;
+      font-size: .35rem;
       margin-top: 30px;
       background-color: rgba(61, 60, 60, 0.6);
       padding: 20px 0;
@@ -314,8 +312,8 @@ export default {
           opacity: 0;
         }
         img {
-          width: 40px;
-          height: 40px;
+          width: .1rem;
+          height: .1rem;
         }
       }
     }

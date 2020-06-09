@@ -42,6 +42,7 @@ export default {
   padding-top: 15px;
   height: 340px;
   line-height: 340px;
+  margin-bottom: -.1rem;
   .mt-swipe {
     width: 750px;
     height: 300px;

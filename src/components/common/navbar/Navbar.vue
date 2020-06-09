@@ -63,14 +63,14 @@ export default {
   display: flex;
   flex-wrap: nowrap;
   align-items: center;
-  height: 90px;
-  line-height: 90px;
+  height: 1rem;
+  line-height: 1rem;
   overflow-x: auto;
   transition: 0.5s;
   .bottom {
     position: absolute;
     width: 90px;
-    height: 6px;
+    height: 5px;
     background-color: var(--color-tint);
     bottom: 0;
     left: 180px;

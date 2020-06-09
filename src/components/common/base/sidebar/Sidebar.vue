@@ -12,7 +12,7 @@
           v-for="(item, index) in items"
           :title="item.title"
           :key="index"
-          :class="{ active: index === isActive }"
+          :class="{ active: index === isActive, 'small': item.title === '' }"
           v-waves
           @touchstart="touchStart($event)"
         >
@@ -279,6 +279,9 @@ export default {
     .active {
       background-color: rgb(110, 110, 110);
       color: var(--color-tint);
+    }
+    .small {
+      height: .3rem;
     }
   }
   .tabbar-outer {

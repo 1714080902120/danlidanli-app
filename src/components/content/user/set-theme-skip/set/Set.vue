@@ -88,7 +88,7 @@ export default {
     };
   },
   created() {
-    this.app = require(`./PursuitSettings.vue`)
+    this.app = require(`./OfflineSettings.vue`)
     this.Bus();
   },
   methods: {

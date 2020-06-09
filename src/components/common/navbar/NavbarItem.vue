@@ -38,14 +38,14 @@ export default {
 <style lang="less" scoped>
 #navbar-item {
   .item {
-    font-size: 32px;
+    font-size: 26px;
     width: 150px;
     text-align: center;
     .inner {
       width: 100px;
       margin: auto;
-      height: 90px;
-      line-height: 90px;
+      height: 1rem;
+      line-height: 1rem;
     }
     .active {
       font-weight: 800;

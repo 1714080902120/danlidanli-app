@@ -101,15 +101,15 @@ export default {
         align-items: center;
         border-radius: 30px;
         background-color: rgba(58, 58, 58, 1);
-        height: 70px;
-        line-height: 70px;
+        height: .8rem;
+        line-height: .8rem;
         padding: 10px;
         margin-bottom: 10px;
         input {
           background-color: transparent;
           border: none;
           outline: none;
-          width: 350px;
+          width: 4rem;
           font-size: 30px;
           color: var(--color-text);
         }
@@ -125,14 +125,14 @@ export default {
         justify-content: space-between;
         align-items: center;
         .download {
-          margin: 0 0 0 -10px;
+          margin: 0 0 0 -.2rem;
           img {
             width: .7rem;
             height: .7rem;
           }
         }
         .mail {
-          margin: 0 0 0 10px;
+          margin: 0 0 0 .6rem;
           img {
             width: .7rem;
             height: .7rem;
