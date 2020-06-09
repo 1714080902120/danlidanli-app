@@ -39,7 +39,7 @@ export default {
       cmps: [
         ["AccountInformation", "SecurityPrivacy", "ReceivingInformation"],
         [
-          "HomeRecommendSet",
+          "HomeRecommendSettings",
           "PlaySettings",
           "OfflineSettings",
           "PursuitSettings"
@@ -88,7 +88,7 @@ export default {
     };
   },
   created() {
-    this.app = require(`./OfflineSettings.vue`)
+    this.app = require(`./PlaySettings.vue`)
     this.Bus();
   },
   methods: {
