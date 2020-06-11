@@ -82,6 +82,39 @@
               </li>
             </ul>
           </div>
+          <div class="select-size" v-if="activeItem === '选择小窗播放尺寸'">
+            <div class="select-size-line">
+              <div class="select-size-line-title">拖动下方的滑块调整小窗的大小</div>
+              <div class="select-size-line-main">
+                <div
+                  v-for="(item, index) in selectSizeList"
+                  :key="index"
+                  @click="selectSize(index)"
+                  class="select-size-line-main-item"
+                  :class="{ 'select-size-active': selectedSize === index }"
+                >
+                  <span>{{ item.size }}</span>
+                  <span>•</span>
+                </div>
+              </div>
+            </div>
+            <hr class="middle" />
+            <div class="select-size-content">
+              <div class="select-size-content-title">预览</div>
+              <div class="select-size-content-main">
+                <div class="img">
+                  <img v-for="index in 6" :key="index" src="~assets/img/user/set/line_item.png" alt />
+                </div>
+              </div>
+            </div>
+            <div class="select-size-footer">
+              <img
+                :style="{'width': `${5 + selectedSize}rem`}"
+                src="~assets/img/user/set/test_item.png"
+                alt
+              />
+            </div>
+          </div>
         </div>
       </mt-popup>
     </div>
@@ -128,6 +161,7 @@ export default {
     return {
       popupVisible: false,
       popupVisible2: false,
+      selectedSize: 1,
       list: [
         {
           title: "",
@@ -322,12 +356,11 @@ export default {
           ],
           selected: 0
         }
-      ]
+      ],
+      selectSizeList: [{ size: "较小" }, { size: "默认" }, { size: "较大" }]
     };
   },
   created() {
-    this.popupVisible = true;
-    this.activeItem = "弹幕设置";
   },
   methods: {
     close() {
@@ -358,6 +391,13 @@ export default {
           }
 
           break;
+        case 3:
+          switch (y) {
+            case 0:
+              this.popupVisible = true;
+              break;
+          }
+          break;
       }
     },
     selected(i) {
@@ -377,6 +417,10 @@ export default {
         this.popSelectedData = this.popData[1];
         this.popupVisible2 = true;
       }
+    },
+    selectSize(i) {
+      this.selectedSize = i;
+      this.list[3].content[0].sub = this.selectSizeList[i].size;
     }
   }
 };
@@ -439,8 +483,8 @@ export default {
         flex-direction: column;
         span {
           &:last-child {
-            font-size: 0.3rem;
-            opacity: 0.9;
+            font-size: 0.25rem;
+            opacity: 0.7;
             margin-top: 0.1rem;
           }
         }
@@ -520,8 +564,8 @@ export default {
 
               span {
                 &:last-child {
-                  font-size: 0.3rem;
-                  opacity: 0.8;
+                  font-size: 0.25rem;
+                  opacity: 0.7;
                   margin-top: 0.05rem;
                 }
               }
@@ -561,6 +605,110 @@ export default {
                 background-color: var(--color-tint);
               }
             }
+          }
+        }
+      }
+      .select-size {
+        .select-size-line {
+          .select-size-line-title {
+            padding: 0 0.4rem;
+            margin: 0.5rem 0 0.2rem 0;
+            opacity: 0.6;
+            font-weight: lighter;
+          }
+          .select-size-line-main {
+            padding: 0 0.4rem;
+            background-color: var(--base-bg-color-thr);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 1.6rem;
+            .select-size-line-main-item {
+              transition: 0.3s;
+              display: flex;
+              flex-direction: column;
+              text-align: center;
+              span {
+                &:last-child {
+                  margin-top: 0.2rem;
+                  font-size: 0.3rem;
+                  font-weight: bold;
+                  opacity: 0.6;
+                }
+              }
+            }
+            .select-size-active {
+              transition: 0.3s;
+              span {
+                &:first-child {
+                  color: var(--color-tint);
+                }
+                &:last-child {
+                  position: relative;
+                  font-size: .6rem;
+                  color: var(--color-tint);
+                  border-radius: 100%;
+                  opacity: 1;
+                  &::before {
+                    content: "";
+                    position: absolute;
+                    width: 0.3rem;
+                    height: 0.3rem;
+                    top: 0.16rem;
+                    left: 0.25rem;
+                    background-color: var(--color-tint);
+                    border-radius: 50%;
+                    opacity: 0.6;
+                  }
+                }
+              }
+            }
+          }
+        }
+        .middle {
+          position: relative;
+          top: -0.55rem;
+          width: 8.4rem;
+          left: 0;
+          right: 0;
+          margin: 0 auto;
+          opacity: 0.1;
+        }
+        .select-size-content {
+          display: flex;
+          flex-direction: column;
+          .select-size-content-title {
+            padding: 0 0.4rem;
+            opacity: 0.6;
+            margin-top: 0.5rem;
+            margin-bottom: 0.2rem;
+          }
+          .select-size-content-main {
+            background-color: rgb(45, 45, 45);
+            padding: 0 0.2rem;
+            border-top: 0.01rem solid rgba(100, 100, 100, 0.7);
+            .img {
+              display: flex;
+              justify-content: space-around;
+              flex-wrap: wrap;
+              margin-top: 0.3rem;
+              img {
+                border-radius: 0.2rem;
+                margin-top: 0.4rem;
+                width: 4.5rem;
+                height: 5rem;
+              }
+            }
+          }
+        }
+        .select-size-footer {
+          position: absolute;
+          bottom: 0.4rem;
+          right: 0.4rem;
+          img {
+            transition: 0.3s;
+            width: 6rem;
+            border-radius: 0.2rem;
           }
         }
       }

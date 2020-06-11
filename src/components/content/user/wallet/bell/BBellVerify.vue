@@ -270,7 +270,6 @@ export default {
       reader.onloadend = function() {
         _this.option.id = i
         _this.option.img = this.result;
-        // _this.list[i].left.img = this.result
         _this.finishCrop(i);
       };
     },

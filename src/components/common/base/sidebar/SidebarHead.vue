@@ -139,7 +139,7 @@ export default {
   border-bottom: 1px solid rgb(95, 95, 95);
   background-image: url("~assets/img/base/bilibili_user_logo_bg.svg");
   background-size: 70%;
-  background-position: 2.4rem 0.6rem;
+  background-position: 2.6rem 0.2rem;
   background-repeat: no-repeat;
   .have-token {
     padding-top: .5rem;

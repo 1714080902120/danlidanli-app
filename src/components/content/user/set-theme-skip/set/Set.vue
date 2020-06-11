@@ -88,7 +88,7 @@ export default {
     };
   },
   created() {
-    this.app = require(`./PlaySettings.vue`)
+    this.app = require(`./SecurityPrivacy.vue`)
     this.Bus();
   },
   methods: {
