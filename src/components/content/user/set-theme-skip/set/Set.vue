@@ -84,18 +84,37 @@ export default {
           col: "3",
           items: ["我的客服", "帮助", "用户协议", "隐私政策", "隐私权限设置"]
         }
-      ]
+      ],
+      isLogin: false
     };
   },
   created() {
-    this.app = require(`./SecurityPrivacy.vue`)
+    this.app = require(`./AccountInformation.vue`)
     this.Bus();
+  },
+  activated() {
+    if (
+      this.$route.params.type === "register" ||
+      this.$route.params.type === "login"
+    ) {
+      this.$router.go(0);
+    }
   },
   methods: {
     close() {
       this.$router.go(-1);
     },
     detail(x, y) {
+      if (x === 0 && y === 0) {
+        if (Object.keys(this.$store.state.userInfo).length <= 0) {
+          alert("请先登录");
+          this.$router.replace({
+            name: "RegisterOrLogin",
+            params: { beforePath: "set", type: "login" }
+          });
+          return false;
+        }
+      }
       this.app = require(`./${this.cmps[x][y]}.vue`);
       this.popupVisible = true;
     },

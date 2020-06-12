@@ -5,7 +5,7 @@
       <mt-button slot="right" @click="go()">{{ type() }}</mt-button>
     </mt-header>
     <div class="bg">
-      <img v-if="!isFocus" v-lazy="img.default" alt />
+      <img v-if="!isFocus" :src="img.default" alt />
       <img v-if="isFocus" v-lazy="img.active" alt />
     </div>
     <div class="content">
@@ -123,7 +123,7 @@ export default {
     goBack() {
       this.isActive = false;
       let timer = setTimeout(() => {
-        this.$router.replace({ path: this.$route.params.beforePath });
+        this.$router.go(-1);
         clearTimeout(timer);
         timer = null;
       }, 150);
@@ -196,10 +196,17 @@ export default {
             });
             this.isActive = false;
             let timer = setTimeout(() => {
-              this.$router.replace({
-                name: "HomeRecommend",
-                params: { type: "register" }
-              });
+              if (this.$route.params.beforePath === "set") {
+                this.$router.replace({
+                  name: "Set",
+                  params: { type: "register" }
+                });
+              } else {
+                this.$router.replace({
+                  name: "HomeRecommend",
+                  params: { type: "register" }
+                });
+              }
               clearTimeout(timer);
               timer = null;
             }, 150);
@@ -210,7 +217,7 @@ export default {
               position: "middle",
               duration: 3000
             });
-            return false
+            return false;
           });
       } else if (this.enterType === "login") {
         getToken({ username, password })
@@ -222,10 +229,17 @@ export default {
             });
             this.isActive = false;
             let timer = setTimeout(() => {
-              this.$router.replace({
-                name: "HomeRecommend",
-                params: { type: "login" }
-              });
+              if (this.$route.params.beforePath === "set") {
+                this.$router.replace({
+                  name: "Set",
+                  params: { type: "login" }
+                });
+              } else {
+                this.$router.replace({
+                  name: "HomeRecommend",
+                  params: { type: "login" }
+                });
+              }
               clearTimeout(timer);
               timer = null;
             }, 150);
@@ -443,8 +457,10 @@ export default {
 }
 img[lazy="loading"] {
   width: 375px;
-  height: 200px;
+  height: 4rem;
   margin: auto;
+  background-repeat: no-repeat;
+  background-position: center center;
   background-image: url("~assets/img/base/bilibili_user_logo_bg.svg");
 }
 </style>
