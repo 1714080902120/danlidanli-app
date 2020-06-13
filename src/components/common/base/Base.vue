@@ -74,16 +74,16 @@ export default {
         flex: auto;
         margin-right: 14px;
         img {
-          widows: 50px;
+          width: 50px;
           height: 50px;
         }
       }
       .logo {
         flex: auto;
         img {
-          widows: 80px;
+          width: 80px;
           height: 80px;
-          border-radius: 50%;
+          border-radius: 100%;
         }
       }
     }

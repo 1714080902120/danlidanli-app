@@ -36,6 +36,11 @@ const mutations = {
   },
   getUuid (state, payload) {
     state.uuid = payload
+  },
+  // 修改头像
+  changeLogo (state, payload) {
+    state.userInfo.baseInfo.logo.src = payload
+    state.userInfo.baseInfo.logo.name = ''
   }
 }
 

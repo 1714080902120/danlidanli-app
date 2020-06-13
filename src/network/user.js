@@ -9,7 +9,7 @@ export async function getUserData() {
   })
 }
 // 短信验证
-export async function Send ({ phoneNumber }) {
+export async function Send({ phoneNumber }) {
   return await axios({
     url: '/user/send',
     method: 'post',
@@ -21,11 +21,11 @@ export async function Send ({ phoneNumber }) {
 
 // 获取当前ip和地址
 export async function City() {
-  return $http.post('/apis/cityjson?ie=utf-8',{})
+  return $http.post('/apis/cityjson?ie=utf-8', {})
 }
 
 
-export async function Register ({ username, password }) {
+export async function Register({ username, password }) {
   let data
   await axios({
     url: '/user/register',
@@ -51,7 +51,7 @@ export async function Register ({ username, password }) {
     return Promise.resolve('注册成功')
   }
 }
-export async function sendMail ({ mail }) {
+export async function sendMail({ mail }) {
   return await axios({
     url: '/user/mail-check',
     method: 'post',
@@ -87,4 +87,17 @@ export async function getToken({ username, password }) {
     // return '登陆失败'
     return Promise.reject('登陆失败')
   }
+}
+
+// 修改头像或者背景图 ,H5+上传的图片失败
+export async function changeLogoOrBg(data) {
+  alert(data)
+  return await axios({
+    url: '/user/upload',
+    method: 'post',
+    data: data,
+    headers: {
+      'Content-Type': 'multipart/form-data'
+    }
+  })
 }

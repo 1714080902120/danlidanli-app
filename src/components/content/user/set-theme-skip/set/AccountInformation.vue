@@ -1,12 +1,12 @@
 <template>
-  <div id="account-information">
+  <div id="account-information" v-if="Object.keys($store.state.userInfo).length > 0">
     <div class="head">
       <span class="back" @click="close()">
         <img src="~assets/img/fans_follows/go_back_dark.svg" alt />
       </span>
       <span class="title">账号资料</span>
     </div>
-    <div class="content" v-if="Object.keys($store.state.userInfo).length > 0">
+    <div class="content">
       <ul v-for="(outer, index) in list" :key="index">
         <div class="outer-title">{{ outer.title }}</div>
         <li
@@ -54,6 +54,22 @@
           <div class="qrcode" v-if="activeItem === '二维码'">
             <img @click="look()" src="~assets/img/user/set/qrcode_dan.png" alt />
           </div>
+          <div class="logo" v-if="activeItem === '头像选择'">
+            <div class="logo-content">
+              <!-- <span>♂</span>
+              <span>?</span>
+              <span>♀</span>-->
+              <span>
+                <img src="~assets/img/user/set/take_photo.svg" alt />
+              </span>
+              <span>
+                <img src="~assets/img/user/set/take_photo.svg" alt />
+              </span>
+              <span>
+                <img src="~assets/img/user/set/take_photo.svg" alt />
+              </span>
+            </div>
+          </div>
         </div>
       </mt-popup>
     </div>
@@ -75,16 +91,47 @@
         </div>
       </mt-popup>
     </div>
+    <div class="pop-4">
+      <mt-popup
+        class="pop"
+        v-model="popupVisible3"
+        position="middle"
+        popup-transition="popup-fade"
+        :modal="false"
+      >
+        <div class="logo" v-if="activeItem === '头像选择'">
+          <div class="logo-head">{{ activeItem }}</div>
+          <div class="logo-content">
+            <!-- <span>♂</span>
+              <span>?</span>
+            <span>♀</span>-->
+            <span @click="getCamera()" v-waves>
+              <img src="~assets/img/user/set/take_photo.svg" alt />拍照
+            </span>
+            <span @click="getGallery()" v-waves>
+              <img src="~assets/img/user/set/photograph.svg" alt /> 图片库
+            </span>
+            <span @click="getRandom()" v-waves>
+              <img src="~assets/img/user/set/random.svg" alt /> 随机
+            </span>
+          </div>
+          <div class="logo-footer" @click="closePop3()" v-waves>取消</div>
+        </div>
+      </mt-popup>
+    </div>
     <div class="action-sheet">
       <mt-actionsheet class="sheet" :actions="actions" v-model="sheetVisible" :modal="false"></mt-actionsheet>
     </div>
-    <div class="modal" v-if="sheetVisible"></div>
+    <div class="modal" v-if="sheetVisible || popupVisible3"></div>
+    <Cropper :options="option" />
   </div>
 </template>
 
 <script>
 /* eslint-disable no-undef */
 import { Toast } from "mint-ui";
+import Cropper from "components/common/cropper/VueCropper";
+// import { changeLogoOrBg } from "network/user.js";
 
 export default {
   name: "AccountInformation",
@@ -170,18 +217,47 @@ export default {
         }
       ],
       qrcode: {},
-      imgSrc: ""
+      camera: null,
+      option: {
+        img: "", // 裁剪图片的地址
+        info: true, // 裁剪框的大小信息
+        outputSize: 1, // 裁剪生成图片的质量
+        outputType: "png", // 裁剪生成图片的格式
+        canScale: false, // 图片是否允许滚轮缩放
+        autoCrop: true, // 是否默认生成截图框
+        // autoCropWidth: 150, // 默认生成截图框宽度
+        // autoCropHeight: 100, // 默认生成截图框高度
+        fixedBox: false, // 固定截图框大小 不允许改变
+        fixed: true, // 是否开启截图框宽高固定比例
+        fixedNumber: [1, 1], // 截图框的宽高比例
+        full: false, // 是否输出原图比例的截图
+        canMoveBox: true, // 截图框能否拖动
+        original: false, // 上传图片按照原始比例渲染
+        centerBox: true, // 截图框是否被限制在图片里面
+        infoTrue: true, // true 为展示真实输出图片宽高 false 展示看到的截图框宽高
+        id: 0
+      },
+      file: null,
+      img: ""
     };
   },
   created() {
+    this.activeItem = "头像选择";
     // console.log(this.$store.state.userInfo);
-    this.activeItem = "二维码";
-    this.popupVisible = true;
+    this.popupVisible3 = true;
     this.getQrCode();
+  },
+  components: {
+    Cropper
   },
   methods: {
     close() {
       this.$Bus.$emit("closeSetPopup");
+    },
+    Bus() {
+      this.$Bus.$on("cancelCrop", () => {
+        this.option.img = "";
+      });
     },
     detail(x, y) {
       this.activeItem = this.list[x].content[y].title;
@@ -189,6 +265,8 @@ export default {
         case 0:
           switch (y) {
             case 0:
+              this.activeItem = "头像选择";
+              this.popupVisible3 = true;
               break;
             case 1:
               break;
@@ -356,14 +434,152 @@ export default {
           }
         );
       }
-    }
-  },
-  watch: {
-    "$store.state.userInfo"(newVal) {
-      this.imgSrc = newVal.baseInfo.logo.src + newVal.baseInfo.logo.name;
     },
-    deep: true,
-    immediate: true
+    closePop3() {
+      this.popupVisible3 = false;
+    },
+    getCamera() {
+      this.camera = plus.camera.getCamera();
+      // 打开摄像头
+      let _this = this;
+      this.camera.captureImage(
+        url => {
+          this.file = url.toString();
+          plus.io.resolveLocalFileSystemURL(
+            url.toString(),
+            entry => {
+              // 可通过entry对象操作图片文件
+              entry.file(file => {
+                let fileReader = new plus.io.FileReader();
+                fileReader.readAsDataURL(file);
+                fileReader.onloadend = e => {
+                  _this.option.id = 0;
+                  _this.option.img = e.target.result;
+                  _this.finishCrop(0);
+                };
+              });
+            },
+            e => {
+              alert("Resolve file URL failed: " + e.message);
+            }
+          );
+        },
+        e => {
+          alert(`111111${e.message}`);
+        },
+        {}
+      );
+    },
+    // 从图库中查找
+    getGallery() {
+      plus.gallery.pick(
+        path => {
+          this.file = path;
+          plus.io.resolveLocalFileSystemURL(
+            path.toString(),
+            entry => {
+              // 可通过entry对象操作图片文件
+              entry.file(file => {
+                let fileReader = new plus.io.FileReader();
+                fileReader.readAsDataURL(file);
+                fileReader.onloadend = e => {
+                  this.option.id = 0;
+                  this.option.img = e.target.result;
+                  this.finishCrop(0);
+                };
+              });
+            },
+            e => {
+              alert("Resolve file URL failed: " + e.message);
+            }
+          );
+        },
+        err => {
+          plus.nativeUI.alert("Failed:" + err.message);
+        }
+      );
+    },
+    upload() {
+      let task = plus.uploader.createUpload(
+        "http://:4000/user/upload",
+        {
+          method: "POST",
+          //《注意》这里不能像ajax一样把token放在这里。
+          //beforeSend: function(request) {
+          //  request.setRequestHeader(tokenHeader, appToken);
+          //},
+          //《请求类型》
+          headers: {
+            "Content-Type": "multipart/form-data"
+          }
+        },
+        (data, status) => {
+          // 上传完成
+          if (status == 200) {
+            alert(data.responseText);
+            this.$store.commit("changeLogo", this.img);
+            this.popupVisible3 = false;
+            plus.gallery.save(
+              this.file,
+              () => {
+                Toast({
+                  message: "修改成功！",
+                  duration: 3000,
+                  position: "middle"
+                });
+              },
+              () => {
+                Toast({
+                  message: "保存至图库失败",
+                  duration: 3000,
+                  position: "middle"
+                });
+              }
+            );
+          } else {
+            alert("Upload failed: " + status);
+          }
+        }
+      );
+      //《注意》带token上传附件时要把toke写在setRequestHeader中。
+      task.setRequestHeader(
+        "authorization",
+        window.localStorage.getItem("token")
+      );
+      //images为图片的src，多张上传的话就写个for
+      task.addFile(this.file, {
+        key: "file" //这里为需要上传图片的key名称。
+      });
+      task.addData("src", this.$store.state.userInfo.baseInfo.logo.src);
+      task.addData("name", this.$store.state.userInfo.baseInfo.logo.name);
+      /*
+              //多张图片上传(看后台需要用什么方式)    files为图片url数组   
+              //多张图片对应多个key上传
+               for (var i = 0; i < files.length; i++) { 
+                  var imgPath = files[i]; 
+                  // console.log("准备上传的图片路径："+ imgPath); 
+                  task.addFile(imgPath, { 
+                      key: file    // file 为图片的key
+                  }); 
+                } 
+
+                //多张图片对应单个key上传
+                task.addFile(files, {
+                    key: "file"  //这里为需要上传图片的key名称。
+                });
+    */
+      //开始上传
+      task.start();
+    },
+    finishCrop(i) {
+      this.$Bus.$on("finishCrop", re => {
+        this.img = re.data;
+        this.option.img = "";
+        if (re.id === i) {
+          this.upload();
+        }
+      });
+    }
   }
 };
 </script>
@@ -471,8 +687,7 @@ export default {
     }
   }
   .pop,
-  .pop-2,
-  .pop-3 {
+  .pop-2 {
     width: 10rem;
     height: 100vh;
     background-color: var(--base-set-bg-color);
@@ -523,6 +738,51 @@ export default {
       }
       .frame::-webkit-scrollbar {
         width: 0 !important;
+      }
+    }
+  }
+  .pop-4 {
+    .pop {
+      width: 8.6rem;
+      height: 6rem;
+      background-color: var(--base-set-bg-color);
+      z-index: 9999 !important;
+      .logo {
+        width: 8.6rem;
+        height: 6rem;
+        display: flex;
+        flex-direction: column;
+        color: var(--color-text);
+        .logo-head {
+          text-align: center;
+          font-size: 0.5rem;
+          height: 1.4rem;
+          line-height: 1.4rem;
+          border: 0.01rem solid rgba(100, 100, 100, 0.1);
+        }
+        .logo-content {
+          flex: 1;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          text-align: center;
+          span {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            img {
+              width: 1rem;
+              height: 1rem;
+              margin-bottom: 0.2rem;
+            }
+          }
+        }
+        .logo-footer {
+          text-align: center;
+          height: 1.4rem;
+          line-height: 1.4rem;
+        }
       }
     }
   }

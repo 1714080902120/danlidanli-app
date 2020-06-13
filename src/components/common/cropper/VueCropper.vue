@@ -86,7 +86,7 @@ export default {
   width: 10rem;
   height: 100vh;
   background-color: rgba(8, 8, 8, 0.6);
-  z-index: 9999;
+  z-index: 10000;
   .cropper {
     position: absolute;
     top: 4rem;
