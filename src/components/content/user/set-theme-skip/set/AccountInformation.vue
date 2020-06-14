@@ -14,6 +14,8 @@
           :key="indey"
           @click="detail(index, indey)"
           v-waves
+          :data-clipboard-text="JSON.stringify(item.more)"
+          :class="{ 'bold': index === 0 && indey === 0, 'copy': index === 2 && indey === 0 }"
         >
           <div class="left">
             <span>{{ item.title }}</span>
@@ -44,11 +46,15 @@
             <img src="~assets/img/fans_follows/go_back_dark.svg" alt />
           </span>
           <span class="title">{{ activeItem }}</span>
+          <span
+            class="save"
+            v-if="activeItem === '修改昵称' || activeItem === '修改个性签名'"
+            @click="save()"
+          >保存</span>
           <span class="share-downlaod" v-if="activeItem === '二维码'">
             <img @click="share()" src="~assets/img/user/set/share_dark.svg" alt />
             <img @click="download()" src="~assets/img/user/set/download_dark.svg" alt />
           </span>
-          <!-- <span>♂?♀</span> -->
         </div>
         <div class="pop-content">
           <div class="qrcode" v-if="activeItem === '二维码'">
@@ -69,6 +75,20 @@
                 <img src="~assets/img/user/set/take_photo.svg" alt />
               </span>
             </div>
+          </div>
+          <div class="reName" v-if="activeItem === '修改昵称'">
+            <div class="get-text">
+              <input type="text" v-model="info.name" placeholder="请输入新昵称" />
+              <span @click="reset()">x</span>
+            </div>
+            <div class="text-msg">
+              <span>修改昵称需要消耗6枚硬币</span>
+              <span @click="callService()">如何获取硬币？</span>
+            </div>
+          </div>
+          <div class="reDesc" v-if="activeItem === '修改个性签名'">
+            <textarea class="text-area" cols="46" rows="5" v-model="info.desc"></textarea>
+            <div class="count">{{ counted() }}</div>
           </div>
         </div>
       </mt-popup>
@@ -98,13 +118,15 @@
         position="middle"
         popup-transition="popup-fade"
         :modal="false"
+        :class="{ 'when-calendar': activeItem === '生日选择' }"
       >
-        <div class="logo" v-if="activeItem === '头像选择'">
+        <div
+          class="logo"
+          :class="{ 'when-calendar': activeItem === '生日选择' }"
+          v-if="activeItem === '头像选择' || activeItem === '性别选择' || activeItem === '生日选择'"
+        >
           <div class="logo-head">{{ activeItem }}</div>
-          <div class="logo-content">
-            <!-- <span>♂</span>
-              <span>?</span>
-            <span>♀</span>-->
+          <div class="logo-content" v-if="activeItem === '头像选择'">
             <span @click="getCamera()" v-waves>
               <img src="~assets/img/user/set/take_photo.svg" alt />拍照
             </span>
@@ -115,7 +137,49 @@
               <img src="~assets/img/user/set/random.svg" alt /> 随机
             </span>
           </div>
-          <div class="logo-footer" @click="closePop3()" v-waves>取消</div>
+          <div class="gender-content" v-if="activeItem === '性别选择'">
+            <div
+              class="male"
+              @click="changeSelect(0, '男')"
+              :class="{ 'male-active': genderIsSelected === 0 }"
+              v-waves
+            >
+              <span>♂</span>
+              <span>男</span>
+            </div>
+            <div
+              class="unknown"
+              @click="changeSelect(1, '保密')"
+              :class="{ 'unknown-active': genderIsSelected === 1 }"
+              v-waves
+            >
+              <span>?</span>
+              <span>保密</span>
+            </div>
+            <div
+              class="female"
+              @click="changeSelect(2, '女')"
+              :class="{ 'female-active': genderIsSelected === 2 }"
+              v-waves
+            >
+              <span>♀</span>
+              <span>女</span>
+            </div>
+          </div>
+          <div class="calendar-content" v-if="activeItem === '生日选择'">
+            <div class="calendar-header">
+              <div class="year">{{ date.year }}年</div>
+              <div class="month-day-weekday"><span>{{date.month}}月</span>{{ date.day }}日<span>{{ date.weekday }}</span><span></span></div>
+            </div>
+            <Calendar class="calendar" v-on:choseDay="clickDay" v-on:changeMonth="clickDay"></Calendar>
+          </div>
+          <div class="logo-footer" v-if="activeItem === '头像选择'" @click="closePop3()" v-waves>取消</div>
+          <div
+            class="logo-footer"
+            v-if="activeItem === '性别选择' || activeItem === '生日选择'"
+            @click="closePop3()"
+            v-waves
+          >确定</div>
         </div>
       </mt-popup>
     </div>
@@ -131,7 +195,9 @@
 /* eslint-disable no-undef */
 import { Toast } from "mint-ui";
 import Cropper from "components/common/cropper/VueCropper";
-// import { changeLogoOrBg } from "network/user.js";
+import { changeMessage } from "network/user.js";
+import Calendar from "vue-calendar-component";
+import Clipboard from "clipboard";
 
 export default {
   name: "AccountInformation",
@@ -141,6 +207,7 @@ export default {
       popupVisible2: false,
       sheetVisible: false,
       popupVisible3: false,
+      calendar: false,
       innerHtml: "",
       actions: [{ name: "浏览器打开", method: this.goToNavigator }],
       activeItem: "",
@@ -238,17 +305,70 @@ export default {
         id: 0
       },
       file: null,
-      img: ""
+      img: "",
+      randomFile: null,
+      randomList: [],
+      info: {
+        name: this.$store.state.userInfo.baseInfo.name,
+        desc: this.$store.state.userInfo.baseInfo.desc
+      },
+      genderIsSelected: 0,
+      date: {
+        year: '',
+        month: '',
+        day: '',
+        weekday: ''
+      }
     };
   },
   created() {
-    this.activeItem = "头像选择";
+    
+        let date = new Date()
+              let weekday = ''
+      switch (date.getDay()) {
+        case 0:
+        weekday = '周日'
+        break;
+         case 1:
+         weekday = '周一'
+        break;
+         case 2:
+         weekday = '周二'
+        break;
+         case 3:
+         weekday = '周三'
+        break;
+         case 4:
+         weekday = '周四'
+        break;
+         case 5:
+         weekday = '周五'
+        break;
+         case 6:
+         weekday = '周六'
+        break;
+      }
+        this.date = {
+          year: date.getFullYear(),
+          month: date.getMonth() + 1,
+          day: date.getDate(),
+          weekday
+        }
     // console.log(this.$store.state.userInfo);
-    this.popupVisible3 = true;
     this.getQrCode();
+    for (let i = 0; i < 42; i++) {
+      this.randomList.push(
+        require(`assets/img/user/set/random/random_${i}.jpg`)
+      );
+    }
+
+    
+    this.activeItem = "修改昵称";
+    this.popupVisible = true;
   },
   components: {
-    Cropper
+    Cropper,
+    Calendar
   },
   methods: {
     close() {
@@ -259,8 +379,118 @@ export default {
         this.option.img = "";
       });
     },
+    changeSelect(i, gender) {
+      this.genderIsSelected = i;
+      this.list[0].content[2].more = gender;
+      
+    },
+    clickDay(data) {
+      let d = new Date(data).getDay() //选中某天
+      let date = data.split('/')
+      let weekday = ''
+      switch (d) {
+        case 0:
+        weekday = '周日'
+        break;
+         case 1:
+         weekday = '周一'
+        break;
+         case 2:
+         weekday = '周二'
+        break;
+         case 3:
+         weekday = '周三'
+        break;
+         case 4:
+         weekday = '周四'
+        break;
+         case 5:
+         weekday = '周五'
+        break;
+         case 6:
+         weekday = '周六'
+        break;
+      }
+      this.date = {
+        year: date[0],
+        month: date[1],
+        day: date[2],
+        weekday
+      }
+      this.list[0].content[3].more = `${date[0]}-${date[1]}-${date[2]}`
+    },
+    changeDate(data) {
+            let d = new Date(data).getDay() //选中某天
+      let date = data.split('/')
+      let weekday = ''
+      switch (d) {
+        case 0:
+        weekday = '周日'
+        break;
+         case 1:
+         weekday = '周一'
+        break;
+         case 2:
+         weekday = '周二'
+        break;
+         case 3:
+         weekday = '周三'
+        break;
+         case 4:
+         weekday = '周四'
+        break;
+         case 5:
+         weekday = '周五'
+        break;
+         case 6:
+         weekday = '周六'
+        break;
+      }
+      this.date = {
+        year: date[0],
+        month: date[1],
+        day: date[2],
+        weekday
+      } //左右点击切换月份
+    },
+    clickToday(data) {
+            let d = new Date(data).getDay() //选中某天
+      let date = data.split('/')
+      let weekday = ''
+      switch (d) {
+        case 0:
+        weekday = '周日'
+        break;
+         case 1:
+         weekday = '周一'
+        break;
+         case 2:
+         weekday = '周二'
+        break;
+         case 3:
+         weekday = '周三'
+        break;
+         case 4:
+         weekday = '周四'
+        break;
+         case 5:
+         weekday = '周五'
+        break;
+         case 6:
+         weekday = '周六'
+        break;
+      }
+      this.date = {
+        year: date[0],
+        month: date[1],
+        day: date[2],
+        weekday
+      }
+    },
+
     detail(x, y) {
       this.activeItem = this.list[x].content[y].title;
+      let clipboard = new Clipboard(".copy");
       switch (x) {
         case 0:
           switch (y) {
@@ -269,10 +499,20 @@ export default {
               this.popupVisible3 = true;
               break;
             case 1:
+              this.activeItem = "修改昵称";
+              this.popupVisible = true;
               break;
             case 2:
+              this.activeItem = "性别选择";
+              this.popupVisible3 = true;
               break;
             case 3:
+              this.activeItem = "生日选择";
+              this.popupVisible3 = true;
+              break;
+            case 4:
+              this.activeItem = "修改个性签名";
+              this.popupVisible = true;
               break;
           }
           break;
@@ -281,6 +521,23 @@ export default {
         case 2:
           switch (y) {
             case 0:
+      
+      clipboard.on("success", () => {
+        Toast({
+          message: "已复制至剪切板",
+          position: "middle",
+          duration: 3000
+        });
+        clipboard.destroy();
+      });
+      clipboard.on("error", () => {
+        Toast({
+          message: "复制失败",
+          position: "middle",
+          duration: 3000
+        });
+        clipboard.destroy();
+      });
               break;
             case 1:
               this.activeItem = "二维码";
@@ -299,6 +556,55 @@ export default {
           this.popupVisible2 = true;
           break;
       }
+    },
+    reset() {
+      this.info.name = "";
+    },
+    callService() {
+      this.innerHtml = "https://www.bilibili.com/v/customer-service";
+      this.popupVisible2 = true;
+    },
+    save() {
+      if (this.info.name !== this.$store.state.userInfo.baseInfo.name) {
+        if (parseInt(this.$store.state.userInfo.coin.coins) < 6) {
+          Toast({
+            message: "硬币数量不足哦∑(°Д°;)",
+            duration: 3000,
+            position: "middle"
+          });
+          return false;
+        }
+        if (this.info.name === "") {
+          Toast({
+            message: "名字不能为空",
+            duration: 3000,
+            position: "middle"
+          });
+          return false;
+        }
+        this.$store.state.userInfo.name = this.info.name;
+        this.$store.state.userInfo.coin.coins =
+          parseInt(this.$store.state.userInfo.coin.coins) - 6;
+      }
+      this.popupVisible = false;
+      this.toChangeMsg();
+    },
+    toChangeMsg() {
+      changeMessage({
+        username: this.$store.state.userInfo.username,
+        name: this.info.name,
+        desc: this.info.desc
+      }).then(() => {
+        Toast({
+          message: "修改成功！",
+          duration: 3000,
+          position: "middle"
+        });
+        this.$store.state.userInfo.baseInfo.name = this.info.name;
+        this.$store.state.userInfo.baseInfo.desc = this.info.desc;
+        this.list[0].content[1].more = this.$store.state.userInfo.baseInfo.name;
+        this.list[0].content[4].more = this.$store.state.userInfo.baseInfo.desc;
+      });
     },
     closePop2() {
       this.popupVisible2 = false;
@@ -321,7 +627,14 @@ export default {
           let directoryReader = fs.root.createReader();
           directoryReader.readEntries(
             entries => {
-              let directoryReader = entries[1].createReader();
+              let en = entries[2];
+              for (let j = 0; j < entries.length; j++) {
+                if (entries[j].name.toString() == "img") {
+                  en = entries[j];
+                  break;
+                }
+              }
+              let directoryReader = en.createReader();
               directoryReader.readEntries(
                 entriess => {
                   for (let i = 0; i < entriess.length; i++) {
@@ -362,7 +675,8 @@ export default {
             duration: 3000
           });
         },
-        () => {
+        e => {
+          alert(JSON.stringify(e));
           plus.nativeUI.alert("使用系统分享失败", () => {}, "错误", "确定");
         }
       );
@@ -406,21 +720,19 @@ export default {
         let path = window.localStorage.getItem("DOWNLOAD_PATH");
         await this.qrcode.getParent(
           entry => {
-            alert(entry.fullPath);
             entry.getDirectory(
               path.toString(),
               { create: false, exclusive: false },
               entrys => {
-                alert(entrys.fullPath);
                 this.copyTo(entrys);
               },
-              () => {
-                alert("获取目录对象失败");
+              e => {
+                alert(JSON.stringify(e));
               }
             );
           },
           e => {
-            alert(e);
+            alert(JSON.stringify(e));
           }
         );
       } else {
@@ -465,7 +777,7 @@ export default {
           );
         },
         e => {
-          alert(`111111${e.message}`);
+          alert(`${e.message}`);
         },
         {}
       );
@@ -516,28 +828,29 @@ export default {
         (data, status) => {
           // 上传完成
           if (status == 200) {
-            alert(data.responseText);
             this.$store.commit("changeLogo", this.img);
             this.popupVisible3 = false;
             plus.gallery.save(
               this.file,
               () => {
                 Toast({
-                  message: "修改成功！",
+                  message: "修改成功！ 切记不可连续换头像！",
                   duration: 3000,
                   position: "middle"
                 });
               },
               () => {
                 Toast({
-                  message: "保存至图库失败",
+                  message: "保存至图库失败！ 切记不可连续换头像！",
                   duration: 3000,
                   position: "middle"
                 });
               }
             );
           } else {
-            alert("Upload failed: " + status);
+            alert(
+              "Upload failed: " + status + " 切记不可连续换头像！后台撑不住"
+            );
           }
         }
       );
@@ -579,7 +892,64 @@ export default {
           this.upload();
         }
       });
+    },
+    getRandom() {
+      let reg = new RegExp(`random_${Math.round(Math.random() * 41)}`, "gi");
+
+      plus.io.requestFileSystem(
+        plus.io.PRIVATE_WWW,
+        fs => {
+          let directoryReader = fs.root.createReader();
+          directoryReader.readEntries(
+            entries => {
+              let en = entries[2];
+              for (let j = 0; j < entries.length; j++) {
+                if (entries[j].name.toString() == "img") {
+                  en = entries[j];
+                  break;
+                }
+              }
+              let directoryReader = en.createReader();
+              directoryReader.readEntries(
+                entriess => {
+                  for (let i = 0; i < entriess.length; i++) {
+                    if (reg.test(entriess[i].name)) {
+                      this.img = "file://" + entriess[i].fullPath;
+                      this.file = entriess[i].fullPath;
+                      this.upload();
+                    }
+                  }
+                },
+                e => {
+                  alert("Read entries failed: " + e.message);
+                }
+              );
+            },
+            () => {
+              alert("读取文件失败");
+            }
+          );
+        },
+        () => {
+          alert("读取失败");
+        }
+      );
     }
+  },
+  computed: {
+    counted() {
+      let length = this.info.desc.length;
+      return () => {
+        return 70 - length;
+      };
+    }
+  },
+  watch: {
+    "$store.state.userInfo"(newVal) {
+      this.$store.state.userInfo = newVal;
+    },
+    deep: true,
+    immediate: true
   }
 };
 </script>
@@ -626,7 +996,7 @@ export default {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      border-bottom: 0.01rem solid rgba(100, 100, 100, 0.1);
+      border-bottom: 0.02rem solid rgba(100, 100, 100, 0.15);
       .left {
         display: flex;
         flex-direction: column;
@@ -645,8 +1015,8 @@ export default {
         display: flex;
         align-items: center;
         img {
-          width: 1.2rem;
-          height: 1.2rem;
+          width: 1.6rem;
+          height: 1.6rem;
           border-radius: 100%;
         }
         &::after {
@@ -685,6 +1055,10 @@ export default {
         }
       }
     }
+    .bold {
+      height: 2rem;
+      line-height: 2rem;
+    }
   }
   .pop,
   .pop-2 {
@@ -704,6 +1078,9 @@ export default {
           width: 0.9rem;
           height: 0.9rem;
         }
+      }
+      .save {
+        opacity: 0.6;
       }
       .share-downlaod {
         display: flex;
@@ -727,6 +1104,59 @@ export default {
         align-items: center;
         img {
           width: 8rem;
+        }
+      }
+      .reName {
+        margin: 0 0.5rem;
+        margin-top: 0.3rem;
+        .get-text {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          input {
+            height: 1rem;
+            width: 8.5rem;
+            background-color: transparent;
+            border: 0;
+            outline: none;
+            border-bottom: 0.03rem solid var(--color-tint);
+            border-radius: 0.05rem;
+            color: var(--color-tint);
+            opacity: 0.9;
+            font-size: 0.35rem;
+            padding-top: 0.3rem;
+          }
+          span {
+            margin-top: 0.3rem;
+            opacity: 0.6;
+          }
+        }
+        .text-msg {
+          font-size: 0.35rem;
+          margin-top: 0.4rem;
+          opacity: 0.9;
+          display: flex;
+          justify-content: space-between;
+        }
+      }
+      .reDesc {
+        display: flex;
+        flex-direction: column;
+
+        .text-area {
+          background-color: transparent;
+          border: 0;
+          color: var(--color-text);
+          padding: 0.3rem;
+          border-bottom: 0.01rem solid var(--color-tint);
+          outline: none;
+        }
+        .count {
+          position: relative;
+          display: flex;
+          justify-content: flex-end;
+          margin: 0.3rem;
+          font-size: 0.35rem;
         }
       }
     }
@@ -758,9 +1188,10 @@ export default {
           font-size: 0.5rem;
           height: 1.4rem;
           line-height: 1.4rem;
-          border: 0.01rem solid rgba(100, 100, 100, 0.1);
+          border: 0.02rem solid rgba(100, 100, 100, 0.1);
         }
-        .logo-content {
+        .logo-content,
+        .gender-content {
           flex: 1;
           display: flex;
           justify-content: space-between;
@@ -778,12 +1209,119 @@ export default {
             }
           }
         }
+        .gender-content {
+          flex: 0;
+          .male,
+          .unknown,
+          .female {
+            width: 2rem;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            height: 2rem;
+            border-radius: 100%;
+            color: rgb(99, 169, 255);
+            margin: 0.5rem 0.3rem;
+            span {
+              width: 3rem;
+              height: 1rem;
+              line-height: 1rem;
+              font-size: 0.5rem;
+              &:first-child {
+                font-weight: bold;
+                font-size: 1rem;
+                margin-top: 0.2rem;
+                margin-bottom: -0.1rem;
+              }
+            }
+          }
+          .unknown {
+            color: var(--color-text);
+            opacity: 0.7;
+            font-size: 0.6rem;
+          }
+          .female {
+            color: var(--color-tint);
+          }
+          .male-active,
+          .unknown-active,
+          .female-active {
+            color: #fff;
+
+            transition: 0.3s;
+            background-color: rgb(99, 169, 255);
+          }
+          .unknown-active {
+            color: #000;
+            background-color: var(--color-text);
+          }
+          .female-active {
+            background-color: var(--color-tint);
+          }
+        }
         .logo-footer {
           text-align: center;
           height: 1.4rem;
           line-height: 1.4rem;
+          border-top: .02rem solid rgba(100, 100, 100, 0.15);
+        }
+        .calendar-content {
+          // flex: 1;
+          height: 11rem;
+          /deep/ .calendar {
+            position: absolute;
+
+            width: 8.6rem;
+            left: 0;
+            right: 0;
+
+            /deep/ .wh_content_all {
+              font-size: .3rem !important;
+              background-color: transparent !important;
+              /deep/ .wh_top_changge {
+                font-size: .2rem !important;
+              }
+              .wh_content {
+                .wh_content_item {
+                  transition: .3s;
+                  .wh_chose_day {
+                    color: #000;
+                    transition: .3s;
+                    background-color: var(--color-tint);
+                  }
+                  .wh_isToday {
+     
+                    color: #000;
+                  }
+                }
+              }
+            }
+          }
+                      .calendar-header {
+              display: flex;
+              flex-direction: column;
+              background-color: var(--base-bg-color-thr);
+              height: 2.4rem;
+              padding: .3rem .6rem;
+              .year {
+                margin-bottom: .1rem;
+              }
+              .month-day-weekday {
+                font-size: .8rem;
+                span {
+                  margin: 0 .1rem;
+                }
+              }
+            }
         }
       }
+      .when-calendar {
+        height: 14rem;
+      }
+    }
+    .when-calendar {
+      height: 14rem;
     }
   }
   .action-sheet {

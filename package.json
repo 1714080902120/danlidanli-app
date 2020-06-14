@@ -16,6 +16,7 @@
     "crypto-js": "^4.0.0",
     "mint-ui": "^2.2.13",
     "vue": "^2.6.11",
+    "vue-calendar-component": "^2.8.2",
     "vue-cropper": "^0.5.2",
     "vue-qr": "^2.2.1",
     "vue-router": "^3.1.6",

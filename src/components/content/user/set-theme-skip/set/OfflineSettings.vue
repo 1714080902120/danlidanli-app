@@ -91,6 +91,7 @@
 
 <script>
 /* eslint-disable no-undef */
+import { Toast } from 'mint-ui'
 
 export default {
   name: "OfflineSettings",
@@ -149,11 +150,13 @@ export default {
       plus.io.PUBLIC_DOWNLOADS,
       fs => {
         this.list[0].content[0].sub = fs.root.fullPath;
+        this.entry = fs.root;
       },
       e => {
         alert("Request file system failed: " + e.message);
       }
     );
+    this.test()
   },
   methods: {
     close() {
@@ -163,6 +166,42 @@ export default {
       this.list[0].content[1].sub = this.filePath;
       window.localStorage.setItem("DOWNLOAD_PATH", this.filePath);
       this.read = false;
+    },
+    test() {
+      if (window.localStorage.getItem('testDownLoad')) { return false }
+      let dtask = plus.downloader.createDownload("http://39.106.222.159:4000/bilibili_data/album_data/draw_data/939356/939356_page.png", {}, function(
+        d,
+        status
+      ) {
+        // 下载完成
+        if (status == 200) {
+          window.localStorage.setItem('testDownLoad', true)
+          plus.gallery.save(
+            d.filename,
+            () => {
+              Toast({
+                message: "测试下载成功",
+                duration: 3000,
+                position: "middle"
+              });
+            },
+            err => {
+              Toast({
+                message: "测试下载失败",
+                duration: 10000,
+                position: "middle"
+              });
+            }
+          );
+        } else {
+          Toast({
+            message: "测试下载失败",
+            duration: 3000,
+            position: "middle"
+          });
+        }
+      });
+      dtask.start();
     },
     look(item) {
       if (item.isFile) {
@@ -175,11 +214,7 @@ export default {
             src: item.fullPath,
             success: event => {
               alert(
-                event.duration,
-                event.resolution,
-                event.size,
-                event.width,
-                event.height
+                JSON.stringify(event)
               );
             },
             fail: () => {
@@ -190,7 +225,7 @@ export default {
           plus.io.getFileInfo({
             src: item.fullPath,
             success: event => {
-              alert(event.digest, event.size);
+              JSON.stringify(event)
             },
             fail: () => {
               alert("获取失败");
@@ -253,7 +288,7 @@ export default {
           );
         },
         e => {
-          alert(e);
+          alert(JSON.stringify(e));
         }
       );
     },

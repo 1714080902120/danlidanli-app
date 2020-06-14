@@ -190,7 +190,6 @@ export default {
         getUserData().then(res => {
           this.userInfo = res;
           delete this.userInfo._id;
-          delete this.userInfo.username;
           this.middleItems = [
             { name: "动态", num: this.userInfo.cardList.length },
             { name: "关注", num: this.userInfo.fans_follows.follows.length },

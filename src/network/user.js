@@ -91,13 +91,25 @@ export async function getToken({ username, password }) {
 
 // 修改头像或者背景图 ,H5+上传的图片失败
 export async function changeLogoOrBg(data) {
-  alert(data)
+  // alert(data)
   return await axios({
     url: '/user/upload',
     method: 'post',
     data: data,
     headers: {
       'Content-Type': 'multipart/form-data'
+    }
+  })
+}
+
+export async function changeMessage({ username, name, desc }) {
+  return await axios({
+    url: '/user/update',
+    method: 'put',
+    params: {
+      username,
+      name,
+      desc
     }
   })
 }
