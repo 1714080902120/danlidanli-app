@@ -98,7 +98,6 @@ export default {
     },
     detail(i) {
       if (i >= 2) return false;
-      if (this.popSelectedData === this.popData[i]) return false;
       this.setType = i;
       this.popSelectedData = this.popData[i];
       this.popupVisible = true
@@ -108,6 +107,7 @@ export default {
     },
     selected (i) {
       this.popSelectedData.selected = i
+      this.list[this.setType].sub = this.popSelectedData.content[i].sub
     }
   }
 };

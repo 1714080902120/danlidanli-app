@@ -169,7 +169,12 @@
           <div class="calendar-content" v-if="activeItem === '生日选择'">
             <div class="calendar-header">
               <div class="year">{{ date.year }}年</div>
-              <div class="month-day-weekday"><span>{{date.month}}月</span>{{ date.day }}日<span>{{ date.weekday }}</span><span></span></div>
+              <div class="month-day-weekday">
+                <span>{{date.month}}月</span>
+                {{ date.day }}日
+                <span>{{ date.weekday }}</span>
+                <span></span>
+              </div>
             </div>
             <Calendar class="calendar" v-on:choseDay="clickDay" v-on:changeMonth="clickDay"></Calendar>
           </div>
@@ -314,46 +319,45 @@ export default {
       },
       genderIsSelected: 0,
       date: {
-        year: '',
-        month: '',
-        day: '',
-        weekday: ''
+        year: "",
+        month: "",
+        day: "",
+        weekday: ""
       }
     };
   },
   created() {
-    
-        let date = new Date()
-              let weekday = ''
-      switch (date.getDay()) {
-        case 0:
-        weekday = '周日'
+    let date = new Date();
+    let weekday = "";
+    switch (date.getDay()) {
+      case 0:
+        weekday = "周日";
         break;
-         case 1:
-         weekday = '周一'
+      case 1:
+        weekday = "周一";
         break;
-         case 2:
-         weekday = '周二'
+      case 2:
+        weekday = "周二";
         break;
-         case 3:
-         weekday = '周三'
+      case 3:
+        weekday = "周三";
         break;
-         case 4:
-         weekday = '周四'
+      case 4:
+        weekday = "周四";
         break;
-         case 5:
-         weekday = '周五'
+      case 5:
+        weekday = "周五";
         break;
-         case 6:
-         weekday = '周六'
+      case 6:
+        weekday = "周六";
         break;
-      }
-        this.date = {
-          year: date.getFullYear(),
-          month: date.getMonth() + 1,
-          day: date.getDate(),
-          weekday
-        }
+    }
+    this.date = {
+      year: date.getFullYear(),
+      month: date.getMonth() + 1,
+      day: date.getDate(),
+      weekday
+    };
     // console.log(this.$store.state.userInfo);
     this.getQrCode();
     for (let i = 0; i < 42; i++) {
@@ -361,10 +365,6 @@ export default {
         require(`assets/img/user/set/random/random_${i}.jpg`)
       );
     }
-
-    
-    this.activeItem = "修改昵称";
-    this.popupVisible = true;
   },
   components: {
     Cropper,
@@ -382,110 +382,109 @@ export default {
     changeSelect(i, gender) {
       this.genderIsSelected = i;
       this.list[0].content[2].more = gender;
-      
     },
     clickDay(data) {
-      let d = new Date(data).getDay() //选中某天
-      let date = data.split('/')
-      let weekday = ''
+      let d = new Date(data).getDay(); //选中某天
+      let date = data.split("/");
+      let weekday = "";
       switch (d) {
         case 0:
-        weekday = '周日'
-        break;
-         case 1:
-         weekday = '周一'
-        break;
-         case 2:
-         weekday = '周二'
-        break;
-         case 3:
-         weekday = '周三'
-        break;
-         case 4:
-         weekday = '周四'
-        break;
-         case 5:
-         weekday = '周五'
-        break;
-         case 6:
-         weekday = '周六'
-        break;
+          weekday = "周日";
+          break;
+        case 1:
+          weekday = "周一";
+          break;
+        case 2:
+          weekday = "周二";
+          break;
+        case 3:
+          weekday = "周三";
+          break;
+        case 4:
+          weekday = "周四";
+          break;
+        case 5:
+          weekday = "周五";
+          break;
+        case 6:
+          weekday = "周六";
+          break;
       }
       this.date = {
         year: date[0],
         month: date[1],
         day: date[2],
         weekday
-      }
-      this.list[0].content[3].more = `${date[0]}-${date[1]}-${date[2]}`
+      };
+      this.list[0].content[3].more = `${date[0]}-${date[1]}-${date[2]}`;
     },
     changeDate(data) {
-            let d = new Date(data).getDay() //选中某天
-      let date = data.split('/')
-      let weekday = ''
+      let d = new Date(data).getDay(); //选中某天
+      let date = data.split("/");
+      let weekday = "";
       switch (d) {
         case 0:
-        weekday = '周日'
-        break;
-         case 1:
-         weekday = '周一'
-        break;
-         case 2:
-         weekday = '周二'
-        break;
-         case 3:
-         weekday = '周三'
-        break;
-         case 4:
-         weekday = '周四'
-        break;
-         case 5:
-         weekday = '周五'
-        break;
-         case 6:
-         weekday = '周六'
-        break;
+          weekday = "周日";
+          break;
+        case 1:
+          weekday = "周一";
+          break;
+        case 2:
+          weekday = "周二";
+          break;
+        case 3:
+          weekday = "周三";
+          break;
+        case 4:
+          weekday = "周四";
+          break;
+        case 5:
+          weekday = "周五";
+          break;
+        case 6:
+          weekday = "周六";
+          break;
       }
       this.date = {
         year: date[0],
         month: date[1],
         day: date[2],
         weekday
-      } //左右点击切换月份
+      }; //左右点击切换月份
     },
     clickToday(data) {
-            let d = new Date(data).getDay() //选中某天
-      let date = data.split('/')
-      let weekday = ''
+      let d = new Date(data).getDay(); //选中某天
+      let date = data.split("/");
+      let weekday = "";
       switch (d) {
         case 0:
-        weekday = '周日'
-        break;
-         case 1:
-         weekday = '周一'
-        break;
-         case 2:
-         weekday = '周二'
-        break;
-         case 3:
-         weekday = '周三'
-        break;
-         case 4:
-         weekday = '周四'
-        break;
-         case 5:
-         weekday = '周五'
-        break;
-         case 6:
-         weekday = '周六'
-        break;
+          weekday = "周日";
+          break;
+        case 1:
+          weekday = "周一";
+          break;
+        case 2:
+          weekday = "周二";
+          break;
+        case 3:
+          weekday = "周三";
+          break;
+        case 4:
+          weekday = "周四";
+          break;
+        case 5:
+          weekday = "周五";
+          break;
+        case 6:
+          weekday = "周六";
+          break;
       }
       this.date = {
         year: date[0],
         month: date[1],
         day: date[2],
         weekday
-      }
+      };
     },
 
     detail(x, y) {
@@ -517,28 +516,27 @@ export default {
           }
           break;
         case 1:
-          this.$router.replace({ path: '/widget' })
+          this.$router.replace({ path: "/widget" });
           break;
         case 2:
           switch (y) {
             case 0:
-      
-      clipboard.on("success", () => {
-        Toast({
-          message: "已复制至剪切板",
-          position: "middle",
-          duration: 3000
-        });
-        clipboard.destroy();
-      });
-      clipboard.on("error", () => {
-        Toast({
-          message: "复制失败",
-          position: "middle",
-          duration: 3000
-        });
-        clipboard.destroy();
-      });
+              clipboard.on("success", () => {
+                Toast({
+                  message: "已复制至剪切板",
+                  position: "middle",
+                  duration: 3000
+                });
+                clipboard.destroy();
+              });
+              clipboard.on("error", () => {
+                Toast({
+                  message: "复制失败",
+                  position: "middle",
+                  duration: 3000
+                });
+                clipboard.destroy();
+              });
               break;
             case 1:
               this.activeItem = "二维码";
@@ -1211,7 +1209,6 @@ export default {
           }
         }
         .gender-content {
-          flex: 0;
           .male,
           .unknown,
           .female {
@@ -1265,7 +1262,7 @@ export default {
           text-align: center;
           height: 1.4rem;
           line-height: 1.4rem;
-          border-top: .02rem solid rgba(100, 100, 100, 0.15);
+          border-top: 0.02rem solid rgba(100, 100, 100, 0.15);
         }
         .calendar-content {
           // flex: 1;
@@ -1278,43 +1275,42 @@ export default {
             right: 0;
 
             /deep/ .wh_content_all {
-              font-size: .3rem !important;
+              font-size: 0.3rem !important;
               background-color: transparent !important;
               /deep/ .wh_top_changge {
-                font-size: .2rem !important;
+                font-size: 0.2rem !important;
               }
               .wh_content {
                 .wh_content_item {
-                  transition: .3s;
+                  transition: 0.3s;
                   .wh_chose_day {
                     color: #000;
-                    transition: .3s;
+                    transition: 0.3s;
                     background-color: var(--color-tint);
                   }
                   .wh_isToday {
-     
                     color: #000;
                   }
                 }
               }
             }
           }
-                      .calendar-header {
-              display: flex;
-              flex-direction: column;
-              background-color: var(--base-bg-color-thr);
-              height: 2.4rem;
-              padding: .3rem .6rem;
-              .year {
-                margin-bottom: .1rem;
-              }
-              .month-day-weekday {
-                font-size: .8rem;
-                span {
-                  margin: 0 .1rem;
-                }
+          .calendar-header {
+            display: flex;
+            flex-direction: column;
+            background-color: var(--base-bg-color-thr);
+            height: 2.4rem;
+            padding: 0.3rem 0.6rem;
+            .year {
+              margin-bottom: 0.1rem;
+            }
+            .month-day-weekday {
+              font-size: 0.8rem;
+              span {
+                margin: 0 0.1rem;
               }
             }
+          }
         }
       }
       .when-calendar {

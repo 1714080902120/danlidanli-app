@@ -60,7 +60,7 @@ export default {
         ]
       ],
       app: "",
-      popupVisible: true,
+      popupVisible: false,
       list: [
         {
           col: "0",
@@ -89,7 +89,6 @@ export default {
     };
   },
   created() {
-    this.app = require(`./AccountInformation.vue`)
     this.Bus();
   },
   activated() {

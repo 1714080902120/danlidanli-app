@@ -134,6 +134,7 @@ export default {
     },
     select(i) {
       this.radioList.selected = i;
+      this.list[0].content[1].sub = this.radioList.content[i]
     },
     openSheet() {
       this.sheetVisible = true;

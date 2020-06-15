@@ -267,6 +267,7 @@ export default {
     },
     select(i) {
       this.radioList.selected = i;
+      this.list[1].content[this.selected.y].more = this.radioList.content[i]
     }
   }
 };

@@ -223,8 +223,8 @@ export default {
       selectedStyle: "",
       popupVisible: false,
       popupVisible2: false,
-      popupVisible3: true,
-      popupVisible4: true,
+      popupVisible3: false,
+      popupVisible4: false,
       type: {
         typeIsSelected: 0,
         title: "兑换挂件",

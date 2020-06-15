@@ -76,6 +76,7 @@ export default {
       opacity: 0.6;
       height: 1.2rem;
       line-height: 1.2rem;
+      margin-left: .4rem;
     }
     ul {
       display: flex;
