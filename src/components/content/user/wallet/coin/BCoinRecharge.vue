@@ -257,7 +257,7 @@ export default {
     goBack() {
       this.isActive = false;
       let timer = setTimeout(() => {
-        this.$router.replace({ path: "/wallet/b-coin" });
+        this.$router.go(-1)
         clearTimeout(timer);
         timer = null;
       }, 300);

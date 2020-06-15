@@ -517,6 +517,7 @@ export default {
           }
           break;
         case 1:
+          this.$router.replace({ path: '/widget' })
           break;
         case 2:
           switch (y) {
