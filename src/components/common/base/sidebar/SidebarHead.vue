@@ -3,7 +3,7 @@
     <div v-if="$store.state.haveToken && Object.keys(info).length > 0" class="have-token">
       <div class="header">
         <div class="logo-wallet-scan">
-          <div class="logo">
+          <div class="logo" @click="goToUserSpace()">
             <img :src="`${info.baseInfo.logo.src}${info.baseInfo.logo.name}`" alt />
           </div>
           <div class="wallet-scan">
@@ -128,6 +128,10 @@ export default {
     bigMember() {
       this.$router.push({ path: "/big-member" });
       this.$Bus.$emit("sidebarDisappear");
+    },
+    goToUserSpace() {
+      this.$Bus.$emit("sidebarDisappear");
+      this.$router.replace({ path: '/user-space' })
     }
   }
 };

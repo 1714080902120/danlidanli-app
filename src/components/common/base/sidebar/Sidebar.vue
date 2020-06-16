@@ -14,7 +14,7 @@
           :key="index"
           :class="{ active: index === isActive, 'small': item.title === '' }"
           v-waves
-          @touchstart="touchStart($event)"
+          @click="goTo(index)"
         >
           <img
             slot="icon"
@@ -43,6 +43,7 @@
 </template>
 
 <script>
+import { Toast } from 'mint-ui'
 import {
   getUserData
   // getToken
@@ -216,8 +217,9 @@ export default {
         this.$store.commit("closeSideBar", false);
       }
     },
-    touchStart() {
-      // console.log(e);
+    goTo(i) {
+      console.log(i);
+      this.$Bus.$emit("sidebarDisappear");
     },
     set() {
       this.$Bus.$emit("sidebarDisappear");
@@ -228,8 +230,13 @@ export default {
       this.$router.push({ path: "/theme" });
     },
     skip() {
-      this.$Bus.$emit("sidebarDisappear");
-      this.$router.push({ path: "/skip" });
+      Toast({
+        message: '该功能待开发~',
+        duration: 3000,
+        posiiton: 'middle'
+      })
+      // this.$Bus.$emit("sidebarDisappear");
+      // this.$router.push({ path: "/skip" });
     }
   },
   computed: {

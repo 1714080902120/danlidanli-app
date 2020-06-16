@@ -6,7 +6,7 @@ import MemberShop from './member-shop/index'
 import Trends from './trends/index'
 import { RorL, ForF, bigMember, set, theme, skip, Scan } from './other/index'
 import Wallet from './user/wallet/index'
-import { PersonalSpace, Widget } from './user/personal/index'
+import { PersonalSpace, Widget, UserSpace } from './user/personal/index'
 
 const routerPush = VueRouter.prototype.push
 VueRouter.prototype.push = function push(location) {
@@ -36,7 +36,8 @@ const routes = [
   skip,
   Scan,
   PersonalSpace,
-  Widget
+  Widget,
+  UserSpace
 ]
 
 const router = new VueRouter({
