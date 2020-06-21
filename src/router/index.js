@@ -10,11 +10,17 @@ import { PersonalSpace, Widget, UserSpace } from './user/personal/index'
 
 const routerPush = VueRouter.prototype.push
 VueRouter.prototype.push = function push(location) {
-  return routerPush.call(this, location).catch(error=> error)
+  return routerPush.call(this, location).catch(error => error)
 }
 VueRouter.prototype.replace = function replace(location) {
-  return routerPush.call(this, location).catch(error=> error)
+  return routerPush.call(this, location).catch(error => error)
 }
+
+VueRouter.prototype.goBack = function () {
+  this.isBack = true
+  window.history.go(-1)
+}
+
 
 Vue.use(VueRouter)
 

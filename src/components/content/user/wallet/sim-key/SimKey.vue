@@ -213,7 +213,7 @@ export default {
     background-color: var(--base-item-color-white) !important;
     .pop-content {
       width: 10rem;
-      height: 18rem;
+      height: 100vh;
       .pop-content-head {
         position: sticky;
         top: 0;

@@ -328,7 +328,7 @@ export default {
         .frame {
           overflow: hidden;
           width: 10rem;
-          height: 16.3rem;
+          height: 16.6rem;
         }
         .frame::-webkit-scrollbar {
           width: 0 !important;

@@ -430,7 +430,7 @@ export default {
     background-color: var(--base-item-color-white) !important;
     .pop {
       width: 10rem;
-      height: 18rem;
+      height: 100vh;
       .pop-content-head {
         position: sticky;
         top: 0;
@@ -458,7 +458,7 @@ export default {
         .frame {
           overflow: hidden;
           width: 10rem;
-          height: 16.3rem;
+          height: 16.6rem;
         }
         .frame::-webkit-scrollbar {
           width: 0 !important;

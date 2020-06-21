@@ -101,7 +101,7 @@ export default {
   },
   methods: {
     close() {
-      this.$router.go(-1);
+      this.$router.replace({ path: '/' });
     },
     detail(x, y) {
       if (x === 0 && y === 0) {
@@ -120,6 +120,8 @@ export default {
     logout() {
       window.localStorage.removeItem("haveToken");
       window.localStorage.removeItem("token");
+      window.sessionStorage.removeItem('isActived')
+      window.localStorage.removeItem('mailCode')
       this.$store.commit("logout");
       this.$router.replace({
         name: "HomeRecommend",
@@ -144,7 +146,7 @@ export default {
 
 <style lang="less" scoped>
 #set {
-  background-color: var(--base-set-bg-color);
+  background-color: var(--base-set-bg-color) !important;
   width: 10rem;
   height: 100vh;
   font-size: 0.4rem;

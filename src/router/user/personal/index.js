@@ -16,7 +16,7 @@ const Widget = {
 }
 
 const UserSpace = {
-  path: '/user-space',
+  path: '/user-space/:uuid',
   name: 'UserSpace',
   component: userspace
 }

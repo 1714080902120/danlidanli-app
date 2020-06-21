@@ -41,6 +41,10 @@ const mutations = {
   changeLogo (state, payload) {
     state.userInfo.baseInfo.logo.src = payload
     state.userInfo.baseInfo.logo.name = ''
+  },
+  // 添加首页推荐数据
+  addHomeRecommend (state, payload) {
+    state.recommendList = payload
   }
 }
 

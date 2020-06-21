@@ -146,7 +146,7 @@ export default {
           selected: 2
         }
       ],
-      popupVisible: true,
+      popupVisible: false,
       selectColor: "",
       selectY: 0,
       content: ["订购后，每月将自动扣除5枚硬币,", "退订后将不再自动扣除硬币。"]

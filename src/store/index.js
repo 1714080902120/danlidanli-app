@@ -20,7 +20,9 @@ export default new Vuex.Store({
     // 判断是否开启下拉刷新
     loadingLock: false,
     // 扫码前往的uuid
-    uuid: ''
+    uuid: '',
+    // 首页推荐数据
+    recommendList: []
   },
   mutations,
   actions,

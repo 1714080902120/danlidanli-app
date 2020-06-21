@@ -1,16 +1,12 @@
 <template>
   <div id="recommend-list" v-if="data.length > 0">
-    <div
-      class="recommend-item"
-      v-for="(item, index) in data"
-      :key="item._id"
-      v-waves
-    >
+    <div class="recommend-item" v-for="(item, index) in data" :key="item._id" v-waves>
       <div class="cover">
         <img
           :class="{ 'is-tip': isTip.indexOf(index) !== -1 }"
           v-lazy="`${item.img.src}${item.img.name}`"
           alt
+          @load="load()"
         />
         <img
           class="is-tip-bg"
@@ -18,26 +14,26 @@
           src="~assets/img/recommend_list/no_like_dark.svg"
           alt
         />
-        <div class="info" v-if="isTip.indexOf(index) === -1">
-          <span>
-            <img src="~assets/img/recommend_list/play_dark.svg" alt />
-            {{ item.plays }}
-          </span>
-          <span>
-            <img src="~assets/img/recommend_list/danmaku_dark.svg" alt />
-            {{ item.danmaku }}
-          </span>
-          <span>{{ item.video.long }}</span>
-        </div>
         <!-- 被举报的信息 -->
         <div class="is-tip-info" v-if="isTip.indexOf(index) !== -1">
           <span class="main">{{ tipTextList[isTip.indexOf(index)] }}</span>
           <span class="sub">将优化首页此类内容</span>
         </div>
       </div>
+      <div class="info" v-if="isTip.indexOf(index) === -1">
+        <span>
+          <img src="~assets/img/recommend_list/play_dark.svg" alt />
+          {{ item.plays }}
+        </span>
+        <span>
+          <img src="~assets/img/recommend_list/danmaku_dark.svg" alt />
+          {{ item.danmaku }}
+        </span>
+        <span>{{ item.video.long }}</span>
+      </div>
       <div class="is-tip-reset" v-if="isTip.indexOf(index) !== -1" @click="reset(index)">
         <img src="~assets/img/recommend_list/reset_dark.svg" alt />
-        撤回
+        撤销
       </div>
       <div class="title" v-if="isTip.indexOf(index) === -1">{{ item.title }}</div>
       <div class="label" v-if="isTip.indexOf(index) === -1">
@@ -49,13 +45,12 @@
     <div class="loading">
       <div class="left">
         <div class="text">
-        <span>刷到底了哟~从头再来吧~</span>
-        <span>刷新看新内容</span>
+          <span>刷到底了哟~从头再来吧~</span>
+          <span>刷新看新内容</span>
         </div>
         <div class="btn">
           <img src="~assets/img/recommend_list/pull_up_pink.svg" alt @click="backToTop()" />刷新
         </div>
-        
       </div>
       <img src="~assets/img/recommend_list/danlidanli_girl.png" alt />
     </div>
@@ -108,7 +103,8 @@ export default {
     // 返回顶部
     backToTop() {
       this.$Bus.$emit("backToTop");
-    }
+    },
+    load() {}
   },
   components: {}
 };
@@ -135,72 +131,86 @@ export default {
     .cover {
       position: relative;
       margin-bottom: -20px;
+      width: 350px;
+      height: 3rem;
+      background-image: url("~assets/img/base/bilibili_user_logo_bg.svg");
+      background-position: center center;
+      background-repeat: no-repeat;
+      background-size: 350px 100%;
+      margin-bottom: 0.2rem;
+      border-radius: 0.2rem;
+      background-color: var(--base-set-bg-color);
       .is-tip {
         filter: blur(15px);
       }
       .is-tip-bg {
         position: absolute;
         top: 20px;
-        left: 120px;
+        left: 0;
+        right: 0;
+        margin: 0 auto;
         width: 100px;
         height: 100px;
       }
       .is-tip-info {
         position: relative;
-        font-size: 30px;
+        font-size: 0.3rem;
         color: #fff;
         text-align: center;
         display: flex;
         flex-direction: column;
         bottom: 100px;
         .main {
-          font-size: 35px;
+          font-size: 0.4rem;
         }
         .sub {
         }
       }
       img {
         width: 350px;
+        height: 3rem;
         border-radius: 10px;
       }
-      .info {
-        position: relative;
+    }
+    .info {
+      position: relative;
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.3rem;
+      align-items: center;
+      margin: -.6rem 0 .2rem .1rem;
+      color: rgb(238, 235, 235);
+      span {
         display: flex;
-        justify-content: space-between;
-        font-size: .3rem;
-        bottom: 45px;
-        margin-left: 10px;
-        color: rgb(238, 235, 235);
-        span {
-          display: flex;
-          align-items: center;
-          flex: auto;
-          &:nth-child(2) {
-            margin: 0 20px 0 -.15rem;
-          }
-          img {
-            width: 30px;
-            height: 30px;
-          }
+        align-items: center;
+        flex: auto;
+        &:nth-child(2) {
+          margin: 0 20px 0 -0.15rem;
+        }
+        img {
+          width: .4rem;
+          height: .4rem;
+          margin-bottom: .02rem;
         }
       }
     }
     .is-tip-reset {
-      font-size: 40px;
+      font-size: 0.45rem;
       display: flex;
       align-items: center;
       justify-content: center;
       font-weight: lighter;
-      margin-bottom: 50px;
+      height: 1.4rem;
+      // margin-bottom: 50px;
       img {
-        width: 40px;
-        height: 40px;
+        width: 0.45rem;
+        height: 0.45rem;
         margin-right: 10px;
         margin-bottom: 6px;
       }
     }
     .title {
-      font-size: .35rem;
+      font-size: 0.35rem;
       overflow: hidden;
       white-space: nowrap;
       text-overflow: ellipsis;

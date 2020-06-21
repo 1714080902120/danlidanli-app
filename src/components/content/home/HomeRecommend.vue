@@ -75,6 +75,7 @@ export default {
           this.homeData.push(...res);
         }
       });
+      this.$store.commit('addHomeRecommend', this.homeData)
     },
     // 下拉获取数据
     async pullDownApplyData() {

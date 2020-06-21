@@ -500,7 +500,7 @@ export default {
       overflow-x: hidden;
       overflow-y: scroll;
       width: 10rem;
-      height: 18rem;
+      height: 100vh;
       background-color: var(--base-item-color-white) !important;
       .pop-head {
         position: sticky;
@@ -569,6 +569,7 @@ export default {
       flex-direction: column;
       width: 9.5rem;
       border-radius: 0.3rem;
+      background-color: var(--base-bg-color);
       .pop-title {
         position: relative;
         height: 1.5rem;

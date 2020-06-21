@@ -5,8 +5,8 @@
       <mt-button slot="right" @click="go()">{{ type() }}</mt-button>
     </mt-header>
     <div class="bg">
-      <img v-if="!isFocus" :src="img.default" alt />
-      <img v-if="isFocus" v-lazy="img.active" alt />
+      <img class="img" :class="{ disappear: isFocus }" :src="img.default" alt />
+      <img class="bg-img" v-lazy="img.active" alt />
     </div>
     <div class="content">
       <div class="username">
@@ -182,7 +182,7 @@ export default {
         return false;
       }
     },
-    // 注册
+    // 注册登录
     async toRegister() {
       const username = this.username;
       const password = this.password;
@@ -207,6 +207,7 @@ export default {
                   params: { type: "register" }
                 });
               }
+              this.refresh();
               clearTimeout(timer);
               timer = null;
             }, 150);
@@ -220,6 +221,14 @@ export default {
             return false;
           });
       } else if (this.enterType === "login") {
+        if (username === "" || password === "") {
+          Toast({
+            message: '账号名或密码不能为空！',
+            position: "middle",
+            duration: 3000
+          });
+          return false;
+        }
         getToken({ username, password })
           .then(res => {
             Toast({
@@ -240,6 +249,7 @@ export default {
                   params: { type: "login" }
                 });
               }
+              this.refresh();
               clearTimeout(timer);
               timer = null;
             }, 150);
@@ -362,10 +372,25 @@ export default {
     box-shadow: 0 1px 1px #000;
   }
   .bg {
+    position: relative;
     margin-top: 20px;
     border-top: 1px solid rgb(238, 237, 237, 0.8);
     img {
-      width: 100%;
+      width: 10rem;
+    }
+    .disappear {
+      transition: 0.3s;
+      opacity: 0;
+    }
+    .img {
+      z-index: 5;
+    }
+    .bg-img {
+      position: absolute;
+      width: 10rem;
+      top: 0;
+      left: 0;
+      z-index: -1;
     }
     margin-bottom: 30px;
   }
@@ -407,9 +432,16 @@ export default {
       border-top: 1px solid rgb(100, 100, 100);
     }
     .isWrong {
-      border: 1px solid rgb(255, 0, 0);
+      border: 0.02rem solid rgb(255, 0, 0);
+      border-radius: 0.1rem;
+
       input {
         color: rgb(255, 0, 0);
+        &::before {
+          content: "";
+          width: 0;
+          height: 0;
+        }
       }
     }
     .mail-check {

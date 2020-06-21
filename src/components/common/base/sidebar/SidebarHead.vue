@@ -131,7 +131,19 @@ export default {
     },
     goToUserSpace() {
       this.$Bus.$emit("sidebarDisappear");
-      this.$router.replace({ path: '/user-space' })
+      this.$router.push(
+        "/user-space/" + this.$store.state.userInfo.identy.uuid
+      );
+      if (window.sessionStorage.getItem('isActived')) {
+        return false;
+      } else {
+        let timer = setTimeout(() => {
+          window.sessionStorage.setItem('isActived', true)
+          this.$Bus.$emit("goRefresh");
+          clearTimeout(timer);
+          timer = null;
+        }, 500);
+      }
     }
   }
 };
@@ -146,7 +158,7 @@ export default {
   background-position: 2.6rem 0.2rem;
   background-repeat: no-repeat;
   .have-token {
-    padding-top: .5rem;
+    padding-top: 0.5rem;
     display: flex;
     flex-direction: column;
     .header {
@@ -179,9 +191,9 @@ export default {
           .wallet {
             margin: 0 10px;
             img {
-              margin: .1rem 0;
-              width: .8rem;
-              height: .8rem;
+              margin: 0.1rem 0;
+              width: 0.8rem;
+              height: 0.8rem;
             }
           }
           .scan {
@@ -207,7 +219,7 @@ export default {
         .name {
           height: 40px;
           line-height: 40px;
-          font-size: .4rem;
+          font-size: 0.4rem;
         }
         .level {
           font-size: 0.18rem;
@@ -220,8 +232,8 @@ export default {
           padding: 0 8px;
         }
         .label {
-          font-size: .3rem;
-          height: .32rem;
+          font-size: 0.3rem;
+          height: 0.32rem;
           background-color: var(--color-tint);
           color: rgb(243, 237, 237);
           border-radius: 6px;
@@ -241,7 +253,7 @@ export default {
       }
     }
     .vip-time {
-      font-size: .35rem;
+      font-size: 0.35rem;
       display: flex;
       align-items: center;
       height: 100px;
@@ -266,7 +278,7 @@ export default {
     .footer {
       display: flex;
       align-items: center;
-      font-size: .35rem;
+      font-size: 0.35rem;
       margin-top: 30px;
       background-color: rgba(61, 60, 60, 0.6);
       padding: 20px 0;
@@ -316,8 +328,8 @@ export default {
           opacity: 0;
         }
         img {
-          width: .1rem;
-          height: .1rem;
+          width: 0.1rem;
+          height: 0.1rem;
         }
       }
     }

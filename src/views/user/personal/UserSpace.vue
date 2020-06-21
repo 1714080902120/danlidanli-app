@@ -1,18 +1,30 @@
 <template>
-  <div id="user-space" v-if="userData">
+  <div
+    id="user-space"
+    ref="space"
+    v-if="userData !== null"
+    @scroll="test($event)"
+    @touchstart="touchStart($event)"
+    @touchmove="touchMove($event)"
+    @touchend="touchEnd($event)"
+  >
     <div class="head">
       <div class="bg">
-        <div class="bg-head">
+        <div class="bg-head" ref="bgHead">
           <div class="bg-head-left">
-            <span>
+            <span @click="goBack()" :class="{ disappear: disappear }">
               <img src="~assets/img/user/space/back_dark.svg" alt />
             </span>
           </div>
+          <div
+            class="bg-head-middle"
+            :class="{ disappear: !disappear }"
+          >{{ userData.baseInfo.name }}</div>
           <div class="bg-head-right">
-            <span>
+            <span :class="{ disappear: disappear }">
               <img src="~assets/img/home/search_dark.svg" alt />
             </span>
-            <span>
+            <span :class="{ disappear: disappear }">
               <img src="~assets/img/recommend_list/three_points_dark.svg" alt />
             </span>
           </div>
@@ -27,19 +39,28 @@
           <div class="fans-follows-praise-btn">
             <div class="fans-follows-praise">
               <div class="fans">
-                <span>{{ userData.fans_follows.fans.length }}</span>
+                <span v-if="userData.fans_follows">{{ userData.fans_follows.fans.length }}</span>
+                <span
+                  v-else-if="!userData.fans_follows"
+                >{{ userData.baseInfo.fans_follows_likes.fans }}</span>
                 <span>粉丝</span>
               </div>
               <div class="follows">
-                <span>{{ userData.fans_follows.follows.length }}</span>
+                <span v-if="userData.fans_follows">{{ userData.fans_follows.follows.length }}</span>
+                <span
+                  v-else-if="!userData.fans_follows"
+                >{{ userData.baseInfo.fans_follows_likes.follows }}</span>
                 <span>关注</span>
               </div>
               <div class="praise">
-                <span>{{ userData.baseInfo.fans_follows_likes.likes }}</span>
+                <span v-if="userData.fans_follows">{{ userData.baseInfo.fans_follows_likes.likes }}</span>
+                <span
+                  v-else-if="!userData.fans_follows"
+                >{{ userData.baseInfo.fans_follows_likes.likes }}</span>
                 <span>获赞</span>
               </div>
             </div>
-            <div class="btn" v-waves>编辑资料</div>
+            <div class="btn" v-waves>{{ edit }}</div>
           </div>
         </div>
         <div class="line-2">
@@ -47,7 +68,8 @@
           <span>
             <img src="~assets/img/user/space/male.svg" alt />
           </span>
-          <span>{{ userData.baseInfo.vip }}</span>
+          <span v-if="userData.baseInfo.vip != ''">{{ userData.baseInfo.vip }}</span>
+          <span v-else-if="userData.baseInfo.vip === ''">正式会员</span>
           <span>
             <img src="~assets/img/user/space/medal.svg" alt /> 勋章
           </span>
@@ -84,34 +106,379 @@
           <div class="line-5-right">充电</div>
         </div>
       </div>
-      <div class="head-footer">
-        <div class="navbar">
-          <div class="navbar-content">
-            <div
-              class="type"
-              v-for="(item, index) in typeList"
-              :key="index"
-              @click="toActive(index)"
-              :class="{ 'active': isActive === index }"
-              v-waves
-            >
-              <span>{{ item.name }}</span>
+    </div>
+    <div class="head-footer">
+      <div class="navbar">
+        <div class="navbar-content">
+          <div
+            class="type"
+            v-for="(item, index) in typeList"
+            :key="index"
+            @click="toActive(index)"
+            :class="{ 'active': isActive === index }"
+            v-waves
+          >
+            <span>{{ item.name }}</span>
+          </div>
+        </div>
+        <span class="navbar-active-footer" :style="{ 'left': `${.5 + 2 * isActive}rem` }"></span>
+      </div>
+    </div>
+    <div class="content">
+      <div class="main" v-if="isActive === 0">
+        <div class="inner" v-for="(items, index) in showingList" :key="index">
+          <div
+            class="wings"
+            v-if="items.length > 0 && (index === 'showingVideoList' || index === 'showingSmallVideoList')"
+          >
+            <div class="wings-head">
+              <div class="wings-head-left">{{ activeType(index) }}</div>
+              <div class="wings-head-right">查看更多</div>
+            </div>
+            <div class="wings-content">
+              <div class="wings-item" v-for="(item, indey) in items" :key="indey" v-waves>
+                <div class="wings-cover">
+                  <img
+                    v-if="item.main.content.inner.img.length > 0"
+                    v-lazy="item.main.content.inner.img[0].src + item.main.content.inner.img[0].name"
+                    alt
+                  />
+                </div>
+                <div class="plays-danmaku-time" v-if="item.main.content.inner.detail.length > 0">
+                  <span class="plays">
+                    <img src="~assets/img/recommend_list/play_dark.svg" alt />
+                    {{ parseInt(item.main.content.inner.detail[1]) }}
+                    <img
+                      src="~assets/img/recommend_list/danmaku_dark.svg"
+                      alt
+                    />
+                    {{ parseInt(item.main.content.inner.detail[2]) }}
+                  </span>
+                  <span class="danmaku"></span>
+                  <span class="time">{{ item.main.content.inner.detail[0] }}</span>
+                </div>
+                <div class="wings-title">{{item.main.content.inner.title[0]}}</div>
+                <div v-if="item.main.content.inner.title.length <= 0">没爬到嘤嘤嘤(╯︵╰)</div>
+              </div>
             </div>
           </div>
-          <span class="navbar-active-footer" :style="{ 'left': `${.45 + 2 * isActive}rem` }"></span>
+        </div>
+        <div
+          v-if="showingList.showingVideoList.length > 0 || showingList.showingSmallVideoList.length > 0"
+          class="middle"
+          @click="goToLive()"
+          v-waves
+        >
+          <img src="~assets/img/base/live_dark.svg" alt />进入我的直播间
+        </div>
+        <div class="animate" v-if="showingList3.length > 0">
+          <div class="animate-outer" v-for="(items, index) in showingList3" :key="index">
+            <div class="wings-head">
+              <div class="wings-head-left">
+                {{ activeType(index) }}
+                <img src="~assets/img/user/space/unsee_dark.svg" />
+              </div>
+              <div class="wings-head-right">查看更多</div>
+            </div>
+            <div class="animate-content">
+              <div class="animate-item" v-for="(item, indey) in items" :key="indey" v-waves>
+                <img v-lazy="item.src" alt />
+                <div class="title-sub">
+                  <div class="animate-item-title">{{ item.name }}</div>
+                  <div class="animate-item-sub">{{ item.set }}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="inner" v-for="(items, index) in showingList2" :key="index">
+          <div class="wings">
+            <div class="wings-head">
+              <div class="wings-head-left">
+                {{ activeType(index) }}
+                <img src="~assets/img/user/space/unsee_dark.svg" />
+              </div>
+              <div class="wings-head-right">查看更多</div>
+            </div>
+            <div class="wings-content">
+              <div class="wings-item" v-for="(item, indey) in items" :key="indey" v-waves>
+                <div class="wings-cover">
+                  <img v-lazy="item.img.src + item.img.name" :alt="item.img.alt" />
+                </div>
+                <div class="plays-danmaku-time">
+                  <span class="plays">
+                    <img src="~assets/img/recommend_list/play_dark.svg" alt />
+                    {{ item.plays }}
+                    <img
+                      src="~assets/img/recommend_list/danmaku_dark.svg"
+                      alt
+                    />
+                    {{ item.danmaku }}
+                  </span>
+                  <span class="danmaku"></span>
+                  <span class="time">{{ item.video.long }}</span>
+                </div>
+                <div class="wings-title">{{ item.title }}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="main-footer">
+          <div class="wings-head">
+            <div class="wings-head-left">
+              我玩过的游戏 1
+              <img src="~assets/img/user/space/unsee_dark.svg" />
+            </div>
+            <div class="wings-head-right">查看更多</div>
+          </div>
+          <a href="https://www.biligame.com/detail/?id=94">
+            <img
+              src="//i0.hdslb.com/bfs/game/ee43a0c2c3e52b8279dd8925ac32d83f7ffe02ac.png@100w_100h.webp"
+              alt
+            />
+            <div class="sub">
+              <div class="sub-title">崩坏三rd</div>
+              <div class="star">
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+              </div>
+            </div>
+          </a>
+        </div>
+      </div>
+      <div class="actions" v-if="isActive === 1">
+        <div
+          class="actions-items"
+          v-for="(item, index) in userData.cardList"
+          :key="index"
+          @click="alert()"
+          v-waves
+        >
+          <div class="actions-items-head">
+            <div class="head-left">
+              <div>
+                <img v-lazy="item.header.logo.src + item.header.logo.name" alt />
+              </div>
+              <div>
+                <span>{{ item.header.name }}</span>
+                <span>{{ item.header.time }}</span>
+              </div>
+            </div>
+            <div class="head-right">
+              <img src="~assets/img/recommend_list/three_points_dark.svg" alt />
+            </div>
+          </div>
+          <div class="actions-main">
+            <div
+              class="main-outer-ellipsis"
+              v-if="item.type === 'forwardingCard' || item.type === 'miss'"
+            >{{ item.main.ellipsis }}</div>
+            <div
+              class="main-content"
+              :class="{ 'dark': item.type === 'forwardingCard' || item.type === 'miss' }"
+            >
+              <div class="content-inner-head">{{ item.main.content.inner.head }}</div>
+              <div
+                v-if="item.type !== 'miss'"
+                class="inner-ellipsis"
+                :class="{ 'white': item.type === 'text' || item.main.content.inner.img.length <= 0, 're-position': item.type === 'forwardingCard' }"
+              >{{ item.main.content.ellipsis }}</div>
+              <div class="content-inner" v-if="item.type !== 'unknown'">
+                <div
+                  class="content-inner-img"
+                  v-if="item.type !== 'text' && item.main.content.inner.img.length > 0 && item.type !== 'imageSet cover-img' && item.type !== 'imageSingle cover-img wings'"
+                  :class="{ init: item.type === 'imageSingle cover-img wings' }"
+                >
+                  <img
+                    :class="{ init: item.type === 'imageSingle cover-img wings' }"
+                    v-if="item.main.content.inner.img.length > 0 && item.type !== 'imageSet cover-img'"
+                    v-lazy="item.main.content.inner.img[0].src + item.main.content.inner.img[0].name"
+                    alt
+                  />
+                </div>
+                <div class="imgsingle-outer" v-if="item.type ==='imageSingle cover-img wings'">
+                  <img
+                    class="imgsingle"
+                    ref="imgSingle"
+                    v-lazy="item.main.content.inner.img[0].src + item.main.content.inner.img[0].name"
+                    alt
+                  />
+                </div>
+                <div class="imgset-outer" v-if="item.type ==='imageSet cover-img'">
+                  <img
+                    class="imgset"
+                    v-for="(src, indey) in item.main.content.inner.img"
+                    v-lazy="src.src + src.name"
+                    alt
+                    :key="indey"
+                  />
+                </div>
+                <div
+                  class="content-inner-title"
+                  v-if="item.main.content.inner.title.length > 0 && item.type !== 'miss' && item.type !== 'wings cover-img'"
+                >{{ item.main.content.inner.title[0] }}</div>
+                <div
+                  class="content-inner-title"
+                  v-if="item.type === 'wings cover-img'"
+                >{{ item.main.content.inner.detail[0] }}</div>
+              </div>
+              <div class="unknown" v-if="item.type === 'unknown'">
+                <img src="~assets/img/wallet/B_discount/B_discount_inner.png" alt />发生了什么~
+              </div>
+            </div>
+            <div
+              v-if="item.type !== 'miss' && item.type !== 'wings cover-img'"
+              class="time-play-danmaku"
+              :class="{ 'position': item.type === 'wings cover-img' }"
+            >
+              <div class="left">
+                <span>{{ item.main.content.inner.detail[0] }}</span>
+                <span>{{ item.main.content.inner.detail[1] }}</span>
+                <span>{{ item.main.content.inner.detail[2] }}</span>
+              </div>
+              <div class="right"></div>
+            </div>
+            <div
+              class="miss"
+              v-else-if="item.type === 'miss'"
+              :class="{ 'dark': item.type === 'miss' }"
+            >
+              {{ item.main.content.inner.detail[0] }}
+              <img src="~assets/img/recommend_list/danlidanli_girl.png" alt />
+            </div>
+          </div>
+          <div class="actions-footer" v-if="item.footer">
+            <span>
+              <img src="~assets/img/user/set/share_dark.svg" alt />
+              {{ item.footer.share }}
+            </span>
+            <span>
+              <img src="~assets/img/user/space/discuss_dark.svg" alt />
+              {{ item.footer.assess }}
+            </span>
+            <span>
+              <img src="~assets/img/user/space/likes_dark.svg" alt />
+              {{ item.footer.likes }}
+            </span>
+          </div>
+        </div>
+      </div>
+      <div class="post" v-if="isActive === 2">
+        <div class="if-have" v-if="videoList.length > 0">
+          <div class="type">
+            <span @click="changeType(0)" :class="{ 'type-active' : postActive === 0}" v-waves>视频</span>
+            <span @click="changeType(1)" :class="{ 'type-active' : postActive === 1}" v-if="smallVideoList.length > 0" v-waves>小视频</span>
+          </div>
+          <div class="content-list" v-if="postActive === 0">
+            <div class="play">
+              <img src="~assets/img/user/space/play_pink.svg" alt />连续播放
+            </div>
+            <ul>
+              <li v-for="(item, index) in videoList" :key="index" @click="alert()" v-waves>
+                <div class="item-left">
+                  <img
+                    v-if="item.main.content.inner.img.length > 0"
+                    v-lazy="item.main.content.inner.img[0].src + item.main.content.inner.img[0].name"
+                    alt
+                  />
+                  <span
+                    v-if="item.main.content.inner.detail.length > 0"
+                    class="time"
+                  >{{ item.main.content.inner.detail[0] }}</span>
+                </div>
+                <div class="item-right">
+                  <div
+                    class="item-right-title"
+                    v-if="item.main.content.inner.title.length > 0"
+                  >{{ item.main.content.inner.title[0] }}</div>
+                  <div class="publish-time">{{ item.header.time.split('·')[0] }}</div>
+                  <div class="message" v-if="item.main.content.inner.detail.length > 0">
+                    <span>
+                      <img src="~assets/img/recommend_list/play_dark.svg" alt />
+                      {{ parseInt(item.main.content.inner.detail[1]) }}
+                    </span>
+                    <span>
+                      <img src="~assets/img/recommend_list/danmaku_dark.svg" alt />
+                      {{ parseInt(item.main.content.inner.detail[2]) }}
+                    </span>
+                    <span>
+                      <img src="~assets/img/recommend_list/three_points_dark.svg" alt />
+                    </span>
+                  </div>
+                </div>
+              </li>
+            </ul>
+          </div>
+          <div class="small-video-list" v-if="postActive === 1">
+            <ul>
+              <li v-for="(item, index) in smallVideoList" :key="index" v-waves>
+                <div class="img">
+                  <img v-if="item.main.content.inner.img.length > 0" v-lazy="item.main.content.inner.img[0].src + item.main.content.inner.img[0].name" alt="">
+                  <div v-if="item.main.content.inner.detail.length > 0" class="time">{{ item.main.content.inner.detail[0] }}</div>
+                </div>
+                <div class="small-video-title" v-if="item.main.content.inner.title.length > 0">{{ item.main.content.inner.title[0] }}</div>
+                <div class="small-video-sub">
+                    <span>
+                      <img src="~assets/img/recommend_list/play_dark.svg" alt />
+                      {{ parseInt(item.main.content.inner.detail[1]) }}
+                    </span>
+                    <span>
+                      <img src="~assets/img/user/space/discuss_dark.svg" alt />
+                      {{ parseInt(item.main.content.inner.detail[2]) }}
+                    </span>
+                    <span>
+                      10个月前
+                    </span>
+                </div>
+              </li>
+            </ul>
+            <div class="small-video-bottom">
+              (￣ェ￣;)，没有更多的内容啦~
+            </div>
+          </div>
+        </div>
+        <div class="if-no-have" v-else-if="videoList.length <= 0">
+          <img src="~assets/img/wallet/B_discount/B_discount_inner.png" alt />
+          什么都没有~
+        </div>
+      </div>
+      <div class="collect" v-if="isActive === 3"></div>
+      <div class="pursuit" v-if="isActive === 4">
+        <div class="animate">
+          <div class="animate-outer">
+            <div class="animate-content">
+              <div class="animate-item" v-for="(item, index) in animate[0]" :key="index" v-waves>
+                <img v-lazy="item.src" alt />
+                <div class="title-sub">
+                  <div class="animate-item-title">{{ item.name }}</div>
+                  <div class="animate-item-sub">{{ item.set }}</div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
-    <div class="content"></div>
   </div>
 </template>
 
 <script>
+import { getHomeData } from "network/home.js";
+import Animate from "./animate.json";
+import { Toast } from "mint-ui";
+import { getUserData } from "network/user.js";
+import { getUpDetail } from "network/up.js";
+
 export default {
   name: "UserSpace",
   data() {
     return {
       userData: null,
+      edit: "编辑资料",
+      postActive: 1,
       experience: {
         now: 19394,
         max: 28800
@@ -124,10 +491,42 @@ export default {
         { name: "追番" }
       ],
       descType: "详情",
-      isActive: 0
+      isActive: 2,
+      showingList: {
+        showingVideoList: [],
+        showingSmallVideoList: []
+      },
+      showingList2: {
+        showingCollects: [],
+        showingPayForList: [],
+        showingRecommendList: []
+      },
+      showingList3: [],
+      videoList: [],
+      smallVideoList: [],
+      collectList: [],
+      articleList: [],
+      position: {
+        y: 0,
+        nowY: 0
+      },
+      disappear: false,
+      animate: Object.values(Animate)
     };
   },
-  created() {},
+  created() {
+    this.bus();
+    this.getCollectList();
+    this.getShowingList3();
+    // getUpDetail(122879).then(res => {
+    //   // console.log(res);
+    //   res.cardList.forEach(e => {
+    //     console.log(e.type)
+    //   })
+    // })
+  },
+  mounted() {},
+  activated() {},
   methods: {
     showDesc() {
       if (this.descType === "收起") {
@@ -141,19 +540,249 @@ export default {
         return false;
       }
     },
+    changeType (i) {
+      this.postActive = i
+    },
     toActive(i) {
       if (i === this.isActive) {
         return false;
       }
       this.isActive = i;
+    },
+    goBack() {
+      this.$router.go(-1);
+    },
+    async bus() {
+      this.$Bus.$on("goRefresh", () => {
+        this.$router.go(0);
+      });
+      await getUserData().then(async res => {
+        let newVal = null;
+        delete res._id;
+        delete res.username;
+        console.log(res);
+        if (res.identy.uuid === this.$route.params.uuid) {
+          this.edit = "编辑资料";
+          newVal = res;
+          this.userData = newVal;
+        } else {
+          this.edit = "关注";
+          await getUpDetail(this.$route.params.uuid).then(res => {
+            newVal = res;
+            this.userData = res;
+          });
+        }
+        console.log(newVal);
+
+        if (newVal.cardList.length <= 0) {
+          return false;
+        } else {
+          await newVal.cardList.forEach(e => {
+            let time = [];
+            if (e.footer && !e.footer.likes) {
+              e.footer = {
+                share: `${(Math.random() * 30).toFixed(1)}万`,
+                assess: `${(Math.random() * 30).toFixed(1)}万`,
+                likes: `${(Math.random() * 30).toFixed(1)}万`
+              };
+            }
+            if (e.main.content.inner.detail.length > 0) {
+              time = e.main.content.inner.detail[0].split(":");
+            } else {
+              if (e.type === "wings") {
+                this.smallVideoList.push(e);
+              }
+            }
+            switch (e.type) {
+              case "wings":
+                this.videoList.push(e);
+                if (
+                  time.length > 0 &&
+                  time[0] === "00" &&
+                  parseInt(time[1]) <= 30
+                ) {
+                  this.smallVideoList.push(e);
+                }
+                break;
+              case "forwardingCard":
+                break;
+              case "imageSingle cover-img wings":
+                break;
+              case "text":
+                this.articleList.push(e);
+                break;
+              case "imageSet cover-img":
+                break;
+              case "wings cover-img":
+                break;
+            }
+          });
+          if (this.videoList.length >= 4) {
+            this.showingList.showingVideoList = this.videoList.filter(
+              (e, i) => {
+                return i < 4;
+              }
+            );
+          } else {
+            this.showingList.showingVideoList = this.videoList;
+          }
+          if (this.smallVideoList.length >= 4) {
+            this.showingList.showingSmallVideoList = this.smallVideoList.filter(
+              (e, i) => {
+                return i < 4;
+              }
+            );
+          } else {
+            this.showingList.showingSmallVideoList = this.smallVideoList;
+          }
+        }
+        switch (newVal.baseInfo.level) {
+          case "0":
+            this.experience = {
+              now: 19,
+              max: 280
+            };
+            break;
+          case "1":
+            this.experience = {
+              now: 280,
+              max: 560
+            };
+            break;
+          case "2":
+            this.experience = {
+              now: 560,
+              max: 1120
+            };
+            break;
+          case "3":
+            this.experience = {
+              now: 1120,
+              max: 2240
+            };
+            break;
+          case "4":
+            this.experience = {
+              now: 2240,
+              max: 10800
+            };
+            break;
+          case "5":
+            this.experience = {
+              now: 19346,
+              max: 28800
+            };
+            break;
+          case "6":
+            this.experience = {
+              now: 99999,
+              max: 99999
+            };
+            break;
+        }
+      });
+    },
+    touchStart() {},
+    touchMove() {},
+    touchEnd() {},
+    test(e) {
+      if (this.position.nowY <= e.srcElement.scrollTop) {
+        this.position.y += 1;
+        if (this.position.y >= 50) {
+          this.position.y = 50;
+        }
+      } else {
+        if (this.position.nowY <= 315) {
+          this.position.y -= 1;
+          if (this.position.y <= 0) {
+            this.position.y = 0;
+          }
+        }
+      }
+      this.position.nowY = e.srcElement.scrollTop;
+      this.$nextTick(() => {
+        this.$refs.bgHead.style.backgroundColor = `rgba(${this.position.y}, ${
+          this.position.y
+        }, ${this.position.y}, ${this.position.y / 50})`;
+        if (this.position.nowY <= 1) {
+          this.disappear = false;
+          this.$refs.bgHead.style.backgroundColor = "transparent";
+          this.position.y = 0;
+        } else if (this.position.nowY >= 315) {
+          this.disappear = true;
+          this.$refs.bgHead.style.backgroundColor = "rgba(50, 50, 50, 1)";
+          this.position.y = 50;
+        }
+      });
+    },
+    goToLive() {
+      window.location.href = "https://live.bilibili.com/6094209";
+    },
+    async getCollectList() {
+      let data = [];
+      // data.push(this.$store.state.recommendList[0])
+      // data.push(this.$store.state.recommendList[1])
+      data = await getHomeData({ skip: 0 }).then(res => {
+        return res;
+      });
+
+      this.collectList = data;
+      this.showingList2.showingCollects = data.filter((n, i) => {
+        return i <= 1;
+      });
+      this.showingList2.showingRecommendList = data.filter((n, i) => {
+        return i < 4 && i >= 2;
+      });
+      this.showingList2.showingPayForList = data.filter((n, i) => {
+        return i < 6 && i >= 4;
+      });
+    },
+    getShowingList3() {
+      let arr1 = this.animate[0].filter((n, i) => {
+        return i <= 2;
+      });
+      let arr2 = this.animate[1].filter((n, i) => {
+        return i <= 2;
+      });
+      this.showingList3.push(arr1);
+      this.showingList3.push(arr2);
+    },
+    alert() {
+      Toast({
+        message: "不要再点啦~忘了爬链接，嘤嘤嘤",
+        duration: 3000,
+        position: "middle"
+      });
+    }
+  },
+  computed: {
+    activeType() {
+      return index => {
+        switch (index) {
+          case "showingVideoList":
+            return `视频 ${this.videoList.length}`;
+          case "showingSmallVideoList":
+            return `小视频 ${this.smallVideoList.length}`;
+          case "showingCollects":
+            return `收藏 ${this.collectList.length}`;
+          case "showingRecommendList":
+            return `我推荐的视频 ${this.collectList.length}`;
+          case "showingPayForList":
+            return `最近投币 ${this.collectList.length}`;
+          case 0:
+            return `追番 ${this.animate[0].length}`;
+          case 1:
+            return `追剧 ${this.animate[1].length}`;
+        }
+      };
+    },
+    imgSingle() {
+      return () => {
+        // console.log();
+      };
     }
   },
   watch: {
-    "$store.state.userInfo"(newVal) {
-      console.log(newVal);
-
-      this.userData = newVal;
-    },
     immediate: true,
     deep: true
   }
@@ -165,60 +794,89 @@ export default {
   width: 10rem;
   height: 100vh;
   overflow: hidden;
-  background-color: var(--base-set-bg-color);
+  background-color: var(--base-set-bg-color) !important;
   font-size: 0.4rem;
+  overflow-y: scroll;
   .head {
     .bg {
+      position: relative;
+      top: -1rem;
       img {
         z-index: 3;
         width: 10rem;
       }
       .bg-head {
+        padding: 0.3rem;
         position: fixed;
-        top: 1rem;
+        top: 0rem;
         z-index: 9;
         width: 10rem;
-        height: 1.2rem;
+        height: 2rem;
         display: flex;
         align-items: center;
         justify-content: space-between;
         .bg-head-left {
           position: relative;
           span {
-                        position: relative;
-            width: 2rem;
-            height: 2rem;
-
-            background-color: var(--base-bg-color-sec);
+            position: relative;
+            width: 1rem;
+            height: 1rem;
+            border-radius: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: rgba(36, 36, 36, 0.3);
             opacity: 0.8;
+            transition: 0.3s;
             img {
-              position: relative;
               width: 0.6rem;
               height: 0.6rem;
             }
           }
+          .disappear {
+            transition: 0.1s;
+            background-color: transparent;
+          }
+        }
+        .bg-head-middle {
+          margin-right: -1rem;
+          font-size: 0.5rem;
+          transition: 0.3s;
         }
         .bg-head-right {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
           span {
+            background-color: rgba(36, 36, 36, 0.3);
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            width: 1rem;
+            height: 1rem;
+            border-radius: 100%;
+            transition: 0.3s;
             img {
               width: 0.9rem;
               height: 0.9rem;
             }
             &:last-child {
+              margin-left: 0.4rem;
               img {
                 width: 1rem;
                 height: 1rem;
               }
             }
           }
+          .disappear {
+            transition: 0.3s;
+            background-color: transparent;
+          }
         }
-        span {
-          img {
-            width: 0.6rem;
-            height: 0.6rem;
-          }
-          &:last-child {
-          }
+        .disappear {
+          transition: 0.3s;
+          color: transparent;
         }
       }
     }
@@ -227,7 +885,7 @@ export default {
       position: relative;
       background-color: var(--base-set-item-color);
       z-index: 3;
-      margin-top: -3rem;
+      margin-top: -3.5rem;
       display: flex;
       flex-direction: column;
       border-bottom: 0.02rem solid rgba(100, 100, 100, 0.2);
@@ -295,8 +953,12 @@ export default {
         span {
           margin: 0 0.1rem;
           &:first-child {
+            width: 2.8rem;
             font-size: 0.5rem;
             margin-left: 0rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
           }
           &:nth-child(2) {
             img {
@@ -460,45 +1122,716 @@ export default {
     img {
       width: 10rem;
     }
-    .head-footer {
-      background-color: var(--base-set-item-color);
-      .navbar {
-        font-size: 0.4rem;
+  }
+  .head-footer {
+    position: sticky;
+    top: 2rem;
+    z-index: 99;
+    background-color: var(--base-set-item-color);
+    .navbar {
+      font-size: 0.4rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      .navbar-content {
         display: flex;
-        flex-direction: column;
+        flex-direction: row;
+        align-items: center;
         justify-content: center;
-        margin-bottom: -0.4rem;
-        .navbar-content {
+        .type {
+          text-align: center;
+          width: 2rem;
+          height: 1rem;
           display: flex;
-          flex-direction: row;
+          justify-content: space-around;
           align-items: center;
-          justify-content: center;
-          .type {
-            text-align: center;
-            width: 2rem;
-            height: 1rem;
-            display: flex;
-            justify-content: space-around;
-            align-items: center;
-            span {
-            }
-          }
-          .active {
-            color: var(--color-tint);
+          span {
           }
         }
-        .navbar-active-footer {
-          transition: 0.3s;
-          position: relative;
-          width: 1.2rem;
-          height: 0.05rem;
-          background-color: var(--color-tint);
-          border-radius: 0.2rem;
+        .active {
+          color: var(--color-tint);
         }
+      }
+      .navbar-active-footer {
+        transition: 0.3s;
+        position: relative;
+        width: 1rem;
+        height: 0.05rem;
+        background-color: var(--color-tint);
+        border-radius: 0.2rem;
       }
     }
   }
   .content {
+    .animate {
+      padding: 0 0.3rem;
+      margin-top: 0.5rem;
+      .animate-outer {
+        margin-bottom: 0.3rem;
+        .wings-head {
+          display: flex;
+          align-items: center;
+          height: 1.2rem;
+          justify-content: space-between;
+          .wings-head-left {
+            display: flex;
+            align-items: center;
+            img {
+              width: 0.5rem;
+              height: 0.5rem;
+              margin-left: 0.1rem;
+            }
+          }
+          .wings-head-right {
+            display: flex;
+            align-items: center;
+            opacity: 0.6;
+            &::after {
+              content: "〉";
+              margin-left: 0.2rem;
+            }
+          }
+        }
+        .animate-content {
+          display: flex;
+          align-items: center;
+          flex-wrap: wrap;
+          justify-content: space-between;
+          text-align: center;
+          .animate-item {
+            position: relative;
+            width: 2.9rem;
+            height: 3.9rem;
+            border-radius: 0.1rem;
+            background-image: url("~assets/img/base/bilibili_user_logo_bg.svg");
+            background-position: center center;
+            background-repeat: no-repeat;
+            background-size: 1.5rem 1.5rem;
+            img {
+              width: 2.9rem;
+              border-radius: 0.1rem;
+            }
+            .title-sub {
+              position: absolute;
+              text-align: left;
+              color: #fff;
+              bottom: 0.1rem;
+              .animate-item-title {
+                font-size: 0.35rem;
+                width: 2.9rem;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                padding-left: 0.1rem;
+              }
+              .animate-item-sub {
+                font-size: 0.3rem;
+                padding-left: 0.1rem;
+                text-align: left;
+              }
+            }
+          }
+        }
+      }
+    }
+    .main {
+      .wings-head {
+        display: flex;
+        align-items: center;
+        height: 1.2rem;
+        justify-content: space-between;
+        .wings-head-left {
+          display: flex;
+          align-items: center;
+          img {
+            width: 0.5rem;
+            height: 0.5rem;
+            margin-left: 0.1rem;
+          }
+        }
+        .wings-head-right {
+          display: flex;
+          align-items: center;
+          opacity: 0.6;
+          &::after {
+            content: "〉";
+            margin-left: 0.2rem;
+          }
+        }
+      }
+      .inner {
+        margin-bottom: -0.5rem;
+        .wings {
+          display: flex;
+          flex-direction: column;
+          padding: 0.3rem;
+          .wings-head {
+            display: flex;
+            align-items: center;
+            height: 1.2rem;
+            justify-content: space-between;
+            .wings-head-left {
+              display: flex;
+              align-items: center;
+              img {
+                width: 0.5rem;
+                height: 0.5rem;
+                margin-left: 0.1rem;
+              }
+            }
+            .wings-head-right {
+              display: flex;
+              align-items: center;
+              opacity: 0.6;
+              &::after {
+                content: "〉";
+                margin-left: 0.2rem;
+              }
+            }
+          }
+          .wings-content {
+            position: relative;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            .wings-item {
+              border-radius: 0.2rem;
+              margin-bottom: 0.4rem;
+              width: 4.55rem;
+              background-color: var(--base-set-item-color);
+              height: 4.2rem;
+              .wings-cover {
+                background-image: url("~assets/img/base/bilibili_user_logo_bg.svg");
+                background-position: center center;
+                background-repeat: no-repeat;
+                background-size: 4.55rem 3rem;
+                width: 4.55rem;
+                height: 3rem;
+                img {
+                  border-radius: 0.2rem;
+                  width: 4.55rem;
+                  height: 3rem;
+                }
+              }
+              .plays-danmaku-time {
+                position: relative;
+                font-size: 0.3rem;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                margin-top: -0.4rem;
+                margin-bottom: 0.3rem;
+                padding: 0 0.1rem;
+                span {
+                  display: flex;
+                  align-items: center;
+                  img {
+                    width: 0.35rem;
+                    height: 0.35rem;
+                    margin-bottom: 0.05rem;
+                    &:last-child {
+                      margin: 0 0.1rem;
+                      margin-bottom: 0.05rem;
+                    }
+                  }
+                }
+              }
+              .wings-title {
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                width: 4.55rem;
+                opacity: 0.8;
+                padding: 0 0.2rem;
+              }
+            }
+          }
+        }
+      }
+      .middle {
+        position: relative;
+        width: 9.4rem;
+        left: 0;
+        right: 0;
+        margin: 0.2rem auto;
+        height: 1.2rem;
+        border-radius: 0.1rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: var(--base-bg-color-thr);
+        img {
+          width: 0.7rem;
+          height: 0.7rem;
+          opacity: 0.5;
+          margin-right: 0.2rem;
+        }
+      }
+      .main-footer {
+        position: relative;
+        padding: 0.3rem;
+        a {
+          position: relative;
+          display: flex;
+          background-color: var(--base-set-item-color);
+          width: 2.4rem;
+          height: 2.4rem;
+          flex-direction: column;
+          border-radius: 0.1rem;
+          margin: 0.7rem 0;
+          img {
+            top: -0.6rem;
+            position: absolute;
+            border-radius: 0.1rem;
+            width: 1.6rem;
+            height: 1.6rem;
+            left: 0;
+            right: 0;
+            margin: 0 auto;
+          }
+          .sub {
+            // color: #fff;
+            font-size: 0.4rem;
+            width: 2.4rem;
+            position: absolute;
+            top: 1.2rem;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            .sub-title {
+              margin-bottom: 0.1rem;
+            }
+            .star {
+              display: flex;
+              justify-content: space-around;
+              span {
+                position: relative;
+                // background-color: #000;
+                width: 0.3rem;
+                height: 0.3rem;
+                background-image: url("~assets/img/user/space/star_yellow.svg");
+                background-repeat: no-repeat;
+                background-size: 0.3rem 0.3rem;
+                background-position: center center;
+                &:last-child {
+                  background-image: url("~assets/img/user/space/star_dark.svg");
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    .actions {
+      .actions-items {
+        padding: 0.3rem;
+        display: flex;
+        flex-direction: column;
+        background-color: var(--base-set-item-color);
+        margin-bottom: 0.3rem;
+        .actions-items-head {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          margin: 0.3rem 0 0.5rem 0;
+          .head-left {
+            display: flex;
+            align-items: center;
+            div {
+              display: flex;
+              align-items: center;
+              &:first-child {
+                width: 1.2rem;
+                height: 1.2rem;
+                margin-right: 0.3rem;
+                border-radius: 100%;
+                background-image: url("~assets/img/base/bilibili_user_logo_bg.svg");
+                background-position: center center;
+                background-size: 1rem 1rem;
+                background-repeat: no-repeat;
+                img {
+                  border-radius: 100%;
+                  height: 1.2rem;
+                  width: 1.2rem;
+                }
+              }
+              &:last-child {
+                display: flex;
+                align-items: flex-start;
+                flex-direction: column;
+                span {
+                  &:first-child {
+                    opacity: 0.9;
+                    font-weight: bold;
+                    margin-bottom: 0.1rem;
+                  }
+                  &:last-child {
+                    font-size: 0.3rem;
+                    opacity: 0.6;
+                  }
+                }
+              }
+            }
+          }
+          .head-right {
+            img {
+              width: 0.8rem;
+              height: 0.8rem;
+            }
+          }
+        }
+        .actions-main {
+          position: relative;
+          display: flex;
+          flex-direction: column;
+          .main-outer-ellipsis {
+            font-size: 0.45rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+          }
+          .main-content {
+            display: flex;
+            flex-direction: column;
+            .inner-ellipsis {
+              font-size: 0.45rem;
+              font-weight: bold;
+              color: rgb(62, 98, 125);
+            }
+            .re-position {
+              margin-top: 0.5rem;
+            }
+            .white {
+              color: var(--color-text);
+              font-weight: initial;
+              margin: 0.3rem 0;
+            }
+            .content-inner {
+              position: relative;
+              display: flex;
+              flex-direction: column;
+              .content-inner-head {
+                margin: 0.3rem 0;
+              }
+              .content-inner-img {
+                margin: 0.3rem 0;
+                border-radius: 0.1rem;
+                width: 9.4rem;
+                background-image: url("~assets/img/base/bilibili_user_logo_bg.svg");
+                height: 5rem;
+                background-repeat: no-repeat;
+                background-position: center center;
+                background-size: 4rem 4rem;
+                img {
+                  width: 9.4rem;
+                  height: 5rem;
+                  border-radius: 0.1rem;
+                }
+              }
+              .imgset-outer {
+                display: flex;
+                align-items: center;
+                flex-wrap: wrap;
+                border-radius: 0.1rem;
+                justify-content: flex-start;
+                img {
+                  border-radius: 0.1rem;
+                  width: 2rem;
+                  margin: 0.1rem;
+                  &:first-child {
+                  }
+                }
+              }
+              .imgsingle-outer {
+                margin-top: 0.2rem;
+                width: 5rem;
+                background-image: url("~assets/img/base/bilibili_user_logo_bg.svg");
+                background-position: center center;
+                background-size: 1rem 1rem;
+                background-repeat: no-repeat;
+                .imgsingle {
+                  width: 5rem;
+                }
+              }
+              .content-inner-title {
+                font-weight: bold;
+                width: 9.4rem;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                font-size: 0.4rem;
+                margin-bottom: 0.2rem;
+              }
+            }
+            .unknown {
+              display: flex;
+              flex-direction: column;
+              align-items: center;
+              img {
+                height: 4rem;
+              }
+            }
+          }
+          .dark {
+            background-color: var(--base-set-bg-color) !important;
+            margin: 0 -0.3rem;
+            padding: 0 0.3rem;
+          }
+          .time-play-danmaku {
+            position: absolute;
+            bottom: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin: 0.1rem 0.2rem;
+            .left {
+              display: flex;
+              align-items: center;
+              justify-content: space-between;
+              opacity: 0.9;
+              span {
+                font-size: 0.35rem;
+                &:nth-child(2) {
+                  margin: 0 0.2rem;
+                }
+              }
+            }
+          }
+          .miss {
+            display: flex;
+            align-items: center;
+            font-size: 0.5rem;
+            justify-content: center;
+            img {
+              height: 5rem;
+            }
+          }
+        }
+        .actions-footer {
+          margin: 0.4rem;
+          font-size: 0.35rem;
+          margin-bottom: 0.1rem;
+          display: flex;
+          justify-content: space-around;
+          align-items: center;
+          text-align: center;
+          span {
+            width: 3rem;
+            height: 0.8rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0.6;
+
+            img {
+              width: 0.6rem;
+              height: 0.6rem;
+              margin-right: 0.05rem;
+              margin-bottom: 0.1rem;
+            }
+          }
+        }
+      }
+    }
+    .post {
+      .if-have {
+        .type {
+          display: flex;
+          align-items: center;
+          padding-left: .5rem;
+          opacity: .6;
+          text-align: center;
+          transition: .3s;
+          span {
+            width: 1.5rem;
+            height: 1.2rem;
+            line-height: 1.2rem;
+          }
+        }
+        .type-active {
+          transition: .3s;
+          color: var(--color-tint);
+        }
+        .content-list {
+          padding: .3rem;
+          transition: .3s;
+          background-color: var(--base-set-item-color);
+          .play {
+            display: flex;
+            align-items: center;
+            font-size: .45rem;
+            margin: .3rem 0;
+            img {
+              width: .6rem;
+              height: .6rem;
+              margin-right: .3rem;
+            }
+          }
+          ul {
+            display: flex;
+            flex-direction: column;
+            li {
+              display: flex;
+              align-items: center;
+              justify-content: space-between;
+              list-style: none;
+              height: 2.6rem;
+              border-bottom: .01rem solid rgba(100, 100, 100, 0.2);
+              .item-left {
+                position: relative;
+                width: 3rem;
+                height: 2rem;
+                border-radius: .1rem;
+                background-size: 2rem 2rem;
+                background-position: center center;
+                background-repeat: no-repeat;
+                background-image: url("~assets/img/base/bilibili_user_logo_bg.svg");
+               img {
+                  width: 3rem;
+                  height: 2rem;
+                  border-radius: .1rem;
+                }
+                .time {
+                  font-size: .3rem;
+                  position: absolute;
+                  bottom: .1rem;
+                  right: .15rem;
+                }
+              }
+              .item-right {
+                height: 2rem;
+                flex: auto;
+                display: flex;
+                padding-left: .3rem;
+                flex-direction: column;
+                justify-content: space-between;
+                .item-right-title {}
+                .publish-time {
+                  opacity: .6;
+                  margin-top: .5rem;
+                  font-size: .22rem;
+                }
+                .message {
+                  display: flex;
+                  align-items: center;
+                  justify-content: space-between;
+                span {
+                  font-size: .35rem;
+                  opacity: .6;
+                  display: flex;
+                  align-items: center;
+                  margin-top: .1rem;
+                  img {
+                    width: .5rem;
+                    height: .5rem;
+                    margin-right: .1rem;
+                  }
+                  &:last-child {
+                    img {width: .7rem;
+                      height: .7rem;
+                      margin-right: 0;}
+                      
+                  }
+                }
+                }
+
+              }
+            }
+          }
+        }
+        .small-video-list {
+          transition: .3s;
+          padding: .3rem;
+          ul {
+            display: flex;
+            flex-direction: column;
+            li {
+              display: flex;
+              flex-direction: column;
+              list-style: none;
+              // align-items: center;
+              background: var(--base-set-item-color);
+              border-radius: .1rem;
+              margin-bottom: .4rem;
+              .img {
+                position: relative;
+                border-radius: .1rem;
+                width: 9.4rem;
+                height: 5.5rem;
+                background-size: 5rem 5rem;
+                background-position: center center;
+                background-repeat: no-repeat;
+                background-image: url("~assets/img/base/bilibili_user_logo_bg.svg");
+                img {
+                  width: 9.4rem;
+                  height: 5.5rem;  
+                  border-radius: .1rem;
+                }
+                .time {
+                  color: #fff;
+                  position: absolute;
+                  bottom: .2rem;
+                  right: .2rem;
+                }
+              }
+              .small-video-title {
+                display: flex;
+                justify-content: flex-start;
+                margin: .3rem;
+              }
+              .small-video-sub {
+                display: flex;
+                align-items: center;
+                height: 1rem;
+                justify-content: space-between;
+                margin: 0 .3rem;
+                font-size: .35rem;
+                opacity: .6;
+                span {
+                  display: flex;
+                  align-items: center;
+                  img {
+                    width: .5rem;
+                    height: .5rem;
+                    margin-right: .1rem;
+                    margin-bottom: .05rem;
+                  }
+                }
+              }
+            }
+          }
+          .small-video-bottom {
+            font-size: .45rem;
+            height: 1.2rem;
+            line-height: 1.2rem;
+            text-align: center;
+          }
+        }
+      }
+      .if-no-have {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        img {
+          height: 5rem;
+          margin-bottom: .1rem;
+        }
+      }
+    }
+    .pursuit {
+      position: relative;
+      .animate {
+        margin-top: 0.2rem;
+        position: relative;
+        .animate-item {
+          margin: 0.2rem 0;
+        }
+      }
+    }
   }
+}
+#user-space::-webkit-scrollbar {
+  display: none;
 }
 </style>
