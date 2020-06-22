@@ -445,7 +445,26 @@
           什么都没有~
         </div>
       </div>
-      <div class="collect" v-if="isActive === 3"></div>
+      <div class="collect" v-if="isActive === 3">
+        <div class="collect-outer" v-for="(items, index) in collectionList" :key="index">
+          <div class="collect-title" @click="Rotate(index)">
+            <img :class="{ rotate: !rotate[index].active }" src="~assets/img/fans_follows/up_or_down_dark.svg" alt="">
+            {{ items.name }} <sup>{{ items.list.length }}</sup>
+          </div>
+          <ul v-if="items.list.length > 0 && rotate[index].active">
+            <li v-for="(item, indey) in items.list" :key="indey" v-waves>
+              <div class="collect-left">
+                <img v-lazy="item.data[0].img.src + item.data[0].img.name" alt="">
+                <span><img src="~assets/img/user/space/collect_dark.svg" alt=""></span>
+              </div>
+              <div class="collect-right">
+                <span>{{ item.name }}</span>
+                <span>{{ item.data.length }}个内容·公开</span>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
       <div class="pursuit" v-if="isActive === 4">
         <div class="animate">
           <div class="animate-outer">
@@ -478,7 +497,7 @@ export default {
     return {
       userData: null,
       edit: "编辑资料",
-      postActive: 1,
+      postActive: 0,
       experience: {
         now: 19394,
         max: 28800
@@ -491,7 +510,7 @@ export default {
         { name: "追番" }
       ],
       descType: "详情",
-      isActive: 2,
+      isActive: 3,
       showingList: {
         showingVideoList: [],
         showingSmallVideoList: []
@@ -506,12 +525,31 @@ export default {
       smallVideoList: [],
       collectList: [],
       articleList: [],
+      collectionList: [
+        {
+          name: '我的创建',
+          list: []
+        },
+                {
+          name: '我的收藏',
+          list: []
+        }
+      ],
       position: {
         y: 0,
         nowY: 0
       },
       disappear: false,
-      animate: Object.values(Animate)
+      animate: Object.values(Animate),
+      rotate: [
+        {
+          index: 0,
+          active: true
+        },{
+          index: 1,
+          active: true
+        }
+      ]
     };
   },
   created() {
@@ -551,6 +589,9 @@ export default {
     },
     goBack() {
       this.$router.go(-1);
+    },
+    Rotate (i) {
+      this.rotate[i].active = !this.rotate[i].active
     },
     async bus() {
       this.$Bus.$on("goRefresh", () => {
@@ -720,13 +761,15 @@ export default {
     },
     async getCollectList() {
       let data = [];
-      // data.push(this.$store.state.recommendList[0])
-      // data.push(this.$store.state.recommendList[1])
       data = await getHomeData({ skip: 0 }).then(res => {
         return res;
       });
-
       this.collectList = data;
+      let obj = {
+        name: '默认文件夹',
+        data
+      }
+      this.collectionList[0].list.push(obj)
       this.showingList2.showingCollects = data.filter((n, i) => {
         return i <= 1;
       });
@@ -1816,6 +1859,99 @@ export default {
         img {
           height: 5rem;
           margin-bottom: .1rem;
+        }
+      }
+    }
+    .collect {
+      padding: .3rem;
+      .collect-outer {
+        display: flex;
+        flex-direction: column;
+        .collect-title {
+          display: flex;
+          opacity: .6;
+          align-items: center;
+          height: 1.2rem;
+          img {
+            position: relative;
+            width: .4rem;
+            height: .4rem;
+            margin-right: .3rem;
+            transition: .3s;
+          }
+          .rotate {
+            transition: .3s;
+            transform: rotateZ(-180deg);
+          }
+          sup {
+            margin-left: .3rem;
+          }
+        }
+        ul {
+          display: flex;
+          flex-direction: column;
+          border-top: .02rem solid rgba(100, 100, 100, 0.3);
+          li {
+            transition: .3s;
+            position: relative;
+            list-style: none;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            align-items: center;
+            height: 2.8rem;
+            border-bottom: .02rem solid rgba(100, 100, 100, 0.1);
+            .collect-left {
+              position: relative;
+              height: 2.2rem;
+              width: 3rem;
+              border-radius: .1rem;
+              background-size: 2rem 2rem;
+              background-position: center center;
+              background-repeat: no-repeat;
+              background-image: url("~assets/img/base/bilibili_user_logo_bg.svg");
+              img {
+                width: 3rem;
+                height: 2.2rem;
+                border-radius: .1rem;
+              }
+
+              span {
+                position: absolute;
+                bottom: .1rem;
+                right: .1rem;
+                width: .7rem;
+                height: .7rem;
+                border-radius: .1rem;
+                background-color: rgba(26, 26, 26, 0.6);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                img {
+                  width: .5rem;
+                  height: .5rem;
+                }
+              }
+            }
+            .collect-right {
+              display: flex;
+              justify-content: space-between;
+              flex-direction: column;
+              margin-left: .3rem;
+              height: 2rem;
+              span {
+                opacity: .8;
+                &:first-child {
+                  margin-top: .2rem;
+                }
+                &:last-child {
+                  font-size: .35rem;
+                  opacity: .6;
+                  margin-bottom: .2rem;
+                }
+              }
+            }
+          }
         }
       }
     }

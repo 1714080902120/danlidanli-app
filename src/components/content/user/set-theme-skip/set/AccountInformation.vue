@@ -812,7 +812,7 @@ export default {
     },
     upload() {
       let task = plus.uploader.createUpload(
-        "http://:4000/user/upload",
+        "http://39.106.222.159:4000/user/upload",
         {
           method: "POST",
           //《注意》这里不能像ajax一样把token放在这里。
