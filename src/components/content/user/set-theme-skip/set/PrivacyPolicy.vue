@@ -83,7 +83,7 @@ export default {
     .frame {
       overflow: hidden;
       width: 10rem;
-      height: 16.5rem;
+      height: calc(100vh - 1.6rem);
     }
     .frame::-webkit-scrollbar {
       width: 0 !important;

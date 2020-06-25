@@ -320,7 +320,7 @@ export default {
         margin: -0.2rem;
         .frame {
           width: 10rem;
-          height: 16.6rem;
+          height: calc(100vh - 1.6rem);
         }
       }
     }

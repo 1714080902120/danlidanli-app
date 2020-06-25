@@ -1,6 +1,6 @@
 <template>
   <div id="recommend-list" v-if="data.length > 0">
-    <div class="recommend-item" v-for="(item, index) in data" :key="item._id" v-waves>
+    <div class="recommend-item" v-for="(item, index) in data" :key="item._id" @click="VideoDetail(item, index)" v-waves>
       <div class="cover">
         <img
           :class="{ 'is-tip': isTip.indexOf(index) !== -1 }"
@@ -31,7 +31,7 @@
         </span>
         <span>{{ item.video.long }}</span>
       </div>
-      <div class="is-tip-reset" v-if="isTip.indexOf(index) !== -1" @click="reset(index)">
+      <div class="is-tip-reset" v-if="isTip.indexOf(index) !== -1" @click.stop="reset(index)">
         <img src="~assets/img/recommend_list/reset_dark.svg" alt />
         撤销
       </div>
@@ -39,7 +39,7 @@
       <div class="label" v-if="isTip.indexOf(index) === -1">
         <p v-if="item.video.label">{{ item.video.label }}</p>
         <p v-else-if="!item.video.label">&nbsp;</p>
-        <img @click="actions(index)" src="~assets/img/recommend_list/three_points_dark.svg" alt />
+        <img @click.stop="actions(index)" src="~assets/img/recommend_list/three_points_dark.svg" alt />
       </div>
     </div>
     <div class="loading">
@@ -74,7 +74,8 @@ export default {
       isShowPopup: false,
       isTip: [],
       isSelected: -1,
-      tipTextList: []
+      tipTextList: [],
+      contNotGoTo: false
     };
   },
   created() {
@@ -83,8 +84,10 @@ export default {
   methods: {
     // 点击弹出举报
     actions(i) {
+      this.contNotGoTo = true
       this.$Bus.$emit("popupVisible", this.data[i].video.info.up);
       this.isSelected = i;
+      this.contNotGoTo = false
     },
     // 被通知举报了
     whenTipd() {
@@ -95,16 +98,29 @@ export default {
     },
     // 取消举报
     reset(i) {
+      this.contNotGoTo = true
       let index = this.isTip.indexOf(i);
       let value = this.tipTextList[index];
       this.tipTextList.splice(this.tipTextList.indexOf(value), 1);
       this.isTip.splice(index, 1);
+      this.contNotGoTo = false
     },
     // 返回顶部
     backToTop() {
       this.$Bus.$emit("backToTop");
     },
-    load() {}
+    load() {},
+    VideoDetail(item ,i) {
+      if (this.contNotGoTo) return false
+      if (this.isTip.indexOf(i) === -1) {
+        this.$router.replace({ path: '/video-detail/' + item.bvid, query: {
+          data: item
+        } })
+      } else {
+        return false
+      }
+      
+    }
   },
   components: {}
 };

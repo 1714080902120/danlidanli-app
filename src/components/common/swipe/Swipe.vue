@@ -64,7 +64,7 @@ export default {
 }
 img[lazy="loading"] {
   background-repeat: no-repeat;
-  background-position: center center;
+  background-position: 2rem center;
   background-image: url("~assets/img/base/bilibili_user_logo_bg.svg");
 }
 </style>

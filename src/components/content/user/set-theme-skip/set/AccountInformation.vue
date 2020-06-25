@@ -571,6 +571,7 @@ export default {
             duration: 3000,
             position: "middle"
           });
+          this.info.name = this.$store.state.userInfo.baseInfo.name
           return false;
         }
         if (this.info.name === "") {
@@ -579,6 +580,7 @@ export default {
             duration: 3000,
             position: "middle"
           });
+          this.info.name = this.$store.state.userInfo.baseInfo.name
           return false;
         }
         this.$store.state.userInfo.name = this.info.name;

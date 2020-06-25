@@ -5,7 +5,7 @@ export default function (options) {
     let instance = Axios.create({
       // baseURL: 'http://localhost:4000/',
       baseURL: 'http://:4000/',
-      timeout: 3000
+      timeout: 5000
     })
     instance.interceptors.request.use(config => {
       // 在这里对请求进行拦截 处理

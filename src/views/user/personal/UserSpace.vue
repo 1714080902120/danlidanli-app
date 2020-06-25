@@ -60,7 +60,7 @@
                 <span>获赞</span>
               </div>
             </div>
-            <div class="btn" v-waves>{{ edit }}</div>
+            <div class="btn" @click="goToSet()" v-waves>{{ edit }}</div>
           </div>
         </div>
         <div class="line-2">
@@ -76,16 +76,16 @@
         </div>
         <div class="line-3">
           <div class="level-experience">
-            <div class="level">
+            <div class="level" :style="{ 'background-color': colorList[userData.baseInfo.level] }">
               LV
-              <span>{{ userData.baseInfo.level }}</span>
+              <span  :style="{ 'background-color': colorList[userData.baseInfo.level] }">{{ userData.baseInfo.level }}</span>
             </div>
             <div class="experience">{{ experience.now }}/{{ experience.max }}</div>
           </div>
           <div class="experience-line">
             <span
               class="experience-now"
-              :style="{ 'width': `${(experience.now / experience.max) * 3}rem`   }"
+              :style="{ 'width': `${(experience.now / experience.max) * 3}rem`, 'background-color': colorList[userData.baseInfo.level] }"
             ></span>
             <span class="experience-max"></span>
           </div>
@@ -347,7 +347,10 @@
               :class="{ 'dark': item.type === 'miss' }"
             >
               {{ item.main.content.inner.detail[0] }}
-              <img src="~assets/img/recommend_list/danlidanli_girl.png" alt />
+              <img
+                src="~assets/img/recommend_list/danlidanli_girl.png"
+                alt
+              />
             </div>
           </div>
           <div class="actions-footer" v-if="item.footer">
@@ -370,7 +373,12 @@
         <div class="if-have" v-if="videoList.length > 0">
           <div class="type">
             <span @click="changeType(0)" :class="{ 'type-active' : postActive === 0}" v-waves>视频</span>
-            <span @click="changeType(1)" :class="{ 'type-active' : postActive === 1}" v-if="smallVideoList.length > 0" v-waves>小视频</span>
+            <span
+              @click="changeType(1)"
+              :class="{ 'type-active' : postActive === 1}"
+              v-if="smallVideoList.length > 0"
+              v-waves
+            >小视频</span>
           </div>
           <div class="content-list" v-if="postActive === 0">
             <div class="play">
@@ -416,28 +424,34 @@
             <ul>
               <li v-for="(item, index) in smallVideoList" :key="index" v-waves>
                 <div class="img">
-                  <img v-if="item.main.content.inner.img.length > 0" v-lazy="item.main.content.inner.img[0].src + item.main.content.inner.img[0].name" alt="">
-                  <div v-if="item.main.content.inner.detail.length > 0" class="time">{{ item.main.content.inner.detail[0] }}</div>
+                  <img
+                    v-if="item.main.content.inner.img.length > 0"
+                    v-lazy="item.main.content.inner.img[0].src + item.main.content.inner.img[0].name"
+                    alt
+                  />
+                  <div
+                    v-if="item.main.content.inner.detail.length > 0"
+                    class="time"
+                  >{{ item.main.content.inner.detail[0] }}</div>
                 </div>
-                <div class="small-video-title" v-if="item.main.content.inner.title.length > 0">{{ item.main.content.inner.title[0] }}</div>
+                <div
+                  class="small-video-title"
+                  v-if="item.main.content.inner.title.length > 0"
+                >{{ item.main.content.inner.title[0] }}</div>
                 <div class="small-video-sub">
-                    <span>
-                      <img src="~assets/img/recommend_list/play_dark.svg" alt />
-                      {{ parseInt(item.main.content.inner.detail[1]) }}
-                    </span>
-                    <span>
-                      <img src="~assets/img/user/space/discuss_dark.svg" alt />
-                      {{ parseInt(item.main.content.inner.detail[2]) }}
-                    </span>
-                    <span>
-                      10个月前
-                    </span>
+                  <span>
+                    <img src="~assets/img/recommend_list/play_dark.svg" alt />
+                    {{ parseInt(item.main.content.inner.detail[1]) }}
+                  </span>
+                  <span>
+                    <img src="~assets/img/user/space/discuss_dark.svg" alt />
+                    {{ parseInt(item.main.content.inner.detail[2]) }}
+                  </span>
+                  <span>10个月前</span>
                 </div>
               </li>
             </ul>
-            <div class="small-video-bottom">
-              (￣ェ￣;)，没有更多的内容啦~
-            </div>
+            <div class="small-video-bottom">(￣ェ￣;)，没有更多的内容啦~</div>
           </div>
         </div>
         <div class="if-no-have" v-else-if="videoList.length <= 0">
@@ -448,14 +462,21 @@
       <div class="collect" v-if="isActive === 3">
         <div class="collect-outer" v-for="(items, index) in collectionList" :key="index">
           <div class="collect-title" @click="Rotate(index)">
-            <img :class="{ rotate: !rotate[index].active }" src="~assets/img/fans_follows/up_or_down_dark.svg" alt="">
-            {{ items.name }} <sup>{{ items.list.length }}</sup>
+            <img
+              :class="{ rotate: !rotate[index].active }"
+              src="~assets/img/fans_follows/up_or_down_dark.svg"
+              alt
+            />
+            {{ items.name }}
+            <sup>{{ items.list.length }}</sup>
           </div>
           <ul v-if="items.list.length > 0 && rotate[index].active">
             <li v-for="(item, indey) in items.list" :key="indey" v-waves>
               <div class="collect-left">
-                <img v-lazy="item.data[0].img.src + item.data[0].img.name" alt="">
-                <span><img src="~assets/img/user/space/collect_dark.svg" alt=""></span>
+                <img v-lazy="item.data[0].img.src + item.data[0].img.name" alt />
+                <span>
+                  <img src="~assets/img/user/space/collect_dark.svg" alt />
+                </span>
               </div>
               <div class="collect-right">
                 <span>{{ item.name }}</span>
@@ -527,11 +548,11 @@ export default {
       articleList: [],
       collectionList: [
         {
-          name: '我的创建',
+          name: "我的创建",
           list: []
         },
-                {
-          name: '我的收藏',
+        {
+          name: "我的收藏",
           list: []
         }
       ],
@@ -545,10 +566,14 @@ export default {
         {
           index: 0,
           active: true
-        },{
+        },
+        {
           index: 1,
           active: true
         }
+      ],
+      colorList: [
+        '#e6e6e6', '#e6e6e6', '#95DDB2', '#92D1E5', '#FFB37C', '#FF7A18', '#FF0000'
       ]
     };
   },
@@ -578,8 +603,16 @@ export default {
         return false;
       }
     },
-    changeType (i) {
-      this.postActive = i
+    changeType(i) {
+      this.postActive = i;
+    },
+    goToSet() {
+      this.$router.replace({
+        path: "/set",
+        query: {
+          beforePath: this.$route.path
+        }
+      });
     },
     toActive(i) {
       if (i === this.isActive) {
@@ -588,10 +621,18 @@ export default {
       this.isActive = i;
     },
     goBack() {
-      this.$router.go(-1);
+      let reg = /set/gi;
+      if (
+        this.$route.query.beforePath &&
+        reg.test(this.$route.query.beforePath)
+      ) {
+        this.$router.replace({ path: "/" });
+      } else {
+        this.$router.go(-1);
+      }
     },
-    Rotate (i) {
-      this.rotate[i].active = !this.rotate[i].active
+    Rotate(i) {
+      this.rotate[i].active = !this.rotate[i].active;
     },
     async bus() {
       this.$Bus.$on("goRefresh", () => {
@@ -601,7 +642,6 @@ export default {
         let newVal = null;
         delete res._id;
         delete res.username;
-        console.log(res);
         if (res.identy.uuid === this.$route.params.uuid) {
           this.edit = "编辑资料";
           newVal = res;
@@ -613,7 +653,6 @@ export default {
             this.userData = res;
           });
         }
-        console.log(newVal);
 
         if (newVal.cardList.length <= 0) {
           return false;
@@ -766,10 +805,10 @@ export default {
       });
       this.collectList = data;
       let obj = {
-        name: '默认文件夹',
+        name: "默认文件夹",
         data
-      }
-      this.collectionList[0].list.push(obj)
+      };
+      this.collectionList[0].list.push(obj);
       this.showingList2.showingCollects = data.filter((n, i) => {
         return i <= 1;
       });
@@ -1045,10 +1084,11 @@ export default {
           display: flex;
           align-items: center;
           .level {
+            position: relative;
+            font-size: 0.24rem;
             display: flex;
-            align-items: center;
-            height: 0.3rem;
-            line-height: 0.3rem;
+            height: 0.2rem;
+            width: 0.4rem;
             background-color: rgb(246, 122, 24);
             color: var(--base-set-item-color);
             z-index: 3;
@@ -1057,14 +1097,16 @@ export default {
             span {
               z-index: 2;
               display: flex;
-              align-items: center;
+              align-items: flex-start;
+              text-align: center;
               justify-content: center;
-              position: relative;
+              position: absolute;
               background-color: rgb(246, 122, 24);
-              font-size: 0.32rem;
-              top: -0.03rem;
-              width: 0.25rem;
-              height: 0.32rem;
+              font-size: 0.28rem;
+              top: -0.05rem;
+              right: 0;
+              width: 0.14rem;
+              height: 0.2rem;
             }
           }
           .experience {
@@ -1682,10 +1724,10 @@ export default {
         .type {
           display: flex;
           align-items: center;
-          padding-left: .5rem;
-          opacity: .6;
+          padding-left: 0.5rem;
+          opacity: 0.6;
           text-align: center;
-          transition: .3s;
+          transition: 0.3s;
           span {
             width: 1.5rem;
             height: 1.2rem;
@@ -1693,22 +1735,22 @@ export default {
           }
         }
         .type-active {
-          transition: .3s;
+          transition: 0.3s;
           color: var(--color-tint);
         }
         .content-list {
-          padding: .3rem;
-          transition: .3s;
+          padding: 0.3rem;
+          transition: 0.3s;
           background-color: var(--base-set-item-color);
           .play {
             display: flex;
             align-items: center;
-            font-size: .45rem;
-            margin: .3rem 0;
+            font-size: 0.45rem;
+            margin: 0.3rem 0;
             img {
-              width: .6rem;
-              height: .6rem;
-              margin-right: .3rem;
+              width: 0.6rem;
+              height: 0.6rem;
+              margin-right: 0.3rem;
             }
           }
           ul {
@@ -1720,72 +1762,77 @@ export default {
               justify-content: space-between;
               list-style: none;
               height: 2.6rem;
-              border-bottom: .01rem solid rgba(100, 100, 100, 0.2);
+              border-bottom: 0.01rem solid rgba(100, 100, 100, 0.2);
               .item-left {
                 position: relative;
                 width: 3rem;
                 height: 2rem;
-                border-radius: .1rem;
-                background-size: 2rem 2rem;
+                border-radius: 0.1rem;
+                background-size: 3rem 2rem;
                 background-position: center center;
                 background-repeat: no-repeat;
                 background-image: url("~assets/img/base/bilibili_user_logo_bg.svg");
-               img {
+                img {
                   width: 3rem;
                   height: 2rem;
-                  border-radius: .1rem;
+                  border-radius: 0.1rem;
                 }
                 .time {
-                  font-size: .3rem;
+                  font-size: 0.3rem;
                   position: absolute;
-                  bottom: .1rem;
-                  right: .15rem;
+                  bottom: 0.1rem;
+                  right: 0.15rem;
                 }
               }
               .item-right {
                 height: 2rem;
                 flex: auto;
                 display: flex;
-                padding-left: .3rem;
+                padding-left: 0.3rem;
                 flex-direction: column;
                 justify-content: space-between;
-                .item-right-title {}
+                .item-right-title {
+                  width: 6rem;
+                  white-space: nowrap;
+                  overflow: hidden;
+                  text-overflow: ellipsis;
+                }
                 .publish-time {
-                  opacity: .6;
-                  margin-top: .5rem;
-                  font-size: .22rem;
+                  opacity: 0.6;
+                  margin-top: 0.3rem;
+                  font-size: 0.22rem;
                 }
                 .message {
                   display: flex;
                   align-items: center;
                   justify-content: space-between;
-                span {
-                  font-size: .35rem;
-                  opacity: .6;
-                  display: flex;
-                  align-items: center;
-                  margin-top: .1rem;
-                  img {
-                    width: .5rem;
-                    height: .5rem;
-                    margin-right: .1rem;
-                  }
-                  &:last-child {
-                    img {width: .7rem;
-                      height: .7rem;
-                      margin-right: 0;}
-                      
+                  span {
+                    font-size: 0.35rem;
+                    opacity: 0.6;
+                    display: flex;
+                    align-items: center;
+                    margin-top: 0.1rem;
+                    img {
+                      width: 0.5rem;
+                      height: 0.5rem;
+                      margin-right: 0.1rem;
+                    }
+                    &:last-child {
+                      img {
+                        width: 0.7rem;
+                        height: 0.7rem;
+                        margin-right: 0;
+                      }
+                    }
                   }
                 }
-                }
-
               }
             }
           }
         }
         .small-video-list {
-          transition: .3s;
-          padding: .3rem;
+          transition: 0.3s;
+          padding: 0.3rem;
           ul {
             display: flex;
             flex-direction: column;
@@ -1795,11 +1842,11 @@ export default {
               list-style: none;
               // align-items: center;
               background: var(--base-set-item-color);
-              border-radius: .1rem;
-              margin-bottom: .4rem;
+              border-radius: 0.1rem;
+              margin-bottom: 0.4rem;
               .img {
                 position: relative;
-                border-radius: .1rem;
+                border-radius: 0.1rem;
                 width: 9.4rem;
                 height: 5.5rem;
                 background-size: 5rem 5rem;
@@ -1808,44 +1855,44 @@ export default {
                 background-image: url("~assets/img/base/bilibili_user_logo_bg.svg");
                 img {
                   width: 9.4rem;
-                  height: 5.5rem;  
-                  border-radius: .1rem;
+                  height: 5.5rem;
+                  border-radius: 0.1rem;
                 }
                 .time {
                   color: #fff;
                   position: absolute;
-                  bottom: .2rem;
-                  right: .2rem;
+                  bottom: 0.2rem;
+                  right: 0.2rem;
                 }
               }
               .small-video-title {
                 display: flex;
                 justify-content: flex-start;
-                margin: .3rem;
+                margin: 0.3rem;
               }
               .small-video-sub {
                 display: flex;
                 align-items: center;
                 height: 1rem;
                 justify-content: space-between;
-                margin: 0 .3rem;
-                font-size: .35rem;
-                opacity: .6;
+                margin: 0 0.3rem;
+                font-size: 0.35rem;
+                opacity: 0.6;
                 span {
                   display: flex;
                   align-items: center;
                   img {
-                    width: .5rem;
-                    height: .5rem;
-                    margin-right: .1rem;
-                    margin-bottom: .05rem;
+                    width: 0.5rem;
+                    height: 0.5rem;
+                    margin-right: 0.1rem;
+                    margin-bottom: 0.05rem;
                   }
                 }
               }
             }
           }
           .small-video-bottom {
-            font-size: .45rem;
+            font-size: 0.45rem;
             height: 1.2rem;
             line-height: 1.2rem;
             text-align: center;
@@ -1858,41 +1905,41 @@ export default {
         justify-content: center;
         img {
           height: 5rem;
-          margin-bottom: .1rem;
+          margin-bottom: 0.1rem;
         }
       }
     }
     .collect {
-      padding: .3rem;
+      padding: 0.3rem;
       .collect-outer {
         display: flex;
         flex-direction: column;
         .collect-title {
           display: flex;
-          opacity: .6;
+          opacity: 0.6;
           align-items: center;
           height: 1.2rem;
           img {
             position: relative;
-            width: .4rem;
-            height: .4rem;
-            margin-right: .3rem;
-            transition: .3s;
+            width: 0.4rem;
+            height: 0.4rem;
+            margin-right: 0.3rem;
+            transition: 0.3s;
           }
           .rotate {
-            transition: .3s;
+            transition: 0.3s;
             transform: rotateZ(-180deg);
           }
           sup {
-            margin-left: .3rem;
+            margin-left: 0.3rem;
           }
         }
         ul {
           display: flex;
           flex-direction: column;
-          border-top: .02rem solid rgba(100, 100, 100, 0.3);
+          border-top: 0.02rem solid rgba(100, 100, 100, 0.3);
           li {
-            transition: .3s;
+            transition: 0.3s;
             position: relative;
             list-style: none;
             display: flex;
@@ -1900,12 +1947,12 @@ export default {
             justify-content: flex-start;
             align-items: center;
             height: 2.8rem;
-            border-bottom: .02rem solid rgba(100, 100, 100, 0.1);
+            border-bottom: 0.02rem solid rgba(100, 100, 100, 0.1);
             .collect-left {
               position: relative;
               height: 2.2rem;
               width: 3rem;
-              border-radius: .1rem;
+              border-radius: 0.1rem;
               background-size: 2rem 2rem;
               background-position: center center;
               background-repeat: no-repeat;
@@ -1913,23 +1960,23 @@ export default {
               img {
                 width: 3rem;
                 height: 2.2rem;
-                border-radius: .1rem;
+                border-radius: 0.1rem;
               }
 
               span {
                 position: absolute;
-                bottom: .1rem;
-                right: .1rem;
-                width: .7rem;
-                height: .7rem;
-                border-radius: .1rem;
+                bottom: 0.1rem;
+                right: 0.1rem;
+                width: 0.7rem;
+                height: 0.7rem;
+                border-radius: 0.1rem;
                 background-color: rgba(26, 26, 26, 0.6);
                 display: flex;
                 align-items: center;
                 justify-content: center;
                 img {
-                  width: .5rem;
-                  height: .5rem;
+                  width: 0.5rem;
+                  height: 0.5rem;
                 }
               }
             }
@@ -1937,17 +1984,17 @@ export default {
               display: flex;
               justify-content: space-between;
               flex-direction: column;
-              margin-left: .3rem;
+              margin-left: 0.3rem;
               height: 2rem;
               span {
-                opacity: .8;
+                opacity: 0.8;
                 &:first-child {
-                  margin-top: .2rem;
+                  margin-top: 0.2rem;
                 }
                 &:last-child {
-                  font-size: .35rem;
-                  opacity: .6;
-                  margin-bottom: .2rem;
+                  font-size: 0.35rem;
+                  opacity: 0.6;
+                  margin-bottom: 0.2rem;
                 }
               }
             }

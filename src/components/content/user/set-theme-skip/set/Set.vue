@@ -98,10 +98,19 @@ export default {
     ) {
       this.$router.go(0);
     }
+    this.routeMatch()
   },
   methods: {
     close() {
-      this.$router.replace({ path: '/' });
+      let reg = /user-space/gi
+      if (this.$route.query.beforePath && reg.test(this.$route.query.beforePath)) {
+        this.$router.replace({ path: this.$route.query.beforePath, query: {
+          beforePath: 'set'
+        } })
+      } else {
+        this.$router.replace({ path: '/' });
+      }
+      
     },
     detail(x, y) {
       if (x === 0 && y === 0) {
@@ -135,11 +144,23 @@ export default {
         duration: 3000
       });
     },
+    routeMatch () {
+      let newVal = this.$route
+      let reg = /user-space/gi
+      if ( Object.keys(newVal.query).length > 0 && reg.test(newVal.query.beforePath)) {
+         this.app = require(`./${this.cmps[0][0]}.vue`)
+         this.popupVisible = true
+      }
+    },
     Bus() {
       this.$Bus.$on("closeSetPopup", () => {
         this.popupVisible = false;
       });
     }
+  },
+  watch: {
+    deep: true,
+    immediate: true
   }
 };
 </script>

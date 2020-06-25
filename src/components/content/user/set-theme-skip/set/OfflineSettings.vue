@@ -186,6 +186,7 @@ export default {
               });
             },
             err => {
+              plus.nativeUI.toast(JSON.stringify(err))
               Toast({
                 message: "测试下载失败",
                 duration: 10000,
@@ -601,7 +602,7 @@ export default {
         overflow: hidden;
         margin: 0 -0.2rem;
         position: relative;
-        height: 17.15rem;
+        height: calc(100vh - 1.6rem);
         .outer-title {
           margin-top: 0.3rem;
           width: 9.5rem;

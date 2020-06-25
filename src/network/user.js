@@ -1,5 +1,4 @@
 import axios from './axios'
-import $http from 'axios'
 
 
 export async function getUserData() {
@@ -20,10 +19,12 @@ export async function Send({ phoneNumber }) {
 }
 
 // 获取当前ip和地址
-export async function City() {
-  return $http.post('/apis/cityjson?ie=utf-8', {})
+export async function City () {
+  return axios({
+    url: '/user/position',
+    method: 'get'
+  })
 }
-
 
 export async function Register({ username, password }) {
   let data

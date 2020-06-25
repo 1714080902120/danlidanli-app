@@ -7,6 +7,8 @@ import Trends from './trends/index'
 import { RorL, ForF, bigMember, set, theme, skip, Scan } from './other/index'
 import Wallet from './user/wallet/index'
 import { PersonalSpace, Widget, UserSpace } from './user/personal/index'
+import { VideoDetail } from './video/index'
+
 
 const routerPush = VueRouter.prototype.push
 VueRouter.prototype.push = function push(location) {
@@ -43,7 +45,8 @@ const routes = [
   Scan,
   PersonalSpace,
   Widget,
-  UserSpace
+  UserSpace,
+  VideoDetail
 ]
 
 const router = new VueRouter({

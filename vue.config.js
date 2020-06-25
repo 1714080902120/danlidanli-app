@@ -19,17 +19,16 @@ module.exports = {
     }
   },
   devServer: {
-    proxy: {//配置跨域
-      '/apis': {
-        target: 'https://pv.sohu.com',//搜狐的域名
-        ws: true,
-        changOrigin: true,//允许跨域
-        pathRewrite: {
-          '^/apis': ''//请求的时候使用这个api就可以
-        }
-      }
-
-    }
+    // proxy: {//配置跨域
+    //   '/apis': {
+    //     target: 'https://pv.sohu.com',//搜狐的域名
+    //     ws: true,
+    //     changOrigin: true,//允许跨域
+    //     pathRewrite: {
+    //       '^/apis': ''//请求的时候使用这个api就可以
+    //     }
+    //   }
+    // }
   },
   css: {
       loaderOptions: {

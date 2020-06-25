@@ -263,10 +263,9 @@ export default {
           break;
         case 2:
           await City().then(res => {
-            let data = JSON.parse(res.data.split(" = ")[1].split(";")[0]);
             this.ipCity = {
-              ip: data.cip,
-              city: data.cname
+              ip: res.cip,
+              city: res.cname
             };
             this.position = "right";
             this.popWid = "10rem";
@@ -533,7 +532,7 @@ export default {
           margin: -0.2rem;
           .frame {
             width: 10rem;
-            height: 16.6rem;
+            height: calc(100vh - 1.6rem);
           }
         }
       }
