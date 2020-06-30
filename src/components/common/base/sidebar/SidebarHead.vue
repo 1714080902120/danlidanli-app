@@ -176,6 +176,10 @@ export default {
           background-color: #fff;
           border-radius: 50%;
           display: flex;
+          background-image: url('~assets/img/base/bilibili_user_logo_bg.svg');
+          background-size: 80px 80px;
+          background-repeat: no-repeat;
+          background-position: center center;
           img {
             margin: auto;
             border-radius: 50%;

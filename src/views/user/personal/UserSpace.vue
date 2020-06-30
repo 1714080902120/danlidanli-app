@@ -531,7 +531,7 @@ export default {
         { name: "追番" }
       ],
       descType: "详情",
-      isActive: 3,
+      isActive: 0,
       showingList: {
         showingVideoList: [],
         showingSmallVideoList: []

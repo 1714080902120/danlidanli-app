@@ -92,7 +92,6 @@ export default {
     };
   },
   created() {
-    console.log(this.dataList);
     for (const key in this.dataList) {
       let element = this.dataList[key];
       if (element == 0) {
@@ -107,8 +106,6 @@ export default {
   },
   methods: {
     touchStart(e, i) {
-      console.log(i);
-      console.log(e)
       if (i !== 4) {
         if ( i === 0 && !this.words[0].state) {
           ''

@@ -29,10 +29,14 @@ export default {
   },
   methods: {
     close() {
-      let l = plus.webview.all().length;
-      if (l > 1) {
-        let ws = plus.webview.currentWebview();
-        plus.webview.close(ws);
+      if (plus) {
+        let l = plus.webview.all().length;
+        if (l > 1) {
+          let ws = plus.webview.currentWebview();
+          plus.webview.close(ws);
+        } else {
+          this.$router.go(-1);
+        }
       } else {
         this.$router.go(-1);
       }

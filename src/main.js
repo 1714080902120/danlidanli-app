@@ -10,9 +10,13 @@ import Utils from 'common/utils'
 import VueTouch from 'vue-touch'
 import VueCropper from 'vue-cropper'
 import Back from 'common/h5+/back.js'
+import VideoPlayer from 'vue-video-player'
+require('video.js/dist/video-js.css')
+require('vue-video-player/src/custom-theme.css')
+
 Vue.config.productionTip = false
 
-
+Vue.use(VideoPlayer)
 Vue.use(VueTouch, { name: 'v-touch' })
 Vue.use(MintUI, {
   lazyload: {
