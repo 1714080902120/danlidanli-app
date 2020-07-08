@@ -652,7 +652,7 @@ export default {
           {
             type: "video/mp4", //这里的种类支持很多种：基本视频格式、直播、流媒体等，具体可以参看git网址项目
             src:
-              "http:///bilibili_data/home/recommend_2/BV17z411b7AL/BV17z411b7AL.mp4" //url地址
+              "http://:4000/bilibili_data/home/recommend_2/BV17z411b7AL/BV17z411b7AL.mp4" //url地址
           }
         ],
         // poster: "~assets/img/video/2233.gif", //你的封面地址
