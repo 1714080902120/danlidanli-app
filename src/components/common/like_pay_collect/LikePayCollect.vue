@@ -209,8 +209,8 @@ export default {
   flex-direction: column;
 }
 img {
-  width: 0.7rem;
-  height: 0.7rem;
+  width: 0.6rem;
+  height: 0.6rem;
   position: absolute;
   /* animation: shake 5s linear infinite; */
 }

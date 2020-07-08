@@ -22,7 +22,9 @@ export default new Vuex.Store({
     // 扫码前往的uuid
     uuid: '',
     // 首页推荐数据
-    recommendList: []
+    recommendList: [],
+    // 是否是满屏
+    isFullScreen: false
   },
   mutations,
   actions,

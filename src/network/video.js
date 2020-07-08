@@ -9,3 +9,13 @@ export async function assess (bvid, pn) {
     }
   })
 }
+
+export async function allDanmakuData (bvid) {
+  return await axios({
+    url: '/up/danmaku',
+    method: 'get',
+    params: {
+      bvid
+    }
+  })
+}

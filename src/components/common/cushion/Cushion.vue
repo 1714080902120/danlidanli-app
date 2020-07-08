@@ -2,7 +2,7 @@
   <div id="cushion">
     <div class="content">
       <img src="~assets/img/video/bbb.gif" alt />
-      <div class="text">正在缓冲中</div>
+      <div class="text">正在缓冲...</div>
     </div>
   </div>
 </template>

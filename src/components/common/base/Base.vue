@@ -33,8 +33,7 @@ export default {
   data() {
     return {};
   },
-  mounted () {
-  },
+  mounted() {},
   components: {},
   methods: {
     goAppear() {
@@ -55,11 +54,13 @@ export default {
 <style lang="less" scoped>
 #base {
   position: relative;
-  margin-top: var(--top-margin);
+  // margin-top: var(--top-margin);
+
   z-index: 99;
-  background-color: var(--base-bg-color);
+  background-color: rgb(62, 62, 62);
   .head {
     position: relative;
+    height: 1.2rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -70,19 +71,25 @@ export default {
       justify-content: space-between;
       align-items: center;
       left: -20px;
+      width: 1.8rem;
       .btn {
-        flex: auto;
+        display: flex;
+        align-items: center;
+        justify-content: center;
         margin-right: 14px;
+        opacity: 0.6;
         img {
-          width: 50px;
-          height: 50px;
+          width: 0.5rem;
+          height: 0.5rem;
         }
       }
       .logo {
-        flex: auto;
+        display: flex;
+        align-items: center;
+        justify-content: center;
         img {
-          width: 80px;
-          height: 80px;
+          width: 1rem;
+          height: 1rem;
           border-radius: 100%;
         }
       }
@@ -96,54 +103,54 @@ export default {
       align-items: center;
     }
     .center {
+      width: 4.4rem;
       .outer {
         display: flex;
         align-items: center;
-        border-radius: 30px;
-        background-color: rgba(58, 58, 58, 1);
-        height: .8rem;
-        line-height: .8rem;
+        border-radius: .5rem;
+        background-color: rgb(54, 54, 54);
+        height: 0.75rem;
+        line-height: 0.75rem;
         padding: 10px;
-        margin-bottom: 10px;
         input {
           background-color: transparent;
           border: none;
           outline: none;
-          width: 4rem;
-          font-size: 30px;
+          width: 3.2rem;
+          font-size: 0.3rem;
           color: var(--color-text);
         }
         img {
+          opacity: .6;
           width: 50px;
           height: 50px;
         }
       }
     }
     .right {
+      display: flex;
+      align-items: center;
+      width: 3rem;
       .home-right {
+        width: 2.8rem;
         display: flex;
         justify-content: space-between;
         align-items: center;
-        .download {
-          margin: 0 0 0 -.2rem;
+        span {
+          opacity: 0.7;
+          display: flex;
+          align-items: center;
           img {
-            width: .7rem;
-            height: .7rem;
-          }
-        }
-        .mail {
-          margin: 0 0 0 .6rem;
-          img {
-            width: .7rem;
-            height: .7rem;
+            width: 0.55rem;
+            height: 0.55rem;
           }
         }
       }
     }
   }
   .bottom {
-    margin-top: 20px;
-    background-color: rgba(66, 65, 65, 1);
+    // margin-top: 20px;
+    // background-color: rgba(66, 65, 65, 1);
     position: relative;
     top: 0;
     left: 0;

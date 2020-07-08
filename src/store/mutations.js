@@ -45,6 +45,9 @@ const mutations = {
   // 添加首页推荐数据
   addHomeRecommend (state, payload) {
     state.recommendList = payload
+  },
+  changeScreenState(state, payload) {
+    state.isFullScreen = payload
   }
 }
 

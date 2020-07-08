@@ -9,6 +9,7 @@
           </div>
         </div>
         <div class="home-right" slot="right">
+          <span class="game"><img src="~assets/img/home/game_dark.svg" alt=""></span>
           <span class="download">
             <img src="~assets/img/base/download_dark.svg" alt />
           </span>
@@ -45,13 +46,12 @@
           <router-view />
         </keep-alive>
       </BS>
-      <Popup />
     </div>
   </div>
 </template>
 
 <script>
-import { BaseOuter, Navbar, NavbarItem, BS, Popup } from "./index";
+import { BaseOuter, Navbar, NavbarItem, BS } from "./index";
 
 export default {
   name: "Home",
@@ -139,7 +139,7 @@ export default {
     navBarTransform() {
       this.$Bus.$on("NavbarTransform", ({ offsetY }) => {
         this.$nextTick(() => {
-          this.$refs.outer.style.transform = `translateY(${offsetY * 0.21}rem)`;
+          this.$refs.outer.style.transform = `translateY(${offsetY * 0.12}rem)`;
         });
       });
     }
@@ -151,8 +151,10 @@ export default {
       };
     },
     height() {
+      let one = window.innerWidth / 10
+      let height = window.innerHeight
       return () => {
-        return `17rem`;
+        return `${(height - 2.2 * one) / one}rem`;
       };
     }
   },
@@ -160,8 +162,7 @@ export default {
     BaseOuter,
     Navbar,
     NavbarItem,
-    BS,
-    Popup
+    BS
   },
   watch: {
     "$store.state.offSetItem"(newVal) {
@@ -174,6 +175,8 @@ export default {
 
 <style lang="less" scoped>
 #home {
+  height: 100vh;
+  width: 10rem;
   overflow: hidden;
 }
 #home::-webkit-scrollbar {

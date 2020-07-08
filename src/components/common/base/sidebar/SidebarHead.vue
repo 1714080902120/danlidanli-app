@@ -80,6 +80,7 @@ export default {
   methods: {
     toScan() {
       /* eslint-disable no-undef */
+      this.$store.commit("closeSideBar", false);
       this.$Bus.$emit("sidebarDisappear");
       let h = location.href;
       let n = h.indexOf("#");
@@ -90,12 +91,14 @@ export default {
     },
     register() {
       this.$Bus.$emit("sidebarDisappear");
+      this.$store.commit("closeSideBar", false);
       this.$router.replace({
         name: "RegisterOrLogin",
         params: { beforePath: this.$route.path, type: "register" }
       });
     },
     login() {
+      this.$store.commit("closeSideBar", false);
       this.$Bus.$emit("sidebarDisappear");
       this.$router.replace({
         name: "RegisterOrLogin",
@@ -103,6 +106,7 @@ export default {
       });
     },
     goTo(name) {
+      this.$store.commit("closeSideBar", false);
       if (name !== "动态") {
         this.$router.push({
           name: "FansFollows",
@@ -112,11 +116,12 @@ export default {
           }
         });
       } else {
-        console.log(name);
+        this.goToUserSpace()
       }
       this.$Bus.$emit("sidebarDisappear");
     },
     toWallet() {
+      this.$store.commit("closeSideBar", false);
       this.$Bus.$emit("sidebarDisappear");
       this.$router.push({
         name: "Wallet",
@@ -126,24 +131,16 @@ export default {
       });
     },
     bigMember() {
+      this.$store.commit("closeSideBar", false);
       this.$router.push({ path: "/big-member" });
       this.$Bus.$emit("sidebarDisappear");
     },
     goToUserSpace() {
+      this.$store.commit("closeSideBar", false);
       this.$Bus.$emit("sidebarDisappear");
       this.$router.push(
         "/user-space/" + this.$store.state.userInfo.identy.uuid
       );
-      if (window.sessionStorage.getItem('isActived')) {
-        return false;
-      } else {
-        let timer = setTimeout(() => {
-          window.sessionStorage.setItem('isActived', true)
-          this.$Bus.$emit("goRefresh");
-          clearTimeout(timer);
-          timer = null;
-        }, 500);
-      }
     }
   }
 };
@@ -158,7 +155,7 @@ export default {
   background-position: 2.6rem 0.2rem;
   background-repeat: no-repeat;
   .have-token {
-    padding-top: 0.5rem;
+    padding-top: 0.2rem;
     display: flex;
     flex-direction: column;
     .header {

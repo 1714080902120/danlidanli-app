@@ -23,6 +23,7 @@
 import Swipe from "components/common/swipe/Swipe";
 import { getHomeSwipe, getHomeData } from "network/home";
 import RecommendList from "components/common/recommend_list/RecommendList";
+
 export default {
   name: "HomeRecommend",
   data() {
@@ -33,7 +34,10 @@ export default {
       offsetX: 0,
       isLock: false,
       cmps: ["HomeLive", "HomeHot"],
-      apps: []
+      apps: [],
+      pullDown: null,
+      pullUp: null,
+      getData: null
     };
   },
   created() {
@@ -43,6 +47,9 @@ export default {
     this.cmps.forEach(app => {
       this.apps.push({ app: require(`./${app}.vue`) });
     });
+    this.pullDown = this.$debounce(this.finishPullDown, 200);
+    this.pullUp = this.$debounce(this.finishPullUp, 200);
+    this.getData = this.$debounce(this.toGetHomeData, 1000, true)
   },
   activated() {
     if (this.$route.path === "/home/") {
@@ -79,12 +86,13 @@ export default {
     },
     // 下拉获取数据
     async pullDownApplyData() {
-      let send = this.$debounce(this.finishPullDown, 20);
+      
       this.$nextTick(() => {
         this.$Bus.$on("pullDownData", async () => {
           this.page += 1;
-          await this.toGetHomeData(this.page, "pullDown");
-          send();
+          await this.getData(this.page, "pullDown")
+          // await this.toGetHomeData(this.page, "pullDown");
+          this.pullDown()
         });
       });
     },
@@ -94,11 +102,11 @@ export default {
     },
     // 上拉获取数据
     async pullUpApplyData() {
-      let send = this.$debounce(this.finishPullUp, 20);
       this.$Bus.$on("pullUpData", async () => {
         this.page += 1;
-        await this.toGetHomeData(this.page, "pullUp");
-        send();
+        await this.getData(this.page, "pullUp")
+        // await this.toGetHomeData(this.page, "pullUp");
+        this.pullUp()
       });
     },
     finishPullUp() {

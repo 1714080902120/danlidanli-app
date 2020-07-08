@@ -20,14 +20,17 @@ export default {
   position: absolute;
   background-color: #fff;
   border-radius: 100%;
-  width: 0.75rem;
-  height: 0.75rem;
+  width: 1rem;
+  height: 1rem;
   z-index: 98;
-  left: 4.5rem;
+  left: 0;
+  right: 0;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   .load-container {
-    position: absolute;
-    top: -.25rem;
-    left: 0.0625rem;
+
   }
   .load2 .loader,
   .load2 .loader:before,

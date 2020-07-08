@@ -152,7 +152,7 @@ export default {
       background-image: url("~assets/img/base/bilibili_user_logo_bg.svg");
       background-position: center center;
       background-repeat: no-repeat;
-      background-size: 350px 100%;
+      background-size: 1.4rem 1.4rem;
       margin-bottom: 0.2rem;
       border-radius: 0.2rem;
       background-color: var(--base-set-bg-color);
@@ -185,28 +185,31 @@ export default {
       img {
         width: 350px;
         height: 3rem;
-        border-radius: 10px;
+        border-radius: .2rem .2rem 0 0;
       }
     }
     .info {
-      position: relative;
+      position: absolute;
       display: flex;
       justify-content: space-between;
       font-size: 0.3rem;
-      align-items: center;
-      margin: -.6rem 0 .2rem .1rem;
+      align-items: flex-end;
+      width: 5rem;
+      height: .6rem;
+      padding: 0 .1rem;
+      top: 2.4rem;
       color: rgb(238, 235, 235);
+      background-image: linear-gradient(360deg, rgba(0, 0, 0, .5) 0%, transparent 100%);
       span {
         display: flex;
         align-items: center;
         flex: auto;
         &:nth-child(2) {
-          margin: 0 20px 0 -0.15rem;
+          margin: 0 0 0 -0.15rem;
         }
         img {
           width: .4rem;
           height: .4rem;
-          margin-bottom: .02rem;
         }
       }
     }

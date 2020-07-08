@@ -55,4 +55,13 @@ const router = new VueRouter({
   routes
 })
 
+// 路由前置导航守卫,处理页面刷新、登录退出
+// router.beforeEach((to, from, next) => {
+
+//   if (to.matched.length === 0) {
+
+//   }
+
+// })
+
 export default router

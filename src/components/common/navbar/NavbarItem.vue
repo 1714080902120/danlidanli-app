@@ -37,10 +37,12 @@ export default {
 
 <style lang="less" scoped>
 #navbar-item {
+  background-color: rgb(58, 58, 58);
   .item {
     font-size: 26px;
     width: 150px;
     text-align: center;
+    color: rgba(216, 216, 216, .6);
     .inner {
       width: 100px;
       margin: auto;

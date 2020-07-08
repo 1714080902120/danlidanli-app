@@ -1,6 +1,6 @@
 <template>
   <div id="popup">
-    <mt-popup class="pop" v-model="popupVisible" position="middle" popup-transition="popup-fade">
+    <mt-popup class="pop" v-model="popupVisible" position="bottom">
       <div class="inner">
         <div class="header" @click="addToBackLook()">添加至稍后再看</div>
         <div class="content">
@@ -23,7 +23,7 @@
             </div>
           </div>
         </div>
-        <div class="footer" @click="colla()">取消</div>
+        <div class="footer" @click="colla()" v-waves>取消</div>
       </div>
     </mt-popup>
   </div>
@@ -71,13 +71,11 @@ export default {
   .pop {
     border-radius: .2rem !important;
     .inner {
-      width: 9rem;
+      width: 10rem;
       height: 800px;
       display: flex;
       flex-direction: column;
-      font-size: 30px;
-      font-family: "FangSong_GB2312";
-      font-weight: lighter;
+      font-size: .35rem;
       color: rgb(197, 192, 192);
       background-color: #353434;
       .header {
@@ -124,11 +122,12 @@ export default {
         }
       }
       .footer {
-        text-align: center;
-        height: 90px;
-        line-height: 90px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: .45rem;
+        height: 2rem;
         border-top: 10px solid rgba(80, 80, 80, 0.8);
-        margin-bottom: 50px;
       }
     }
   }

@@ -208,6 +208,8 @@ export default {
       this.$Bus.$on("sidebarDisappear", () => {
         this.isAppear = false;
         this.isDisappear = true;
+        console.log(111);
+        
       });
     },
     goDisappear(e) {
@@ -220,14 +222,17 @@ export default {
     goTo(i) {
       console.log(i);
       this.$Bus.$emit("sidebarDisappear");
+      this.$store.commit("closeSideBar", false);
     },
     set() {
       this.$Bus.$emit("sidebarDisappear");
       this.$router.push({ path: "/set" });
+      this.$store.commit("closeSideBar", false);
     },
     theme() {
       this.$Bus.$emit("sidebarDisappear");
       this.$router.push({ path: "/theme" });
+      this.$store.commit("closeSideBar", false);
     },
     skip() {
       Toast({
@@ -267,7 +272,7 @@ export default {
   overflow: hidden;
   transition: 0.6s;
   transform: translate(-100%, 0);
-  background-color: var(--base-bg-color);
+  // background-color: var(--base-bg-color);
   list-style: none;
   .inner {
     background-color: var(--base-bg-color);
@@ -328,7 +333,7 @@ export default {
   }
   to {
     transform: translate(0, 0);
-    background-color: rgba(0, 0, 0, 0.1);
+    background-color: transparent;
   }
 }
 @keyframes disappear {

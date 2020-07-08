@@ -8,7 +8,7 @@
       :showIndicators="false"
     >
       <mt-swipe-item v-for="item in swipeData" :key="item.id">
-        <img v-lazy="`${item.url}${item.name}`" :alt="item.alt" />
+        <img :src="`${item.url}${item.name}`" :alt="item.alt" />
         <div class="text">{{ item.text }}</div>
       </mt-swipe-item>
     </mt-swipe>
@@ -43,6 +43,10 @@ export default {
   height: 340px;
   line-height: 340px;
   margin-bottom: -.1rem;
+    background-repeat: no-repeat;
+  background-position: center center;
+  background-size: 3rem 3rem;
+  background-image: url("~assets/img/base/bilibili_user_logo_bg.svg");
   .mt-swipe {
     width: 750px;
     height: 300px;
@@ -57,14 +61,10 @@ export default {
       position: absolute;
       top: 100px;
       left: 30px;
-      font-size: 40px;
+      font-size: .4rem;
       color: rgb(255, 255, 255);
     }
   }
 }
-img[lazy="loading"] {
-  background-repeat: no-repeat;
-  background-position: 2rem center;
-  background-image: url("~assets/img/base/bilibili_user_logo_bg.svg");
-}
+
 </style>

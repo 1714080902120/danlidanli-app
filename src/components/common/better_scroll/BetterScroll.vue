@@ -52,7 +52,6 @@ export default {
   data() {
     return {
       BS: null,
-      toShowImg: true,
       toShowLoading: false,
       originPosition: 0,
       ifOpenSideBar: false
@@ -126,17 +125,17 @@ export default {
       this.BS.on("scroll", position => {
         lastY = nowY;
         nowY = position.y;
-        loading.style.opacity = 1;
-        img.style.opacity = 1;
         // loading加载
         if (!this.$store.state.loadingLock) {
+          loading.style.opacity = 1;
+          img.style.opacity = 1;
           if (nowY >= 0 && nowY - lastY >= 0) {
-            if (this.originPosition <= 115) {
+            if (this.originPosition < 120) {
               this.originPosition += speed;
               this.BS.on("touchEnd", () => {
                 this.$Bus.$emit("finishPullDown");
               });
-            } else if (this.originPosition === 120) {
+            } else if (this.originPosition >= 120) {
               img.style.opacity = 0;
               this.toShowLoading = true;
               sendPullDown();
@@ -214,21 +213,27 @@ export default {
   overflow: hidden;
   .loading {
     position: absolute;
-    top: 1.34rem;
+    top: 0rem;
     opacity: 0;
     transition: 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    left: 0;
+    right: 0;
+    margin: 0 auto;
     img {
       position: absolute;
-      width: 0.75rem;
-      height: 0.75rem;
+      width: 1rem;
+      height: 1rem;
       background-color: #fff;
       border-radius: 100%;
       left: 4.5rem;
       z-index: 99;
     }
     .inner {
-      width: .1rem;
-      height: .1rem;
+      width: 0.1rem;
+      height: 0.1rem;
     }
   }
 }
