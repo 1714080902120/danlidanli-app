@@ -1,9 +1,9 @@
 <template>
   <div id="B-coin-detail">
-    <div class="inner" :class="{ 'active': isActive === true }">
+    <div class="inner">
       <div class="nav">
         <div class="head">
-          <span class="back" @click="goBack()">‹</span>
+          <span class="back" @click="goBack()"></span>
           <span class="title">明细</span>
         </div>
         <div class="navbar">
@@ -30,7 +30,7 @@
                   <div class="main-item-content-title-1">
                     <img src="~assets/img/wallet/b_consumer/bilibili_dark.svg" alt />
                     哔哩哔哩
-                    <span>›</span>
+                    <span></span>
                   </div>
                   <div class="main-item-content-main-1">
                     <div class="main-item-content-main-left-1">
@@ -360,11 +360,7 @@ export default {
   methods: {
     goBack() {
       this.isActive = false;
-      let timer = setTimeout(() => {
-        this.$router.replace({ path: "/wallet/b-coin" });
-        clearTimeout(timer);
-        timer = null;
-      }, 300);
+      this.$router.replace({ path: "/wallet/b-coin" });
     }
   }
 };
@@ -376,14 +372,13 @@ export default {
     overflow-x: hidden;
     overflow-x: hidden;
     transition: 0.3s ease-in-out;
-    transform: translateX(10rem);
     background-color: var(--base-bg-color-sec);
     height: 100vh;
     .nav {
       position: sticky;
       top: 0;
       z-index: 99;
-      border-bottom: 0.03rem solid rgb(12, 12, 12, 0.2);
+      border-bottom: 0.03rem solid rgba(12, 12, 12, 0.2);
       .head {
         display: flex;
         align-items: center;
@@ -392,13 +387,19 @@ export default {
         text-align: center;
         background-color: var(--base-bg-color-thr);
         .back {
-          padding-left: 0.5rem;
+          opacity: .6;
+          width: 1rem;
+          height: 1rem;
+          background-size: 50% 50%;
+          background-repeat: no-repeat;
+          background-position: center center;
+          background-image: url('~assets/img/video/back_white.svg');
         }
         .title {
           flex: auto;
           font-size: 0.45rem;
           text-align: center;
-          margin-right: 0.8rem;
+          margin-right: 1rem;
         }
       }
       .navbar {
@@ -453,18 +454,21 @@ export default {
                   display: flex;
                   align-items: center;
                   height: 1.2rem;
-                  line-height: 1.2rem;
                   border-bottom: 0.01rem solid rgba(180, 180, 180, 0.9);
                   img {
-                    width: 0.6rem;
-                    height: 0.6rem;
+                    width: 0.5rem;
+                    height: 0.5rem;
                     margin-right: 0.2rem;
+                    margin-bottom: .05rem;
                   }
                   span {
-                    font-size: 0.8rem;
-                    margin-left: 0.2rem;
-                    padding-bottom: 0.2rem;
-                    color: #fff;
+                    width: .5rem;
+                    height: .5rem;
+                    transform: rotateZ(180deg);
+                    background-size: 50% 50%;
+                    background-repeat: no-repeat;
+                    background-position: center center;
+                    background-image: url('~assets/img/video/back_white.svg');
                   }
                 }
                 .main-item-content-main-1,

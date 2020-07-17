@@ -173,33 +173,36 @@ export default {
     },
     // 获取二维码base64并转换为普通图片
     getDataUrl(dataUrl) {
-      let filename = new Date().getTime();
-      this.dataUrl = (function base64DataToBlob(dataUrl) {
-        //去掉url的头，并转换为byte
-        var bytes = window.atob(dataUrl.split(",")[1]);
-        //处理异常,将ascii码小于0的转换为大于0
-        var ab = new ArrayBuffer(bytes.length);
-        var ia = new Uint8Array(ab);
-        for (var i = 0; i < bytes.length; i++) {
-          ia[i] = bytes.charCodeAt(i);
-        }
-        return new Blob([ia], { type: "image/png" });
-      })(dataUrl);
-      Toast({
-        message: "由于后台未开发该模块，因此改为下载头像",
-        duration: 3000,
-        position: "middle"
-      });
+      this.dataUrl = dataUrl.split(",")[1]
+      // let filename = new Date().getTime();
+      // this.dataUrl = (function base64DataToBlob(dataUrl) {
+      //   //去掉url的头，并转换为byte
+      //   var bytes = window.atob(dataUrl.split(",")[1]);
+      //   //处理异常,将ascii码小于0的转换为大于0
+      //   var ab = new ArrayBuffer(bytes.length);
+      //   var ia = new Uint8Array(ab);
+      //   for (var i = 0; i < bytes.length; i++) {
+      //     ia[i] = bytes.charCodeAt(i);
+      //   }
+      //   return new Blob([ia], { type: "image/png" });
+      // })(dataUrl);
+      // Toast({
+      //   message: "由于后台未开发该模块，因此改为下载头像",
+      //   duration: 3000,
+      //   position: "middle"
+      // });
     },
     press() {
-      let dtask = plus.downloader.createDownload(this.imgSrc, {}, function(
-        d,
-        status
-      ) {
-        // 下载完成
-        if (status == 200) {
+      // alert(this.dataUrl)
+      let bitmap = new plus.nativeObj.Bitmap();
+      bitmap.loadBase64Data(this.dataUrl, () => {
+        bitmap.save("_downloads/qrcode.png", {
+          overwrite: true,
+          format: 'png',
+          quality: 100,
+        },(e) => {
           plus.gallery.save(
-            d.filename,
+            "_downloads/qrcode.png",
             () => {
               Toast({
                 message: "下载成功",
@@ -209,21 +212,51 @@ export default {
             },
             err => {
               Toast({
-                message: "下载失败",
-                duration: 10000,
+                message: `${JSON.stringify(err)}`,
+                duration: 5000,
                 position: "bottom"
               });
             }
           );
-        } else {
-          Toast({
-            message: "下载失败",
-            duration: 3000,
-            position: "bottom"
-          });
-        }
-      });
-      dtask.start();
+        },() => {
+          alert('保存失败')
+        })
+      },() => {
+        alert('失败')
+      })
+      bitmap.recycle()
+      // let dtask = plus.downloader.createDownload(this.imgSrc, {}, function(
+      //   d,
+      //   status
+      // ) {
+      //   // 下载完成
+      //   if (status == 200) {
+      //     plus.gallery.save(
+      //       d.filename,
+      //       () => {
+      //         Toast({
+      //           message: "下载成功",
+      //           duration: 3000,
+      //           position: "bottom"
+      //         });
+      //       },
+      //       err => {
+      //         Toast({
+      //           message: "下载失败",
+      //           duration: 10000,
+      //           position: "bottom"
+      //         });
+      //       }
+      //     );
+      //   } else {
+      //     Toast({
+      //       message: "下载失败",
+      //       duration: 3000,
+      //       position: "bottom"
+      //     });
+      //   }
+      // });
+      // dtask.start();
     }
   },
   components: {

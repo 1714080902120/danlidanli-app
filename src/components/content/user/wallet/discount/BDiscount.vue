@@ -1,9 +1,9 @@
 <template>
-  <div id="B-coin-detail">
-    <div class="inner" :class="{ 'active': isActive === true }">
+  <div id="B-discount">
+    <div class="inner">
       <div class="nav">
         <div class="head">
-          <span class="back" @click="goBack()">‹</span>
+          <span class="back" @click="goBack()"></span>
           <span class="title">我的优惠券</span>
           <img src="~assets/img/wallet/B_discount/B_discount_shop.svg" alt @click="goToMemberShop()" />
         </div>
@@ -62,7 +62,7 @@
 
 <script>
 export default {
-  name: "BCoinDetail",
+  name: "BDiscount",
   data() {
     return {
       isActive: false,
@@ -79,11 +79,7 @@ export default {
   methods: {
     goBack() {
       this.isActive = false;
-      let timer = setTimeout(() => {
-        this.$router.replace({ path: "/wallet/" });
-        clearTimeout(timer);
-        timer = null;
-      }, 300);
+      this.$router.replace({ path: "/wallet/" });
     },
     goToMemberShop () {
       this.$router.replace({ path: '/member-shop', query: {
@@ -95,13 +91,11 @@ export default {
 </script>
 
 <style lang="less" scoped>
-#B-coin-detail {
+#B-discount {
   .inner {
     color: #000;
     overflow-x: hidden;
-    overflow-x: hidden;
     transition: 0.3s ease-in-out;
-    transform: translateX(10rem);
     background-color: var(--base-bg-color-white);
     height: 100vh;
     .nav {
@@ -117,12 +111,18 @@ export default {
         background-color: var(--base-item-color-white);
         border-bottom: 0.03rem solid rgba(131, 131, 131, 0.2);
         .back {
-          padding-left: 0.5rem;
+          width: 1rem;
+          height: 1rem;
+          background-size: 50% 50%;
+          background-repeat: no-repeat;
+          background-position: center center;
+          background-image: url('~assets/img/video/back_black.svg');
         }
         .title {
           flex: auto;
           font-size: 0.45rem;
           text-align: center;
+          
         }
         img {
           width: 0.8rem;

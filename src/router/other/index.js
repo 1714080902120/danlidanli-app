@@ -5,6 +5,8 @@ const UserSet = () => import('components/content/user/set-theme-skip/set/Set')
 const Theme = () => import('components/content/user/set-theme-skip/theme/Theme')
 const Skip = () => import('components/content/user/set-theme-skip/skip/Skip')
 const scan = () => import('components/common/scan/Scan')
+const game = () => import('components/content/home/Game')
+
 
 const RorL = {
   path: '/registerOrLogin',
@@ -48,6 +50,12 @@ const Scan = {
   component: scan
 }
 
+const Game = {
+  path: '/game',
+  name: 'Game',
+  component: game
+}
+
 export {
   RorL,
   ForF,
@@ -55,5 +63,6 @@ export {
   set,
   theme,
   skip,
-  Scan
+  Scan,
+  Game
 }

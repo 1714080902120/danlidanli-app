@@ -1,8 +1,8 @@
 <template>
   <div id="B-coin">
-    <div class="inner" :class="{ 'active': isActive === true }">
+    <div class="inner">
       <div class="head">
-        <span class="back" @click="goBack()">‹</span>
+        <span class="back" @click="goBack()"></span>
         <span class="title">B币钱包</span>
         <span class="detail" @click="goTo()">明细</span>
       </div>
@@ -49,11 +49,7 @@ export default {
   methods: {
     goBack() {
       this.isActive = false;
-      let timer = setTimeout(() => {
-        this.$router.replace({ path: "/wallet/" });
-        clearTimeout(timer);
-        timer = null;
-      }, 300);
+      this.$router.replace({ path: "/wallet/" });
     },
     ask() {
       this.popupVisible = true;
@@ -78,7 +74,6 @@ export default {
     color: rgb(155, 153, 153);
     overflow-x: hidden;
     transition: 0.3s ease-in-out;
-    transform: translateX(10rem);
     background-color: var(--base-bg-color-sec);
     height: 100vh;
     .head {
@@ -95,7 +90,13 @@ export default {
       z-index: 99;
       border-bottom: 0.01rem solid rgb(36, 35, 35);
       .back {
-        padding-left: 0.5rem;
+        width: 1rem;
+        height: 1rem;
+        background-size: 50% 50%;
+        background-repeat: no-repeat;
+        background-position: center center;
+        opacity: .6;
+        background-image: url('~assets/img/video/back_white.svg');
       }
       .title {
         font-size: 0.45rem;

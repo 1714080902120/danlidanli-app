@@ -314,9 +314,13 @@ export default {
 img[lazy="loading"] {
   height: 3.2rem;
   margin: auto;
+  background-color: var(--base-set-bg-color);
+  z-index: 2;
   background-image: url("~assets/img/base/bilibili_user_logo_bg.svg");
   background-position: center center;
   background-size: 80% 80%;
   background-repeat: no-repeat;
+  border-radius: .1rem;
+  border: none;
 }
 </style>

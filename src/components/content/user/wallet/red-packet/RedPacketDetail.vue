@@ -1,9 +1,9 @@
 <template>
   <div id="red-packet-detail">
-    <div class="inner" :class="{ 'active': isActive === true }">
+    <div class="inner">
       <div class="nav">
         <div class="head">
-          <span class="back" @click="goBack()">‹</span>
+          <span class="back" @click="goBack()"></span>
           <span class="title">流水明细</span>
         </div>
         <div class="navbar">
@@ -53,11 +53,7 @@ export default {
   methods: {
     goBack() {
       this.isActive = false;
-      let timer = setTimeout(() => {
-        this.$router.replace({ path: "/wallet/red-packet" });
-        clearTimeout(timer);
-        timer = null;
-      }, 300);
+      this.$router.replace({ path: "/wallet/red-packet" });
     }
   }
 };
@@ -70,7 +66,6 @@ export default {
     color: #000;
     overflow-x: hidden;
     transition: 0.3s ease-in-out;
-    transform: translateX(10rem);
     background-color: var(--base-bg-color-white);
     height: 100vh;
     .nav {
@@ -86,7 +81,12 @@ export default {
         line-height: 1.6rem;
         background-color: var(--base-item-color-white);
         .back {
-          padding-left: 0.5rem;
+        width: 1rem;
+        height: 1rem;
+        background-size: 50% 50%;
+        background-repeat: no-repeat;
+        background-position: center center;
+        background-image: url('~assets/img/video/back_black.svg');
         }
         .title {
           margin-right: 4rem;

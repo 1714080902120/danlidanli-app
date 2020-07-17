@@ -1,8 +1,8 @@
 <template>
   <div id="B-bell-verify">
-    <div class="inner" :class="{ 'active': isActive === true }">
+    <div class="inner">
       <div class="head">
-        <span class="back" @click="goBack()">‹</span>
+        <span class="back" @click="goBack()"></span>
         <span class="title">申请验证</span>
       </div>
       <div class="content">
@@ -216,11 +216,7 @@ export default {
   methods: {
     goBack() {
       this.isActive = false;
-      let timer = setTimeout(() => {
-        this.$router.go(-1);
-        clearTimeout(timer);
-        timer = null;
-      }, 300);
+      this.$router.go(-1);
     },
     async sendVerification() {
       if (this.verifyState !== "获取") return false;
@@ -345,7 +341,6 @@ export default {
     font-size: 0.45rem;
     overflow-x: hidden;
     transition: 0.3s ease-in-out;
-    transform: translateX(10rem);
     background-color: var(--base-bg-color-sec);
     height: 100vh;
     .head {
@@ -358,15 +353,22 @@ export default {
       text-align: center;
       background-color: var(--base-bg-color-thr);
       z-index: 99;
+      justify-content: space-between;
       .back {
-        padding-left: 0.5rem;
-        margin-right: 1rem;
+        width: 1rem;
+        height: 1rem;
+        opacity: .6;
+        background-size: 50% 50%;
+        background-repeat: no-repeat;
+        background-position: center center;
+        background-image: url('~assets/img/video/back_white.svg');
       }
       .title {
         font-size: 0.45rem;
         display: flex;
         text-align: center;
         align-items: center;
+        margin-right: 4rem;
       }
     }
     .content {

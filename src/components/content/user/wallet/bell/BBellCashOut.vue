@@ -1,8 +1,8 @@
 <template>
   <div id="B-bell-cash-out">
-    <div class="inner" :class="{ 'active': isActive === true }">
+    <div class="inner">
       <div class="head">
-        <span class="back" @click="goBack()">‹</span>
+        <span class="back" @click="goBack()"></span>
         <span class="title">贝壳提现</span>
         <span class="detail" @click="popup()">规则说明</span>
       </div>
@@ -91,11 +91,7 @@ export default {
   methods: {
     goBack() {
       this.isActive = false;
-      let timer = setTimeout(() => {
-        this.$router.replace({ path: "/wallet/b-bell" });
-        clearTimeout(timer);
-        timer = null;
-      }, 300);
+      this.$router.replace({ path: "/wallet/b-bell" });
     },
     close() {
       this.popupVisible = false;
@@ -120,7 +116,6 @@ export default {
     color: #000;
     overflow-x: hidden;
     transition: 0.3s ease-in-out;
-    transform: translateX(10rem);
     background-color: var(--base-bg-color-white);
     height: 100vh;
     .head {
@@ -137,7 +132,12 @@ export default {
       z-index: 99;
       border-bottom: 0.01rem solid rgb(228, 228, 228);
       .back {
-        padding-left: 0.5rem;
+        width: 1rem;
+        height: 1rem;
+        background-size: 50% 50%;
+        background-repeat: no-repeat;
+        background-position: center center;
+        background-image: url('~assets/img/video/back_black.svg');
       }
       .title {
         font-size: 0.45rem;
@@ -154,7 +154,6 @@ export default {
       .detail {
         font-size: 0.4rem;
         color: rgb(128, 126, 126);
-        padding-top: 0.3rem;
         padding-right: 0.2rem;
       }
     }
@@ -196,7 +195,7 @@ export default {
             align-items: center;
             margin: 0 0.4rem;
             border-radius: 0.1rem;
-            border: 0.01rem solid rgba(128, 126, 126);
+            border: 0.01rem solid rgba(255, 255, 255, 0.1);
             &:last-child {
               margin-left: -0.15rem;
             }

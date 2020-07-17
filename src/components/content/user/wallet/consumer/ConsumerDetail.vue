@@ -1,8 +1,8 @@
 <template>
   <div id="consumer-detail" v-if="Object.keys($route.query).length > 0 && $route.query.data">
-    <div class="inner" :class="{ 'active': isActive === true }">
+    <div class="inner">
       <div class="head">
-        <span class="back" @click="goBack()">‹</span>
+        <span class="back" @click="goBack()"></span>
         <span class="title">交易详情</span>
       </div>
       <div class="main-footer">
@@ -44,11 +44,7 @@ export default {
   methods: {
     goBack() {
       this.isActive = false;
-      let timer = setTimeout(() => {
-        this.$router.replace({ path: '/wallet/b-consumer' });
-        clearTimeout(timer);
-        timer = null;
-      }, 300);
+      this.$router.replace({ path: '/wallet/b-consumer' });
     },
     getListData () {
       let reg = /币/gi
@@ -72,7 +68,6 @@ export default {
     color: #000;
     overflow: hidden;
     transition: 0.3s ease-in-out;
-    transform: translateX(10rem);
     background-color: var(--base-bg-color-white);
     height: 100vh;
     .head {
@@ -87,7 +82,12 @@ export default {
       z-index: 99;
       border-bottom: 0.01rem solid rgba(160, 159, 159, 0.8);
       .back {
-        padding-left: 0.5rem;
+        width: 1rem;
+        height: 1rem;
+        background-size: 50% 50%;
+        background-repeat: no-repeat;
+        background-position: center center;
+        background-image: url('~assets/img/video/back_black.svg');
       }
       .title {
         flex: auto;

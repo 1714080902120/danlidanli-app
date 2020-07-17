@@ -29,7 +29,7 @@ export default {
   },
   methods: {
     close() {
-      if (plus) {
+      try {
         let l = plus.webview.all().length;
         if (l > 1) {
           let ws = plus.webview.currentWebview();
@@ -37,7 +37,7 @@ export default {
         } else {
           this.$router.go(-1);
         }
-      } else {
+      } catch {
         this.$router.go(-1);
       }
     }

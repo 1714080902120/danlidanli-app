@@ -1,9 +1,9 @@
 <template>
   <div id="big-member">
     <div class="head">
-      <span class="back" @click="close()">‹</span>
+      <span class="back" @click="close()"></span>
       <span class="title" @click="close()">
-        <img src="~assets/img/fans_follows/close_dark.svg" alt /> 我的大会员
+        我的大会员
       </span>
     </div>
     <div class="main">
@@ -34,28 +34,29 @@ export default {
 #big-member {
   background-color: var(--base-item-color-white) !important;
   width: 10rem;
-  height: 17.7rem;
+  height: 100vh;
   .head {
     position: sticky;
     top: 0;
     height: 1.6rem;
     background-color: var(--base-bg-color-thr);
     display: flex;
+    justify-content: space-between;
     align-items: center;
     .back {
-      padding-bottom: 0.1rem;
-      margin: 0 0.5rem;
+      width: 1rem;
+      height: 1rem;
+      opacity: .6;
+      background-size: 50% 50%;
+      background-repeat: no-repeat;
+      background-position: center center;
+      background-image: url('~assets/img/video/back_white.svg');
     }
     .title {
       display: flex;
       align-items: center;
       font-size: 0.45rem;
-      img {
-        width: 0.35rem;
-        height: 0.35rem;
-        margin-right: 0.2rem;
-        padding-bottom: 0.05rem;
-      }
+      margin-right: 4rem;
     }
   }
   .main {

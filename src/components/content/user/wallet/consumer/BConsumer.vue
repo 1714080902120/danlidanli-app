@@ -1,8 +1,8 @@
 <template>
   <div id="B-consumer">
-    <div class="inner" :class="{ 'active': isActive === true }">
+    <div class="inner">
       <div class="head">
-        <span class="back" @click="goBack()">‹</span>
+        <span class="back" @click="goBack()"></span>
         <span class="title">交易记录</span>
       </div>
       <div class="content">
@@ -127,11 +127,7 @@ export default {
   methods: {
     goBack() {
       this.isActive = false;
-      let timer = setTimeout(() => {
-        this.$router.replace({ path: '/wallet/' });
-        clearTimeout(timer);
-        timer = null;
-      }, 300);
+      this.$router.replace({ path: '/wallet/' });
     },
     async goTo(x, y) {
       let data = await this.items[x].list[y];
@@ -154,7 +150,6 @@ export default {
   .inner {
     overflow-x: hidden;
     transition: 0.3s ease-in-out;
-    transform: translateX(10rem);
     background-color: var(--base-bg-color-white);
     height: 100vh;
     .head {
@@ -169,7 +164,12 @@ export default {
       margin-bottom: 0.2rem;
       z-index: 99;
       .back {
-        padding-left: 0.5rem;
+        width: 1rem;
+        height: 1rem;
+        background-size: 50% 50%;
+        background-repeat: no-repeat;
+        background-position: center center;
+        background-image: url('~assets/img/video/back_black.svg');
       }
       .title {
         flex: auto;

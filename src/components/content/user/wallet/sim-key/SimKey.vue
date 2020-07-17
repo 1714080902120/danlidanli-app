@@ -1,10 +1,10 @@
 <template>
   <div id="b-card">
-    <div class="inner" :class="{ 'active': isActive === true }">
+    <div class="inner">
       <div class="head">
-        <span class="back" @click="goBack()">‹</span>
+        <span class="back" @click="goBack()"></span>
         <span class="title" @click="goBack()">
-          <img src="~assets/img/fans_follows/close_dark.svg" alt /> 免流量服务
+          免流量服务
         </span>
       </div>
       <div class="content">
@@ -52,9 +52,9 @@
     <div class="pop">
       <mt-popup class="pop-content" v-model="popupVisible" position="right">
         <div class="pop-content-head">
-          <span class="back" @click="close()">‹</span>
+          <span class="back" @click="close()"></span>
           <span class="title" @click="close()">
-            <img src="~assets/img/fans_follows/close_dark.svg" alt /> 免流量服务
+            免流量服务
           </span>
         </div>
         <div class="pop-content-main">
@@ -117,7 +117,6 @@ export default {
     font-size: 0.45rem;
     overflow-x: hidden;
     transition: 0.3s ease-in-out;
-    transform: translateX(10rem);
     background-color: var(--base-item-color-white);
     height: 100vh;
     .head {
@@ -130,19 +129,21 @@ export default {
       text-align: center;
       background-color: var(--base-bg-color-thr);
       z-index: 99;
+      justify-content: space-between;
       .back {
-        padding-left: 0.5rem;
-        margin-right: 1rem;
+        width: 1rem;
+        height: 1rem;
+        opacity: .6;
+        background-size: 50% 50%;
+        background-repeat: no-repeat;
+        background-position: center center;
+        background-image: url('~assets/img/video/back_white.svg');
       }
       .title {
         font-size: 0.45rem;
         display: flex;
         align-items: center;
-        img {
-          width: 0.3rem;
-          height: 0.3rem;
-          margin-right: 0.3rem;
-        }
+        margin-right: 4rem;
       }
     }
     .content {
@@ -221,20 +222,21 @@ export default {
         background-color: var(--base-bg-color-thr);
         display: flex;
         align-items: center;
+        justify-content: space-between;
         .back {
-          padding-bottom: .1rem;
-          margin: 0 0.5rem;
+        width: 1rem;
+        height: 1rem;
+        opacity: .6;
+        background-size: 50% 50%;
+        background-repeat: no-repeat;
+        background-position: center center;
+        background-image: url('~assets/img/video/back_white.svg');
         }
         .title {
           display: flex;
           align-items: center;
           font-size: 0.45rem;
-          img {
-            width: 0.35rem;
-            height: 0.35rem;
-            margin-right: 0.2rem;
-            padding-bottom: .05rem;
-          }
+          margin-right: 4rem;
         }
       }
       .pop-content-main {

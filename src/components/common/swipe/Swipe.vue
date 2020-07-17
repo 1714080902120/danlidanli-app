@@ -39,28 +39,31 @@ export default {
 #swipe {
   position: relative;
   border-radius: 10px;
-  padding-top: 15px;
-  height: 340px;
-  line-height: 340px;
+  padding-top: .2rem;
+  height: 5.2rem;
+  line-height: 5.2rem;
   margin-bottom: -.1rem;
     background-repeat: no-repeat;
   background-position: center center;
   background-size: 3rem 3rem;
   background-image: url("~assets/img/base/bilibili_user_logo_bg.svg");
   .mt-swipe {
-    width: 750px;
-    height: 300px;
-    border-radius: 10px;
+    width: 10rem;
+    border-radius: .2rem;
     img {
-      border-radius: 10px;
-      margin: 0 15px;
-      width: 720px;
-      height: 300px;
+      border-radius: .2rem;
+      // margin: 0 15px;
+      position: absolute;
+      left: 0;
+      right: 0;
+      margin: auto;
+      width: 9.6rem;
+      height: 4.7rem;
     }
     .text {
       position: absolute;
-      top: 100px;
-      left: 30px;
+      top: 1.7rem;
+      left: .6rem;
       font-size: .4rem;
       color: rgb(255, 255, 255);
     }

@@ -6,7 +6,6 @@
         <router-view class="Router" />
       </keep-alive>
     </transition>
-
     <div v-if="active()">
       <Tabbar />
     </div>

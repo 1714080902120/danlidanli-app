@@ -276,7 +276,7 @@ export default {
             flex-direction: column;
             span {
               &:last-child {
-                font-size: 0.1rem;
+                font-size: 0.23rem;
                 opacity: 0.6;
                 margin-top: 0.05rem;
               }

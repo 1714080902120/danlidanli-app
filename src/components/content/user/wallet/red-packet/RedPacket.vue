@@ -1,8 +1,8 @@
 <template>
   <div id="red-packet">
-    <div class="inner" :class="{ 'active': isActive === true }">
+    <div class="inner">
       <div class="head">
-        <span class="back" @click="goBack()">‹</span>
+        <span class="back" @click="goBack()"></span>
         <span class="title">提现</span>
         <span class="detail" @click="detail()">流水明细</span>
       </div>
@@ -96,9 +96,9 @@
     <div class="popup-2">
       <mt-popup class="pop" v-model="popupVisible2" position="right">
         <div class="pop-content-head">
-          <span class="back" @click="closeService()">‹</span>
+          <span class="back" @click="closeService()"></span>
           <span class="title" @click="closeService()">
-            <img src="~assets/img/fans_follows/close_dark.svg" alt /> 客服
+            客服
           </span>
         </div>
         <div class="pop-content-main">
@@ -140,11 +140,7 @@ export default {
   methods: {
     goBack() {
       this.isActive = false;
-      let timer = setTimeout(() => {
-        this.$router.replace({ path: "/wallet/" });
-        clearTimeout(timer);
-        timer = null;
-      }, 300);
+      this.$router.replace({ path: "/wallet/" });
     },
     close() {
       this.popupVisible = false;
@@ -202,7 +198,6 @@ export default {
     color: #000;
     overflow-x: hidden;
     transition: 0.3s ease-in-out;
-    transform: translateX(10rem);
     background-color: var(--base-bg-color-white);
     height: 100vh;
     .head {
@@ -218,10 +213,14 @@ export default {
       z-index: 99;
       border-bottom: 0.01rem solid rgba(36, 35, 35, 0.1);
       .back {
-        padding-left: 0.5rem;
+        width: 1rem;
+        height: 1rem;
+        background-size: 50% 50%;
+        background-repeat: no-repeat;
+        background-position: center center;
+        background-image: url('~assets/img/video/back_black.svg');
       }
       .title {
-        margin-left: 1rem;
         font-size: 0.45rem;
       }
       .detail {
@@ -281,10 +280,10 @@ export default {
           align-items: center;
           justify-content: space-between;
           flex-wrap: wrap;
-                    font-weight: bold;
+          font-weight: bold;
           .item,
           input {
-            
+            font-weight: 400;
             transition: 0.4s ease-in-out;
             width: 3.05rem;
             height: 1.3rem;
@@ -294,7 +293,6 @@ export default {
             justify-content: center;
             border-radius: 0.2rem;
             font-size: 0.5rem;
-            font-weight: lighter;
             border: 0.04rem solid var(--color-text);
             margin: 0.2rem 0;
           }
@@ -398,7 +396,6 @@ export default {
       .pop-content {
         position: relative;
         color: rgba(14, 14, 14, 0.5);
-        font-weight: 400;
         font-family: "Black";
         font-size: 0.4rem;
         margin: 0.4rem;
@@ -435,23 +432,25 @@ export default {
         position: sticky;
         top: 0;
         height: 1.6rem;
+        width: 10rem;
         background-color: var(--base-bg-color-thr);
         display: flex;
+        justify-content: space-between;
         align-items: center;
         .back {
-          padding-bottom: .1rem;
-          margin: 0 0.5rem;
+        width: 1rem;
+        height: 1rem;
+        opacity: .6;
+        background-size: 50% 50%;
+        background-repeat: no-repeat;
+        background-position: center center;
+        background-image: url('~assets/img/video/back_white.svg');
         }
         .title {
           display: flex;
           align-items: center;
           font-size: 0.45rem;
-          img {
-            width: 0.35rem;
-            height: 0.35rem;
-            margin-right: 0.2rem;
-            padding-bottom: .05rem;
-          }
+          margin-right: 4.5rem;
         }
       }
       .pop-content-main {

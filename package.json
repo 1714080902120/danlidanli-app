@@ -14,6 +14,7 @@
     "clipboard": "^2.0.6",
     "core-js": "^3.6.4",
     "crypto-js": "^4.0.0",
+    "html2canvas": "^1.0.0-rc.5",
     "mint-ui": "^2.2.13",
     "vue": "^2.6.11",
     "vue-calendar-component": "^2.8.2",

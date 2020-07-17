@@ -9,7 +9,7 @@
           </div>
         </div>
         <div class="home-right" slot="right">
-          <span class="game"><img src="~assets/img/home/game_dark.svg" alt=""></span>
+          <span class="game" @click="goToGame()"><img src="~assets/img/home/game_dark.svg" alt=""></span>
           <span class="download">
             <img src="~assets/img/base/download_dark.svg" alt />
           </span>
@@ -39,7 +39,7 @@
         :pullDownRefresh="{ threshold: 0, stop: 0 }"
         :bounce="bounce"
         screenWidth="100%"
-        :screenHeight="height()"
+        :screenHeight="height"
         :probeType="3"
       >
         <keep-alive>
@@ -114,6 +114,9 @@ export default {
       this.$store.commit("offSetItemByClick", this.sendActive);
       this.$router.replace({ path });
     },
+    goToGame() {
+      this.$router.replace({ path: '/game' })
+    },
     // 刷新
     refresh() {
       this.$Bus.$on("BSNeedToRefresh", () => {
@@ -150,12 +153,11 @@ export default {
         return this.sendActive === index;
       };
     },
-    height() {
+    height () {
       let one = window.innerWidth / 10
       let height = window.innerHeight
-      return () => {
         return `${(height - 2.2 * one) / one}rem`;
-      };
+
     }
   },
   components: {

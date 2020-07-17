@@ -2,12 +2,8 @@
   <div id="fans-follows">
     <div class="top" :class="{ 'is-focus': isFocus === true }">
       <div class="back">
-        <div class="go-back" @click="goBack()">
-          <img src="~assets/img/fans_follows/go_back_dark.svg" alt />
-        </div>
-        <div class="close" @click="goBack()" v-waves>
-          <img src="~assets/img/fans_follows/close_dark.svg" alt />我的好友
-        </div>
+        <img @click="goBack()" src="~assets/img/fans_follows/go_back_dark.svg" alt />
+          我的好友
       </div>
       <div class="nav">
         <div
@@ -120,9 +116,9 @@
       </v-touch>
     </v-touch>
     <div class="popup">
-        <mt-popup class="pop" v-model="popupVisible" position="right">
+        <mt-popup class="pop" v-model="popupVisible" position="right" :modal="false">
           <div class="pop-content-head">
-            <span class="back" @click="closePop()">‹</span>
+            <span class="back" @click="closePop()"></span>
             <span class="title" @click="closeSe()">
               {{ activePerson.name }}的个人空间
             </span>
@@ -189,7 +185,7 @@ export default {
       this.active = i;
     },
     goBack() {
-      this.$router.replace({ path: this.$route.params.beforePath });
+      this.$router.replace({ path: '/' });
     },
     judegeThePath() {
       if (this.$route.params.name !== "关注") {
@@ -286,25 +282,17 @@ export default {
     z-index: 99;
     transition: 0.1s ease-in-out;
     .back {
-      height: 1.8rem;
-      line-height: 1.8rem;
+      font-size: .45rem;
+      height: 1.6rem;
+      line-height: 1.6rem;
       display: flex;
-      .go-back {
-        margin: 0 0.6rem;
-        img {
-          width: 0.5rem;
-          height: 0.5rem;
-        }
-      }
-      .close {
-        img {
-          width: 0.5rem;
-          height: 0.5rem;
-          margin-right: 0.35rem;
-        }
-        font-size: 0.5rem;
-        display: flex;
-        align-items: center;
+      align-items: center;
+      padding: 0 .5rem;
+      img {
+        width: .5rem;
+        height: .5rem;
+        margin-bottom: .05rem;
+        margin-right: 3rem;
       }
     }
     .nav {
@@ -360,7 +348,6 @@ export default {
                 color: var(--color-tint);
               }
               .desc {
-                font-weight: lighter;
                 font-size: 0.36rem;
                 white-space: nowrap;
                 overflow: hidden;
@@ -399,7 +386,6 @@ export default {
           margin: 0 0.6rem;
         }
         sup {
-          font-weight: lighter;
           margin: 0 0.3rem;
         }
       }
@@ -496,27 +482,28 @@ export default {
   .popup {
     .pop {
       width: 10rem;
-      height: 18rem;
+      height: 100vh;
       .pop-content-head {
         position: relative;
         height: 1.6rem;
         background-color: var(--base-bg-color-thr);
         display: flex;
         align-items: center;
+        text-align: center;
         .back {
-          padding-bottom: 0.1rem;
-          margin: 0 0.5rem;
+          opacity: .6;
+          width: 1rem;
+          height: 1rem;
+          background-size: 50% 50%;
+          background-repeat: no-repeat;
+          background-position: center center;
+          background-image: url('~assets/img/video/back_white.svg');
         }
         .title {
           display: flex;
           align-items: center;
           font-size: 0.45rem;
-          img {
-            width: 0.35rem;
-            height: 0.35rem;
-            margin-right: 0.2rem;
-            padding-bottom: 0.05rem;
-          }
+          
         }
       }
       .pop-content-main {

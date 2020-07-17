@@ -1,8 +1,8 @@
 <template>
   <div id="B-coin-recharge">
-    <div class="inner" :class="{ 'active': isActive === true }">
+    <div class="inner">
       <div class="head">
-        <span class="back" @click="goBack()">‹</span>
+        <span class="back" @click="goBack()"></span>
         <span class="title">B币充值</span>
         <span class="detail" @click="instruction(1)">使用说明</span>
       </div>
@@ -43,7 +43,7 @@
     <div class="popup" v-if="popState !== 2">
       <mt-popup class="pop" v-model="popupVisible" position="right">
         <div class="pop-head">
-          <span @click="goToLastRouter()">‹</span>
+          <span @click="goToLastRouter()"></span>
           <span>使用说明</span>
         </div>
         <div class="pop-content" v-if="popState === 1">
@@ -256,11 +256,7 @@ export default {
   methods: {
     goBack() {
       this.isActive = false;
-      let timer = setTimeout(() => {
-        this.$router.go(-1)
-        clearTimeout(timer);
-        timer = null;
-      }, 300);
+      this.$router.go(-1)
     },
     close() {
       this.popupVisible = false;
@@ -360,7 +356,6 @@ export default {
     color: rgb(155, 153, 153);
     overflow-x: hidden;
     transition: 0.3s ease-in-out;
-    transform: translateX(10rem);
     background-color: var(--base-bg-color-sec);
     height: 100vh;
     .head {
@@ -376,7 +371,13 @@ export default {
       z-index: 99;
       border-bottom: 0.01rem solid rgb(36, 35, 35);
       .back {
-        padding-left: 0.5rem;
+        width: 1rem;
+        height: 1rem;
+        opacity: .6;
+        background-size: 50% 50%;
+        background-repeat: no-repeat;
+        background-position: center center;
+        background-image: url('~assets/img/video/back_white.svg');
       }
       .title {
         color: rgb(187, 186, 186);
@@ -508,21 +509,32 @@ export default {
         height: 1.6rem;
         line-height: 1.6rem;
         background-color: var(--base-bg-color-thr);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
         span {
+          display: flex;
+          align-items: center;
           &:first-child {
-            margin: 0 0.5rem;
+            width: 1rem;
+            height: 1rem;
+            opacity: .6;
+            background-size: 50% 50%;
+            background-repeat: no-repeat;
+            background-position: center center;
+            background-image: url('~assets/img/video/back_white.svg');
           }
           &:last-child {
             font-size: 0.5rem;
+            margin-right: 4rem;
           }
         }
       }
       .pop-content {
         position: relative;
         color: #000;
-        font-weight: 400;
-        font-family: "Black";
         font-size: 0.4rem;
+        font-family: 'Black';
         margin: 0.4rem;
         .pop-content-item {
           margin-bottom: 0.8rem;
@@ -543,7 +555,6 @@ export default {
         flex-direction: column;
         h4 {
           margin: 0.3rem 0;
-          font-weight: 100;
         }
         h5 {
           margin: 0.2rem 0;

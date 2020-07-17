@@ -22,13 +22,17 @@ export default {
     display: flex;
     align-items: center;
     flex-direction: column;
+    justify-content: center;
     img {
       width: 2rem;
     }
     .text {
-      font-size: 0.3rem;
+      font-size: 0.25rem;
       margin-top: 0.2rem;
       color: #fff;
+      @media screen and (orientation:landscape) {
+        font-size: .2rem;
+        }
     }
   }
 }

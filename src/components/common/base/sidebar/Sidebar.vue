@@ -4,7 +4,7 @@
     :class="{ appear: isAppear === true && isDisappear === false, disappear: isDisappear = true && isAppear === false }"
     @click="goDisappear($event)"
   >
-    <BetterScroll ref="scroll" screenWidth="80%" :screenHeight="height()">
+    <BetterScroll ref="scroll" screenWidth="80%" :screenHeight="height">
       <div class="inner">
         <SidebarHead :info="userInfo" :items="middleItems" />
         <li
@@ -43,7 +43,7 @@
 </template>
 
 <script>
-import { Toast } from 'mint-ui'
+import { Toast } from "mint-ui";
 import {
   getUserData
   // getToken
@@ -63,8 +63,8 @@ export default {
         {
           title: "首页",
           path: "/home",
-          icon: require("assets/img/base/home_active.svg"),
-          iconActive: require("assets/img/base/home_active.svg")
+          icon: require("assets/img/base/home_02_active.svg"),
+          iconActive: require("assets/img/base/home_02_active.svg")
         },
         {
           title: "历史记录",
@@ -209,7 +209,6 @@ export default {
         this.isAppear = false;
         this.isDisappear = true;
         console.log(111);
-        
       });
     },
     goDisappear(e) {
@@ -236,20 +235,22 @@ export default {
     },
     skip() {
       Toast({
-        message: '该功能待开发~',
+        message: "该功能待开发~",
         duration: 3000,
-        posiiton: 'middle'
-      })
+        posiiton: "middle"
+      });
       // this.$Bus.$emit("sidebarDisappear");
       // this.$router.push({ path: "/skip" });
     }
   },
   computed: {
     height() {
-      return () => {
         const height = window.innerHeight;
-        return `${height - 44}px`;
-      };
+        const one = window.innerWidth / 10
+        return `${
+          (height - 44) / one
+          }rem`;
+      
     }
   },
   watch: {
@@ -292,11 +293,11 @@ export default {
       color: var(--color-tint);
     }
     .small {
-      height: .3rem;
+      height: 0.3rem;
     }
   }
   .tabbar-outer {
-    position: fixed;
+    position: relative;
     display: flex;
     bottom: 0;
     background-color: var(--base-bg-color);

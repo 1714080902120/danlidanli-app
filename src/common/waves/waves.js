@@ -5,6 +5,7 @@ vueWaves.install = (Vue, options = {}) => {
   Vue.directive('waves', {
     bind(el, binding) {
       el.addEventListener('touchstart', e => {
+        // e.stopPropagation()
         const customOpts = Object.assign(options, binding.value);
         const opts = Object.assign({
           ele: el, // 波纹作用元素

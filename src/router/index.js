@@ -4,7 +4,7 @@ import Category from './category/index'
 import Home from './home/index'
 import MemberShop from './member-shop/index'
 import Trends from './trends/index'
-import { RorL, ForF, bigMember, set, theme, skip, Scan } from './other/index'
+import { RorL, ForF, bigMember, set, theme, skip, Scan, Game } from './other/index'
 import Wallet from './user/wallet/index'
 import { PersonalSpace, Widget, UserSpace } from './user/personal/index'
 import { VideoDetail } from './video/index'
@@ -46,7 +46,8 @@ const routes = [
   PersonalSpace,
   Widget,
   UserSpace,
-  VideoDetail
+  VideoDetail,
+  Game
 ]
 
 const router = new VueRouter({

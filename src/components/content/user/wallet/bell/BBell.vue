@@ -1,8 +1,8 @@
 <template>
   <div id="B-bell">
-    <div class="inner" :class="{ 'active': isActive === true }">
+    <div class="inner">
       <div class="head">
-        <span class="back" @click="goBack()">‹</span>
+        <span class="back" @click="goBack()"></span>
         <span class="title">
           贝壳账户
           <img src="~assets/img/wallet/B_bell/question.svg" alt @click="ask(0)" />
@@ -61,11 +61,7 @@ export default {
   methods: {
     goBack() {
       this.isActive = false;
-      let timer = setTimeout(() => {
-        this.$router.replace({ path: "/wallet/" });
-        clearTimeout(timer);
-        timer = null;
-      }, 300);
+      this.$router.replace({ path: "/wallet/" });
     },
     ask(i) {
       if (i === 0) {
@@ -98,7 +94,6 @@ export default {
     color: #000;
     overflow-x: hidden;
     transition: 0.3s ease-in-out;
-    transform: translateX(10rem);
     background-color: var(--base-item-color-white);
     height: 100vh;
     .head {
@@ -115,7 +110,12 @@ export default {
       z-index: 99;
       border-bottom: 0.01rem solid rgb(228, 228, 228);
       .back {
-        padding-left: 0.5rem;
+        width: 1rem;
+        height: 1rem;
+        background-size: 50% 50%;
+        background-repeat: no-repeat;
+        background-position: center center;
+        background-image: url('~assets/img/video/back_black.svg');
       }
       .title {
         font-size: 0.45rem;
@@ -131,7 +131,6 @@ export default {
       .detail {
         font-size: 0.4rem;
         color: rgb(128, 126, 126);
-        padding-top: 0.3rem;
         padding-right: 0.2rem;
       }
     }

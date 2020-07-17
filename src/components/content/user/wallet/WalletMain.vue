@@ -1,8 +1,8 @@
 <template>
   <div id="wallet-main">
-    <div class="inner" :class="{ 'active': isActive === true }">
+    <div class="inner">
       <div class="head">
-        <span class="back" @click="goBack()">‹</span>
+        <span class="back" @click="goBack()"></span>
         <span class="title">我的钱包</span>
       </div>
       <div class="middle">
@@ -21,8 +21,10 @@
           </div>
         </div>
         <div class="doc" @click="goToThird()">
-          <img src="~assets/img/wallet/doc.svg" alt />账单记录
-          <span>›</span>
+          <div>
+            <img src="~assets/img/wallet/doc.svg" alt />账单记录
+          </div>
+          <span></span>
         </div>
       </div>
       <div class="swipe">
@@ -115,11 +117,7 @@ export default {
   methods: {
     goBack() {
       this.isActive = false;
-      let timer = setTimeout(() => {
-        this.$router.replace({ path: '/home/' });
-        clearTimeout(timer);
-        timer = null;
-      }, 300);
+      this.$router.replace({ path: '/home/' });
     },
     goTo(i) {
       const beforePath = this.$route.path;
@@ -209,7 +207,6 @@ export default {
   font-weight: bold;
   .inner {
     transition: 0.3s ease-in-out;
-    transform: translateX(10rem);
     overflow: hidden;
     background-color: var(--base-bg-color-sec);
     height: 100vh;
@@ -222,7 +219,12 @@ export default {
       background-color: var(--base-bg-color-thr);
       margin-bottom: 0.2rem;
       .back {
-        padding-left: 0.5rem;
+        width: 1rem;
+        height: 1rem;
+        background-size: 50% 50%;
+        background-repeat: no-repeat;
+        background-position: center center;
+        background-image: url('~assets/img/video/back_white.svg');
       }
       .title {
         flex: auto;
@@ -269,20 +271,30 @@ export default {
         align-items: center;
         font-size: 0.4rem;
         font-weight: lighter;
-        margin-left: 0.5rem;
+        padding: 0 0.5rem;
         height: 1.3rem;
         line-height: 1.3rem;
         border-top: 0.01rem solid rgb(83, 83, 83);
-        img {
-          width: 0.7rem;
-          height: 0.7rem;
-          margin-right: 0.3rem;
+        justify-content: space-between;
+        div {
+          display: flex;
+          align-items: center;
+          img {
+            width: 0.7rem;
+            height: 0.7rem;
+            margin-right: 0.3rem;
+          }
         }
+
         span {
+          height: .8rem;
+          width: .8rem;
+          transform: rotateZ(180deg);
           font-size: 0.6rem;
-          flex: auto;
-          text-align: right;
-          padding-right: 1rem;
+          background-size: 50% 50%;
+          background-repeat: no-repeat;
+          background-position: center center;
+          background-image: url('~assets/img/video/back_white.svg');
         }
       }
     }
