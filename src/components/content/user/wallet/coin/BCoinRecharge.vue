@@ -164,7 +164,6 @@
 <script>
 /* eslint-disable no-undef */
 
-
 export default {
   name: "BCoinRecharge",
   data() {
@@ -235,28 +234,14 @@ export default {
     };
   },
   created() {},
-  mounted() {
-    function plusReady() {
-      //uni-app中将此function里的代码放入vue页面的onLoad生命周期中
-      // 获取支付通道
-      plus.payment.getChannels(
-        function(channels) {
-          channel = channels[0];
-        },
-        function(e) {
-          alert("获取支付通道失败：" + e.message);
-        }
-      );
-    }
-    document.addEventListener("plusready", plusReady, false);
-  },
+  mounted() {},
   activated() {
     this.isActive = true;
   },
   methods: {
     goBack() {
       this.isActive = false;
-      this.$router.go(-1)
+      this.$router.go(-1);
     },
     close() {
       this.popupVisible = false;
@@ -296,54 +281,95 @@ export default {
       this.popup3Visible = false;
     },
     pay() {
-      let id = "alipay";
-      if (this.popSelectID === 1) {
-        id = "wxpay";
-      }
-      // 2. 发起支付请求
-      // 从服务器请求支付订单
-      var ALIPAYSERVER =
-        "http://demo.dcloud.net.cn/helloh5/payment/alipay.php?total=";
-      var WXPAYSERVER =
-        "http://demo.dcloud.net.cn/helloh5/payment/wxpay.php?total=";
-      var PAYSERVER = "";
-      if (id == "alipay") {
-        PAYSERVER = ALIPAYSERVER;
-      } else if (id == "wxpay") {
-        PAYSERVER = WXPAYSERVER;
-      } else {
-        plus.nativeUI.alert("不支持此支付通道！", null, "捐赠");
-        return;
-      }
-      var xhr = new plus.net.XMLHttpRequest(); //uni-app中请使用uni的request api联网
-      xhr.onreadystatechange = function() {
-        switch (xhr.readyState) {
-          case 4:
-            if (xhr.status == 200) {
-              plus.payment.request(
-                this.channel,
-                xhr.responseText,
-                function(result) {
-                  alert(result);
-
-                  plus.nativeUI.alert("支付成功！", function() {
-                    back();
-                  });
-                },
-                function(error) {
-                  plus.nativeUI.alert("支付失败：" + error.code);
-                }
-              );
-            } else {
-              alert("获取订单信息失败！");
-            }
-            break;
-          default:
-            break;
+      function goPay(channel, id, count) {
+        plus.nativeUI.showWaiting("正在支付", {
+          style: "black",
+          background: "rgba(0,0,0,0)"
+        });
+        let ALIPAYSERVER = `http://demo.dcloud.net.cn/payment/?payid=alipay&appid=${plus.runtime.appid}&total=${count}`;
+        let WXPAYSERVER = `http://demo.dcloud.net.cn/payment/?payid=wxpay&appid=${plus.runtime.appid}&total=${count}`;
+        let PAYSERVER = "";
+        if (id == "alipay") {
+          PAYSERVER = ALIPAYSERVER;
+        } else if (id == "wxpay") {
+          PAYSERVER = WXPAYSERVER;
+        } else {
+          plus.nativeUI.closeWaiting();
+          plus.nativeUI.alert("不支持此支付通道！", null, "捐赠");
+          return;
         }
-      };
-      xhr.open("GET", PAYSERVER);
-      xhr.send();
+        let xhr = new plus.net.XMLHttpRequest(); //uni-app中请使用uni的request api联网
+        xhr.onreadystatechange = function() {
+          plus.nativeUI.closeWaiting();
+          switch (xhr.readyState) {
+            case 4:
+              if (xhr.status == 200) {
+                plus.payment.request(
+                  channel,
+                  xhr.responseText,
+                  result => {
+                    plus.nativeUI.alert("支付成功！", () => {
+                      alert(result);
+                    });
+                  },
+                  error => {
+                    plus.nativeUI.alert("支付失败：" + error.code);
+                  }
+                );
+              } else {
+                alert("获取订单信息失败！");
+              }
+              break;
+            default:
+              break;
+          }
+        };
+        xhr.open("GET", PAYSERVER);
+        xhr.send();
+      }
+      try {
+        let ids = `${parseInt(this.charge.split("￥")[1])}B币`;
+        let id = "alipay";
+        if (this.popSelectID === 1) {
+          id = "wxpay";
+        } else if (this.popSelectID >= 2) {
+          alert("目前只支持支付宝和微信支付");
+          return false;
+        }
+        // 2. 发起支付请求
+        // 从服务器请求支付订单
+        plus.nativeUI.showWaiting("检测支付环境...");
+        plus.payment.getChannels(
+          channels => {
+            plus.nativeUI.closeWaiting();
+            plus.nativeUI.confirm(
+              `确认要购买${ids}?`,
+              e => {
+                if (e.index == 0) {
+                  for (let i = 0; i < channels.length; i++) {
+                    if (id === channels[i].id) {
+                      let count = parseInt(this.charge.split("￥")[1]);
+                      goPay(channels[i], id, count);
+                    }
+                  }
+                }
+              },
+              "请求支付",
+              ["确定", "取消"]
+            );
+          },
+          e => {
+            let timer = setTimeout(() => {
+              plus.nativeUI.closeWaiting();
+              alert("获取支付通道失败：" + e.message);
+              clearTimeout(timer);
+              timer = null;
+            }, 3000);
+          }
+        );
+      } catch {
+        alert("该用能只支持真机");
+      }
     }
   }
 };
@@ -373,11 +399,11 @@ export default {
       .back {
         width: 1rem;
         height: 1rem;
-        opacity: .6;
+        opacity: 0.6;
         background-size: 50% 50%;
         background-repeat: no-repeat;
         background-position: center center;
-        background-image: url('~assets/img/video/back_white.svg');
+        background-image: url("~assets/img/video/back_white.svg");
       }
       .title {
         color: rgb(187, 186, 186);
@@ -518,11 +544,11 @@ export default {
           &:first-child {
             width: 1rem;
             height: 1rem;
-            opacity: .6;
+            opacity: 0.6;
             background-size: 50% 50%;
             background-repeat: no-repeat;
             background-position: center center;
-            background-image: url('~assets/img/video/back_white.svg');
+            background-image: url("~assets/img/video/back_white.svg");
           }
           &:last-child {
             font-size: 0.5rem;
@@ -534,7 +560,7 @@ export default {
         position: relative;
         color: #000;
         font-size: 0.4rem;
-        font-family: 'Black';
+        font-family: "Black";
         margin: 0.4rem;
         .pop-content-item {
           margin-bottom: 0.8rem;

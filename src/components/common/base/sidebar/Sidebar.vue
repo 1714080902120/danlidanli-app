@@ -208,7 +208,6 @@ export default {
       this.$Bus.$on("sidebarDisappear", () => {
         this.isAppear = false;
         this.isDisappear = true;
-        console.log(111);
       });
     },
     goDisappear(e) {
@@ -218,8 +217,7 @@ export default {
         this.$store.commit("closeSideBar", false);
       }
     },
-    goTo(i) {
-      console.log(i);
+    goTo() {
       this.$Bus.$emit("sidebarDisappear");
       this.$store.commit("closeSideBar", false);
     },

@@ -78,7 +78,9 @@
           <div class="level-experience">
             <div class="level" :style="{ 'background-color': colorList[userData.baseInfo.level] }">
               LV
-              <span  :style="{ 'background-color': colorList[userData.baseInfo.level] }">{{ userData.baseInfo.level }}</span>
+              <span
+                :style="{ 'background-color': colorList[userData.baseInfo.level] }"
+              >{{ userData.baseInfo.level }}</span>
             </div>
             <div class="experience">{{ experience.now }}/{{ experience.max }}</div>
           </div>
@@ -490,7 +492,13 @@
         <div class="animate">
           <div class="animate-outer">
             <div class="animate-content">
-              <div class="animate-item" v-for="(item, index) in animate[0]" :key="index" @click="goToLink(item.link)" v-waves>
+              <div
+                class="animate-item"
+                v-for="(item, index) in animate[0]"
+                :key="index"
+                @click="goToLink(item.link)"
+                v-waves
+              >
                 <img v-lazy="item.src" alt />
                 <div class="title-sub">
                   <div class="animate-item-title">{{ item.name }}</div>
@@ -503,30 +511,26 @@
       </div>
     </div>
     <div class="pop" v-if="popupVisible">
-      <mt-popup
-  v-model="popupVisible"
-  position="right">
-    <div class="head">
-      <span class="back" @click="closePop()">
-        <img src="~assets/img/fans_follows/go_back_dark.svg" alt />
-      </span>
-      <span class="title"></span>
-      <div class="head-right" @click="openSheet()">
-        <img src="~assets/img/recommend_list/three_points_dark.svg" alt />
-      </div>
-    </div>
-    <div class="main">
-      <iframe class="frame" :src="animateLink">
-        <a
-          :href="animateLink"
-        >你的浏览器不支持iframe页面嵌套，请点击这里访问页面内容。</a>
-      </iframe>
-    </div>
-    <div class="action-sheet">
-      <mt-actionsheet class="sheet" :actions="actions" v-model="sheetVisible" :modal="false"></mt-actionsheet>
-    </div>
-      <div class="modal" v-if="sheetVisible === true"></div>
-</mt-popup>
+      <mt-popup v-model="popupVisible" position="right">
+        <div class="head">
+          <span class="back" @click="closePop()">
+            <img src="~assets/img/fans_follows/go_back_dark.svg" alt />
+          </span>
+          <span class="title"></span>
+          <div class="head-right" @click="openSheet()">
+            <img src="~assets/img/recommend_list/three_points_dark.svg" alt />
+          </div>
+        </div>
+        <div class="main">
+          <iframe class="frame" :src="animateLink">
+            <a :href="animateLink">你的浏览器不支持iframe页面嵌套，请点击这里访问页面内容。</a>
+          </iframe>
+        </div>
+        <div class="action-sheet">
+          <mt-actionsheet class="sheet" :actions="actions" v-model="sheetVisible" :modal="false"></mt-actionsheet>
+        </div>
+        <div class="modal" v-if="sheetVisible === true"></div>
+      </mt-popup>
     </div>
   </div>
 </template>
@@ -599,12 +603,18 @@ export default {
         }
       ],
       colorList: [
-        '#e6e6e6', '#e6e6e6', '#95DDB2', '#92D1E5', '#FFB37C', '#FF7A18', '#FF0000'
+        "#e6e6e6",
+        "#e6e6e6",
+        "#95DDB2",
+        "#92D1E5",
+        "#FFB37C",
+        "#FF7A18",
+        "#FF0000"
       ],
       popupVisible: false,
       sheetVisible: false,
       actions: [{ name: "浏览器打开", method: this.goToNavigator }],
-      animateLink: ''
+      animateLink: ""
     };
   },
   created() {
@@ -620,8 +630,11 @@ export default {
   },
   mounted() {},
   activated() {
-    if (this.userData && this.$route.params.uuid !== this.userData.identy.uuid) {
-      this.reset()
+    if (
+      this.userData &&
+      this.$route.params.uuid !== this.userData.identy.uuid
+    ) {
+      this.reset();
     }
   },
   methods: {
@@ -633,24 +646,24 @@ export default {
       }
     },
     reset() {
-      this.userData = null
+      this.userData = null;
       this.showingList = {
         showingVideoList: [],
         showingSmallVideoList: []
-      }
+      };
       this.showingList2 = {
         showingCollects: [],
         showingPayForList: [],
         showingRecommendList: []
-      }
-      this.showingList3 = []
-      this.videoList = []
-      this.smallVideoList = []
-      this.collectList = []
-      this.articleList = []
-      this.popupVisible = false
-      this.sheetVisible = false
-      this.disappear = false
+      };
+      this.showingList3 = [];
+      this.videoList = [];
+      this.smallVideoList = [];
+      this.collectList = [];
+      this.articleList = [];
+      this.popupVisible = false;
+      this.sheetVisible = false;
+      this.disappear = false;
       this.bus();
       this.getCollectList();
       this.getShowingList3();
@@ -689,8 +702,8 @@ export default {
       }
     },
     goToLink(link) {
-      this.animateLink = link
-      this.popupVisible = true
+      this.animateLink = link;
+      this.popupVisible = true;
     },
     Rotate(i) {
       this.rotate[i].active = !this.rotate[i].active;
@@ -855,7 +868,7 @@ export default {
     },
     goToLive() {
       this.animateLink = "https://live.bilibili.com/6094209";
-      this.popupVisible = true
+      this.popupVisible = true;
     },
     async getCollectList() {
       let data = [];
@@ -895,7 +908,7 @@ export default {
         position: "middle"
       });
     },
-        closePop() {
+    closePop() {
       this.popupVisible = false;
     },
     openSheet() {
@@ -903,8 +916,7 @@ export default {
     },
     goToNavigator() {
       this.sheetVisible = false;
-      window.location.href =
-        this.animateLink;
+      window.location.href = this.animateLink;
     }
   },
   computed: {
@@ -1134,7 +1146,10 @@ export default {
             display: flex;
             align-items: center;
             &::after {
-              content: "﹚";
+              content: "〉";
+              position: relative;
+              margin-left: 0.2rem;
+              font-size: 0.3rem;
             }
             img {
               margin-right: 0.2rem;
@@ -1285,7 +1300,6 @@ export default {
     background-color: var(--base-set-item-color);
     border-top: 0.1rem solid var(--base-set-item-color);
     .navbar {
-      
       background-color: var(--base-set-item-color);
       font-size: 0.4rem;
       display: flex;
@@ -2087,103 +2101,103 @@ export default {
     }
   }
   .pop {
-  position: absolute;
-  top: 0;
-  background-color: transparent;
-  width: 10rem;
-  height: 100vh;
-  .head {
-    position: fixed;
-    height: 1.6rem;
-    background-color: transparent;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    width: 10rem;
-    padding: .3rem;
-    .back {
-      width: 1rem;
-      height: 1rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background-color: rgba(100, 100, 100, .1);
-      border-radius: 100%;
-
-      img {
-        width: 0.5rem;
-      }
-    }
-    .title {
-      display: flex;
-      align-items: center;
-      width: 7rem;
-      font-size: 0.45rem;
-    }
-    .head-right {
-      position: relative;
-      width: 1rem;
-      height: 1rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background-color: rgba(100, 100, 100, .1);
-      border-radius: 100%;
-      img {
-        width: 0.9rem;
-        height: 0.9rem;
-      }
-    }
-  }
-  .main {
-    .frame {
-      overflow: hidden;
-      width: 10rem;
-      height: 100vh;
-    }
-    .frame::-webkit-scrollbar {
-      width: 0 !important;
-    }
-  }
-  .action-sheet {
-    /deep/ .sheet {
-      z-index: 9999 !important;
-      background-color: var(--base-set-bg-color);
-      /deep/ .mint-actionsheet-list {
-        .mint-actionsheet-listitem {
-          border-color: var(--base-set-bg-color);
-          background-color: var(--base-set-item-color);
-          &:last-child {
-            height: 2.4rem;
-            background-repeat: no-repeat;
-            background-image: url("~assets/img/user/set/navigator_dark.svg");
-            background-size: 1.2rem 1.2rem;
-            background-position: 0.7rem 0.2rem;
-            color: var(--color-text);
-            font-size: 0.4rem;
-            font-weight: lighter;
-            text-align: left;
-            padding-top: 1.2rem;
-            padding-left: 0.4rem;
-          }
-        }
-      }
-      /deep/ .mint-actionsheet-button {
-        border-color: var(--base-set-bg-color);
-        font-weight: lighter;
-        color: var(--color-text);
-        background-color: var(--base-set-item-color);
-      }
-    }
-  }
-  .modal {
     position: absolute;
     top: 0;
+    background-color: transparent;
     width: 10rem;
     height: 100vh;
-    z-index: 9998;
-    background-color: rgba(0, 0, 0, 0.5);
-  }
+    .head {
+      position: fixed;
+      height: 1.6rem;
+      background-color: transparent;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 10rem;
+      padding: 0.3rem;
+      .back {
+        width: 1rem;
+        height: 1rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: rgba(100, 100, 100, 0.1);
+        border-radius: 100%;
+
+        img {
+          width: 0.5rem;
+        }
+      }
+      .title {
+        display: flex;
+        align-items: center;
+        width: 7rem;
+        font-size: 0.45rem;
+      }
+      .head-right {
+        position: relative;
+        width: 1rem;
+        height: 1rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: rgba(100, 100, 100, 0.1);
+        border-radius: 100%;
+        img {
+          width: 0.9rem;
+          height: 0.9rem;
+        }
+      }
+    }
+    .main {
+      .frame {
+        overflow: hidden;
+        width: 10rem;
+        height: 100vh;
+      }
+      .frame::-webkit-scrollbar {
+        width: 0 !important;
+      }
+    }
+    .action-sheet {
+      /deep/ .sheet {
+        z-index: 9999 !important;
+        background-color: var(--base-set-bg-color);
+        /deep/ .mint-actionsheet-list {
+          .mint-actionsheet-listitem {
+            border-color: var(--base-set-bg-color);
+            background-color: var(--base-set-item-color);
+            &:last-child {
+              height: 2.4rem;
+              background-repeat: no-repeat;
+              background-image: url("~assets/img/user/set/navigator_dark.svg");
+              background-size: 1.2rem 1.2rem;
+              background-position: 0.7rem 0.2rem;
+              color: var(--color-text);
+              font-size: 0.4rem;
+              font-weight: lighter;
+              text-align: left;
+              padding-top: 1.2rem;
+              padding-left: 0.4rem;
+            }
+          }
+        }
+        /deep/ .mint-actionsheet-button {
+          border-color: var(--base-set-bg-color);
+          font-weight: lighter;
+          color: var(--color-text);
+          background-color: var(--base-set-item-color);
+        }
+      }
+    }
+    .modal {
+      position: absolute;
+      top: 0;
+      width: 10rem;
+      height: 100vh;
+      z-index: 9998;
+      background-color: rgba(0, 0, 0, 0.5);
+    }
   }
 }
 #user-space::-webkit-scrollbar {

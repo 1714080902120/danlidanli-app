@@ -89,6 +89,11 @@ export default {
     };
   },
   created() {
+    Toast({
+      message: '大部分的功能只能在真机上才能触发，对不起~~',
+      duration: 3000,
+      position: 'middle'
+    })
     this.Bus();
   },
   activated() {

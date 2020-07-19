@@ -80,14 +80,18 @@ export default {
   methods: {
     toScan() {
       /* eslint-disable no-undef */
-      this.$store.commit("closeSideBar", false);
-      this.$Bus.$emit("sidebarDisappear");
-      let h = location.href;
-      let n = h.indexOf("#");
-      let r = h.substr(n);
-      h = h.replace(r, "#/scan");
-      let ws = plus.webview.create(h);
-      ws.show();
+      try {
+        this.$store.commit("closeSideBar", false);
+        this.$Bus.$emit("sidebarDisappear");
+        let h = location.href;
+        let n = h.indexOf("#");
+        let r = h.substr(n);
+        h = h.replace(r, "#/scan");
+        let ws = plus.webview.create(h);
+        ws.show();
+      } catch {
+        alert("该功能只支持真机");
+      }
     },
     register() {
       this.$Bus.$emit("sidebarDisappear");
@@ -116,7 +120,7 @@ export default {
           }
         });
       } else {
-        this.goToUserSpace()
+        this.goToUserSpace();
       }
       this.$Bus.$emit("sidebarDisappear");
     },
@@ -173,7 +177,7 @@ export default {
           background-color: #fff;
           border-radius: 50%;
           display: flex;
-          background-image: url('~assets/img/base/bilibili_user_logo_bg.svg');
+          background-image: url("~assets/img/base/bilibili_user_logo_bg.svg");
           background-size: 80px 80px;
           background-repeat: no-repeat;
           background-position: center center;

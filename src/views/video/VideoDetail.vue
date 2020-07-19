@@ -285,7 +285,7 @@
               <div class="full-screen-video-end-2">
                 <div class="full-screen-video-end-2-title">推荐视频</div>
                 <div class="scroll-list">
-                  <div class="scroll-item" v-for="(item, index) in videoList" :key="index" @click="changeVideo(index)">
+                  <div class="scroll-item" v-for="(item, index) in videoList" :key="'item-' + index" @click="changeVideo(index)">
                     <div class="scroll-inner" v-if="item.bvid !== videoData.bvid">
                       <div class="scroll-inner-cover">
                         <img v-lazy="item.img.src + item.img.name" alt="">
@@ -312,7 +312,7 @@
           <div class="shot-img" v-if="showShot && dataURL" @click="shareTheShot()">
             <img :src="dataURL" alt="">
           </div>
-          <div class="full-screen-input" v-if="showBottomInput && isOk && !whenVideoEnd &&  !popupVisible2 && !fullScreenLock">
+          <div class="full-screen-input" v-if="isOk && !whenVideoEnd &&  !popupVisible2 && !fullScreenLock && isInFullScreen && showBottomInput">
               <div class="full-screen-input-danmaku">
                 <input
                   @focus="bottomFocus()"
@@ -874,6 +874,7 @@ import emoji from "common/emoji/emoji.json";
 import { secondsFormat } from "common/number_time/numberTime.js";
 import Cushion from "components/common/cushion/Cushion";
 import Battery from "components/content/video/Battery.vue";
+
 export default {
   name: "VideoDetail",
   data() {
@@ -1737,7 +1738,7 @@ export default {
       if (this.fullScreenLock) {
         return false
       }
-      if (this.showBottomInput) {
+      if (this.isInFullScreen && this.showBottomInput) {
         let height = window.innerHeight / 3
         if (e.touches[0].pageY > height) {
           this.showBottomInput = false
@@ -2034,7 +2035,6 @@ export default {
       plus.share.getServices((s) => {
         let bitmap = new plus.nativeObj.Bitmap();
         bitmap.loadBase64Data(this.dataURL.split(',')[1].toString(), () => {
-          alert('成功')
           bitmap.save("_downloads/video_shot.png", {
             overwrite: false,
             format: 'png',
@@ -3574,7 +3574,7 @@ export default {
     }
   }
   .in-desc {
-    z-index: 1;
+    z-index: -1;
     .desc {
     padding: 0.5rem 0.3rem 0 0.3rem;
     .desc-up {
