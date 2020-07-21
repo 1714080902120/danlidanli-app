@@ -179,6 +179,7 @@ export default {
           }
           break;
         case 4:
+          this.$Bus.$emit('goToShare')
           break;
       }
     },

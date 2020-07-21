@@ -13,8 +13,12 @@ document.addEventListener('plusready', () => {
   plus.android.importClass(windowMe);
   var Color = plus.android.importClass("android.graphics.Color");
   plus.android.invoke(windowMe, "setNavigationBarColor", Color.parseColor("#000000"));
-  plus.navigator.updateSplashscreen({ image: '_www/splash.png', delay: 3000 })
-
+  plus.navigator.updateSplashscreen({
+    image: '_www/splash.png', delay: 3000
+  })
+  // if(plus.os.name == 'Android'){
+  //    main.moveTaskToBack(false);
+  // }
   //如parseColor("#ffffff")设置为白色
   plus.key.addEventListener('backbutton', () => {
     webview.canBack((e) => {

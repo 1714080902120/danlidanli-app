@@ -48,6 +48,10 @@ const mutations = {
   },
   changeScreenState(state, payload) {
     state.isFullScreen = payload
+  },
+  // 添加到纪录列表
+  pushInRouteList (state, payload) {
+    state.routeList.push(payload)
   }
 }
 

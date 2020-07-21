@@ -1887,7 +1887,7 @@ export default {
                 .publish-time {
                   opacity: 0.6;
                   margin-top: 0.3rem;
-                  font-size: 0.22rem;
+                  font-size: 0.28rem;
                 }
                 .message {
                   display: flex;

@@ -76,7 +76,6 @@ export default {
     };
   },
   created() {
-    this.$nextTick(() => {});
   },
   mounted() {
     this.$nextTick(() => {
@@ -134,16 +133,12 @@ export default {
     whenStart() {
       this.$refs.scroll.scrollTo(0, 0, 100);
       this.$refs.scroll.refresh();
-      this.$nextTick(() => {
-        this.$refs.scroll.scrollEnd();
-      });
+      this.$refs.scroll.scrollEnd();
     },
     // 上滑navbar消失特效
     navBarTransform() {
       this.$Bus.$on("NavbarTransform", ({ offsetY }) => {
-        this.$nextTick(() => {
-          this.$refs.outer.style.transform = `translateY(${offsetY * 0.12}rem)`;
-        });
+        this.$refs.outer.style.transform = `translateY(${offsetY * 0.12}rem)`;
       });
     }
   },

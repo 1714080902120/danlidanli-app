@@ -24,7 +24,9 @@ export default new Vuex.Store({
     // 首页推荐数据
     recommendList: [],
     // 是否是满屏
-    isFullScreen: false
+    isFullScreen: false,
+    // 路由记录列表
+    routeList: []
   },
   mutations,
   actions,

@@ -18,7 +18,7 @@
           </div>
           <div class="bg-head-middle" :class="{ disappear: !disappear }"></div>
           <div class="bg-head-right">
-            <span :class="{ disappear: disappear }">
+            <span :class="{ disappear: disappear }" @click="P_In_P()">
               <img src="~assets/img/video/small_window_dark.svg" alt />
             </span>
             <span :class="{ disappear: disappear }">
@@ -107,7 +107,7 @@
           <div class="video-end" v-if="whenVideoEnd">
             <div class="video-end-head">推荐视频</div>
             <div class="video-end-center">
-              <div class="item-left">
+              <div class="item-left" @click="changeVideo(0)">
                 <img
                   :src="videoList[0].img.src + videoList[0].img.name"
                   :alt="videoList[0].img.alt"
@@ -201,7 +201,7 @@
                 <span>
                   <img src="~assets/img/video/coin_white.svg" alt />
                 </span>
-                <span>
+                <span @click="share()">
                   <img src="~assets/img/user/set/share_white.svg" alt />
                 </span>
                 <span>
@@ -1132,6 +1132,7 @@ export default {
   },
   async created() {
     this.bus();
+    this.$store.commit('pushInRouteList', this.$route.params.bvid)
     this.func2 = this.$debounce(this.getRecommendLst, 1000, true);
     this.func = this.$debounce(this.requireAssessData, 1000, true);
     this.disappearFunc = this.$debounce(this.videoVarDisappear, 5000);
@@ -1187,7 +1188,6 @@ export default {
       this.sheetVisible = false
       this.isShowEmoji = false
       this.popupVisible = false
-      this.isOk = false
       this.videoState = {
         play: require("assets/img/video/play.svg"),
         pause: require("assets/img/video/pause.svg"),
@@ -1214,8 +1214,6 @@ export default {
       this.assessList = []
       this.assessPage = 1
       this.videoData = await this.$route.query.data
-      console.log(this.$route.query.data);
-      
       this.typeList[1].num = await this.videoData.assess.detail.length;
       await getUpDetail(this.videoData.up.mid).then(res => {
         this.upData = res;
@@ -1620,7 +1618,29 @@ export default {
       this.timestap.nowFormat = secondsFormat(this.timestap.now);
       this.playPause();
     },
-    share() {},
+    share() {
+      try {
+        let msg = {
+          type: 'video',
+          title: `${this.$store.state.userInfo.baseInfo.name}向你推荐了一个视频`,
+          content: `快来看B站UP主${this.upData.baseInfo.name}的新视频${this.videoData.title}啦~`,
+          thumbs: [`${this.videoData.img.src + this.videoData.img.name}`],
+          media: `${this.videoData.video.src + this.videoData.video.name}`,
+          extra:{scene:"WXSceneSession"}
+        }
+        plus.share.getServices((s) => {
+          s[2].send(msg, () => {},
+          (e) => {
+            plus.nativeUI.toast('分享失败：' + JSON.stringify(e))
+          })
+        }, (e) => {
+          plus.nativeUI.toast('获取分享列表失败：' + JSON.stringify(e))
+        });
+      } catch  {
+        alert('不好意思，该功能只支持真机')
+      }
+      
+    },
     onPlayerPlay() {},
     onPlayerPause() {},
     onPlayerWaiting() {
@@ -1669,6 +1689,19 @@ export default {
           this.replay()
           this.whenVideoEnd = false;
           this.videoBarDisappear = true;
+        break;
+        case 1:
+        case 2:
+        case 3:
+        case 4:
+          Toast({
+            message: '哥，这里我真的不想做了，让我偷下懒谢谢，嘤嘤嘤~',
+            duration: 3000,
+            positoon: 'middle'
+          })
+        break;
+        case 5:
+          this.share()
         break;
       }
     },
@@ -1907,7 +1940,11 @@ export default {
     bottomBlur() {
       this.sheetVisible = false;
     },
-    bus() {},
+    bus() {
+      this.$Bus.$on('goToShare', () => {
+        this.share()
+      })
+    },
     sendDanmaku() {
       let fonsize=25,
           color=16777215,
@@ -2061,11 +2098,6 @@ export default {
                     pictures: ["_downloads/video_shot.png"],
                     title: '蛋哩蛋哩截图'
                   }, () => {
-                    Toast({
-                      message: "分享成功",
-                      duration: 3000,
-                      position: "bottom"
-                    });
                     this.shot = false
                     this.dataURL = ''
                   }, (e) => {
@@ -2098,7 +2130,38 @@ export default {
       })
       } catch {
         alert('该功能仅提供真机')
+        this.shot = false
+        this.dataURL = ''
+
       }
+    },
+    // 实现画中画功能
+    P_In_P() {
+      // 第一步，获取DOM
+      this.$nextTick(() => {
+        
+        try {
+          
+          // up用了插件，所以不能直接获取视频元素
+          let video = this.$refs.videoOuter.children[1].children[0].children[0]
+          // 第二步， 给DOM添加开启、关闭画中画的监听事件
+          // 开启
+          video.addEventListener('enterpictureinpicture', () => {})
+          // 关闭
+          video.addEventListener('leavepictureinpicture', () => {})
+          
+          // 第三步， 开启、关闭事件
+          if (!document.pictureInPictureElement) {
+            // 开启
+            video.requestPictureInPicture().catch(() => {})
+          } else {
+            // 关闭
+            document.exitPictureInPicture().catch(() => {})
+          }
+        } catch {
+          alert('哥，移动端好像不支持')
+        }
+      })
     }
   },
   computed: {
@@ -2190,7 +2253,21 @@ export default {
     },
     async '$route' () {
       if (this.$route.path.indexOf('video-detail') !== -1) {
-        await this.getAllData()
+        let list = this.$store.state.routeList
+        let bvid = this.$route.params.bvid
+        if (list.indexOf(bvid) === -1) {
+          this.isOk = false
+          await this.getAllData()
+          this.$store.commit('pushInRouteList', bvid)
+        } else {
+          if (list[list.length - 1] !== bvid) {
+            this.isOk = false
+            await this.getAllData()
+            this.$store.commit('pushInRouteList', bvid)
+          }
+        }
+        
+        
       }
       
     },
