@@ -54,6 +54,14 @@
               >{{ item.text }}</span>
             </span>
           </div>
+          <!-- <canvas  
+            class="danmaku-outer"
+            v-show="!whenVideoEnd"
+            :class="{ 'oy': closeTheDanmaku }"
+            :style="danmakuheight"
+            width="20rem" height="422"
+            ref="danmakuCanvas"
+          >哥，你浏览器不支持canvas</canvas> -->
           <div v-if="!isOk" class="poster" :style="posterheight"></div>
           <video-player
             class="video-player-box"
@@ -183,7 +191,7 @@
           <div
             class="is-in-full-screen"
             v-if="!showBottomInput && !showShot"
-            :class="{ 'bg-head-disappear': videoBarDisappear && !popupVisible2 }"
+            :class="{ 'bg-head-disappear': videoBarDisappear && !popupVisible2 && !whenVideoEnd }"
           >
             <div class="full-screen-head" v-if="!popupVisible2 && !fullScreenLock">
               <div class="full-screen-head-left">
@@ -869,7 +877,7 @@ import { getHomeData } from "network/home.js";
 import { getUpDetail } from "network/up.js";
 import LikePayCollect from "components/common/like_pay_collect/LikePayCollect";
 import { Toast } from "mint-ui";
-// import { assess, allDanmakuData } from "network/video.js";
+import { assess, allDanmakuData } from "network/video.js";
 import emoji from "common/emoji/emoji.json";
 import { secondsFormat } from "common/number_time/numberTime.js";
 import Cushion from "components/common/cushion/Cushion";
@@ -1222,29 +1230,29 @@ export default {
       this.playerOptions.sources[0].src =
         this.videoData.video.src + this.videoData.video.name;
 
-      // await assess(this.videoData.bvid, this.assessPage)
-      //     .then(res => {
-      //       if (res && res.page && Object.keys(res.page).length > 0) {
-      //         this.assessList.push(res);
-      //       }
-      //     })
-      //     .catch(err => {
-      //       console.log(err);
-      //     });
-      // if (this.assessList.length > 0) {
-      //   if (this.assessList[0].page.acount > 10000) {
-      //     this.typeList[1].num =
-      //       (this.assessList[0].page.acount / 10000).toFixed(1) + "万";
-      //   } else {
-      //     this.typeList[1].num = this.assessList[0].page.acount;
-      //   }
-      // }
-      // await allDanmakuData(this.videoData.bvid).then(res => {
-      //   // console.log(res[0]);
-      //   this.danmakuData = res.sort((a, b) => {
-      //     return a.time - b.time
-      //   })
-      // })
+      await assess(this.videoData.bvid, this.assessPage)
+          .then(res => {
+            if (res && res.page && Object.keys(res.page).length > 0) {
+              this.assessList.push(res);
+            }
+          })
+          .catch(err => {
+            console.log(err);
+          });
+      if (this.assessList.length > 0) {
+        if (this.assessList[0].page.acount > 10000) {
+          this.typeList[1].num =
+            (this.assessList[0].page.acount / 10000).toFixed(1) + "万";
+        } else {
+          this.typeList[1].num = this.assessList[0].page.acount;
+        }
+      }
+      await allDanmakuData(this.videoData.bvid).then(res => {
+        // console.log(res[0]);
+        this.danmakuData = res.sort((a, b) => {
+          return a.time - b.time
+        })
+      })
 
     },
     goBack() {
@@ -1604,6 +1612,12 @@ export default {
       this.closeTheDanmaku = !this.closeTheDanmaku;
     },
     test(e) {
+      this.timestap = {
+        max: 0,
+        formattedTime_: "",
+        now: 0,
+        nowFormat: "00:00"
+      }
       this.video = e;
       this.timestap.max = e.controlBar.durationDisplay.duration_;
       this.timestap.formattedTime_ =
@@ -1616,6 +1630,8 @@ export default {
       this.whenVideoEnd = false;
       this.timestap.now = Math.floor(this.video.currentTime());
       this.timestap.nowFormat = secondsFormat(this.timestap.now);
+      this.danmakuData = [...this.showDanmakuList]
+      this.showDanmakuList = []
       this.playPause();
     },
     share() {
@@ -2061,77 +2077,76 @@ export default {
         this.dataURL = ''
         clearTimeout(this.shotTimer)
         this.shotTimer = null
+        this.videoBarDisappear = false
       }, 5000)
       })
     },
     shareTheShot() {
       clearTimeout(this.shotTimer)
       this.shotTimer = null
-
       try {
       plus.share.getServices((s) => {
         let bitmap = new plus.nativeObj.Bitmap();
         bitmap.loadBase64Data(this.dataURL.split(',')[1].toString(), () => {
           bitmap.save("_downloads/video_shot.png", {
-            overwrite: false,
+            overwrite: true,
             format: 'png',
             quality: 100,
           },() => {
-            plus.gallery.save(
-              "_downloads/video_shot.png",
+
+            plus.gallery.save("_downloads/video_shot.png",
               () => {
-                Toast({
-                  message: "下载成功",
-                  duration: 3000,
-                  position: "bottom"
-                });
+                plus.nativeUI.toast('保存成功！')
+
                 // 可取值：
                 // "WXSceneSession"分享到微信的“我的好友”；
                 // "WXSceneTimeline"分享到微信的“朋友圈”中；
                 // "WXSceneFavorite"分享到微信的“我的收藏”中。
                 // 默认值为"WXSceneSession"`
-                plus.nativeUI.showWaiting();
-                setTimeout(plus.nativeUI.closeWaiting,3000)
                 s[2].send(
                   {
                     type: "image",
                     pictures: ["_downloads/video_shot.png"],
                     title: '蛋哩蛋哩截图'
                   }, () => {
-                    this.shot = false
+                    this.showShot = false
                     this.dataURL = ''
+                    this.videoBarDisappear = false
+                    bitmap.recycle()
                   }, (e) => {
-                    Toast({
-                      message: `${JSON.stringify(e)}`,
-                      duration: 5000,
-                      position: "bottom"
-                    });
+                    bitmap.recycle()
+                    console.log('发送失败' + JSON.stringify(e))
                   }
                 )
-                
-              },
-              err => {
-                Toast({
-                  message: `${JSON.stringify(err)}`,
-                  duration: 5000,
-                  position: "bottom"
-                });
-              }
-            );
+            }, (e) => {
+              console.log('放入Gallay失败' + JSON.stringify(e))
+            })
           },() => {
-            alert('保存失败')
+            this.showShot = false
+            this.dataURL = ''
+            this.videoBarDisappear = false
+            bitmap.recycle()
+            console.log('保存失败')
           })
         },() => {
-          alert('失败')
+          this.showShot = false
+          this.dataURL = ''
+          this.videoBarDisappear = false
+          bitmap.recycle()
+          console.log('失败')
         })
-        bitmap.recycle()
       }, (e) => {
-        alert("获取分享服务列表失败：" + JSON.stringify(e));
+        this.showShot = false
+        this.dataURL = ''
+        this.videoBarDisappear = false
+        bitmap.recycle()
+        console.log("获取分享服务列表失败：" + JSON.stringify(e));
       })
       } catch {
-        alert('该功能仅提供真机')
-        this.shot = false
+        this.showShot = false
         this.dataURL = ''
+        this.videoBarDisappear = false
+        alert('该功能仅提供真机')
 
       }
     },
@@ -2235,6 +2250,7 @@ export default {
     },
     currentTime(newVal) {
       this.lastTime = newVal;
+      
       for (let i = 0; i < this.danmakuData.length; i++) {
         let front = newVal - 2;
 
@@ -2311,7 +2327,7 @@ export default {
           position: absolute;
           width: 10rem;
           height: 4.65rem;
-
+          -webkit-text-stroke: 1px rgba(0, 0, 0, .5);
           overflow: hidden;
           background-color: transparent;
           top: 0.5rem;
@@ -2329,11 +2345,13 @@ export default {
           }
 
           .mode-scroll-right {
-            transform: translateX(10rem);
+            display: inline-block;
+            transform: translate3d(10rem, 0, 0);
             animation: slideright linear forwards;
           }
           .mode-scroll-left {
-            transform: translateX(-10rem);
+            display: inline-block;
+            transform: translate3d(-10rem, 0, 0);
             animation: slideleft linear forwards;
           }
           .mode-fixed-top,
@@ -2353,10 +2371,10 @@ export default {
           }
           @keyframes slideright {
             0% {
-              transform: translateX(10rem);
+              transform: translate3d(10rem, 0, 0);
             }
             100% {
-              transform: translateX(-10rem);
+              transform: translate3d(-10rem, 0, 0);
               position: absolute;
               display: none;
               z-index: -999;
@@ -2365,10 +2383,10 @@ export default {
           }
           @keyframes slideleft {
             0% {
-              transform: translateX(-10rem);
+              transform: translate3d(-10rem, 0, 0);
             }
             100% {
-              transform: translateX(10rem);
+              transform: translate3d(10rem, 0, 0);
               z-index: -999;
               display: none;
               position: absolute;
