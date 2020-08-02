@@ -71,7 +71,7 @@ export default {
   height: 100vh;
   width: 10rem;
   overflow: hidden;
-  background-color: var(--base-bg-color);
+  background-color: rgb(35, 35, 35);
 }
 #app::-webkit-scrollbar {
   display: none;

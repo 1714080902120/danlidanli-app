@@ -26,7 +26,7 @@ export default {
           name: "首页",
           icon: require("assets/img/base/home_02_default.svg"),
           iconActive: require("assets/img/base/home_02_active.svg"),
-          path: "/"
+          path: "/home"
         },
         {
           name: "频道",
@@ -50,9 +50,10 @@ export default {
     };
   },
   created() {
-    if (this.$route.query.beforePath === "/wallet/b-discount") {
-      this.selected = "会员购";
-    }
+    // if (this.$route.query.beforePath === "/wallet/b-discount") {
+    //   this.selected = "会员购";
+    // }
+    this.bus()
   },
   methods: {
     goTo(path, name) {
@@ -62,10 +63,24 @@ export default {
         this.selected = name
       }
       this.$router.replace({ path });
+    },
+    bus () {
+      this.$Bus.$on('isInActive', (i) => {
+        this.selected = this.items[i].name
+      })
     }
   },
   components: {
     Popup
+  },
+  watch: {
+    // '$route' (newVal) {
+    //   this.items.forEach(e => {
+    //     if (newVal.path.indexOf(e.path) !== -1) {
+    //       this.selected = e.name
+    //     }
+    //   })
+    // }
   }
 };
 </script>

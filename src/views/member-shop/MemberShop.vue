@@ -15,10 +15,19 @@ export default {
       
     }
   },
+  created() {
+    this.bus()
+  },
   activated() {
+    this.bus()
   },
   components: {
     BaseOuter
+  },
+  methods: {
+    bus () {
+      this.$Bus.$emit('isInActive', 3)
+    }
   }
 }
 </script>

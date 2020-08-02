@@ -4,8 +4,7 @@
     :class="{ appear: isAppear === true && isDisappear === false, disappear: isDisappear = true && isAppear === false }"
     @click="goDisappear($event)"
   >
-    <BetterScroll ref="scroll" screenWidth="80%" :screenHeight="height">
-      <div class="inner">
+      <div class="inner" :style="{ height }">
         <SidebarHead :info="userInfo" :items="middleItems" />
         <li
           class="cell"
@@ -27,7 +26,6 @@
           <div class="title">{{item.title}}</div>
         </li>
       </div>
-    </BetterScroll>
     <div class="tabbar-outer">
       <span class="set" @click="set()">
         <img slot="icon" src="~assets/img/base/set_dark.svg" />设置
@@ -50,7 +48,6 @@ import {
 } from "network/user";
 
 import SidebarHead from "./SidebarHead";
-import BetterScroll from "components/common/better_scroll/BetterScroll";
 
 export default {
   name: "Sidebar",
@@ -181,7 +178,6 @@ export default {
   },
   activated() {},
   components: {
-    BetterScroll,
     SidebarHead
   },
   methods: {
@@ -265,23 +261,22 @@ export default {
 #sidebar {
   position: absolute;
   top: 0;
-  width: 100%;
+  width: 10rem;
   height: 100vh;
   z-index: 999;
   overflow: hidden;
   transition: 0.6s;
-  transform: translate(-100%, 0);
-  // background-color: var(--base-bg-color);
+  transform: translate(-10rem, 0);
   list-style: none;
   .inner {
+    width: 7.8rem;
+    overflow-y: scroll;
     background-color: var(--base-bg-color);
-    width: 90%;
     .cell {
+      padding-left: .2rem;
       font-size: 30px;
       background-color: transparent;
-      margin: 10px 0;
-      height: 80px;
-      line-height: 80px;
+      height: 1.2rem;
       color: var(--color-text);
       display: flex;
       align-items: center;
@@ -291,8 +286,11 @@ export default {
       color: var(--color-tint);
     }
     .small {
-      height: 0.3rem;
+      height: 0.2rem;
     }
+  }
+  .inner::-webkit-scrollbar {
+    display: none;
   }
   .tabbar-outer {
     position: relative;
@@ -302,13 +300,11 @@ export default {
     justify-content: space-around;
     align-items: center;
     font-size: 25px;
-    width: 72%;
-    padding-left: 20px;
+    width: 7.8rem;
     box-shadow: 0 -2px 1px rgb(65, 64, 64);
     span {
       height: 90px;
       line-height: 110px;
-      flex: auto;
       display: flex;
       align-items: center;
       img {
@@ -328,7 +324,7 @@ export default {
 
 @keyframes appear {
   from {
-    transform: translate(-100%, 0);
+    transform: translate(-10rem, 0);
   }
   to {
     transform: translate(0, 0);
@@ -340,7 +336,7 @@ export default {
     transform: translate(0, 0);
   }
   to {
-    transform: translate(-100%, 0);
+    transform: translate(-10rem, 0);
   }
 }
 </style>

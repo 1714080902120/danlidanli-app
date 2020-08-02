@@ -60,16 +60,12 @@ export default {
   mounted() {
     this.$nextTick(() => {
       this.getBetterScroll();
-      this.scrollTo(0, -1, 100);
     });
   },
   activated() {
     this.$nextTick(() => {
-      if (!this.ifOpenSideBar) {
-        this.whenScroll();
-        this.loadingFinish();
-        this.pullUp();
-      }
+      this.whenScroll();
+      this.loadingFinish();
     });
   },
   components: {
@@ -126,33 +122,36 @@ export default {
         lastY = nowY;
         nowY = position.y;
         // loading加载
-        if (!this.$store.state.loadingLock) {
-          loading.style.opacity = 1;
-          img.style.opacity = 1;
-          if (nowY >= 0 && nowY - lastY >= 0) {
-            if (this.originPosition < 120) {
-              this.originPosition += speed;
-              this.BS.on("touchEnd", () => {
-                this.$Bus.$emit("finishPullDown");
-              });
-            } else if (this.originPosition >= 120) {
-              img.style.opacity = 0;
-              this.toShowLoading = true;
-              sendPullDown();
-              this.originPosition = 120;
-            }
-          } else {
-            img.style.opacity = 1;
-            this.toShowLoading = false;
-            this.originPosition -= speed;
-            if (this.originPosition <= 0) {
-              this.originPosition = 0;
+        if (this.$route.path === "/home/") {
+          if (!this.$store.state.loadingLock) {
+            if (nowY >= 0 && nowY - lastY >= 0) {
+              loading.style.opacity = 1;
+              img.style.opacity = 1;
+              if (this.originPosition < 120) {
+                this.originPosition += speed;
+                this.BS.on("touchEnd", () => {
+                  this.$Bus.$emit("finishPullDown");
+                });
+              } else if (this.originPosition >= 120) {
+                img.style.opacity = 0;
+                this.toShowLoading = true;
+                sendPullDown();
+                this.originPosition = 120;
+              }
+            } else {
+              img.style.opacity = 1;
+              this.toShowLoading = false;
+              this.originPosition -= speed;
+              if (this.originPosition <= 0) {
+                this.originPosition = 0;
+              }
             }
           }
+
+          img.style.transform = `rotateZ(-${this.originPosition * 2}deg)`;
+          loading.style.transform = `translateY(${this.originPosition}px)`;
         }
 
-        img.style.transform = `rotateZ(-${this.originPosition * 2}deg)`;
-        loading.style.transform = `translateY(${this.originPosition}px)`;
         // home页面顶部随滑动消失出现
         if (nowY - lastY > 0) {
           if (NavbarTransform < 0) {
@@ -178,17 +177,22 @@ export default {
     },
     // 下拉请求加载数据
     pullDownData() {
-      this.$Bus.$emit("pullDownData");
+      if (this.$route.path === "/home/") {
+        this.$Bus.$emit("pullDownData");
+      }
     },
     // 上拉请求加载数据
     pullUp() {
       let send = this.$debounce(this.pullUpData, 250);
       this.BS.on("pullingUp", () => {
-        send();
+        console.log(123)
+          send();
       });
     },
     pullUpData() {
-      this.$Bus.$emit("pullUpData");
+      if (this.$route.path === "/home/") {
+        this.$Bus.$emit("pullUpData");
+      }
     },
     // 停止滑动时
     scrollEnd() {
@@ -197,13 +201,6 @@ export default {
       });
     },
     Bus() {}
-  },
-  watch: {
-    // 监测是否打开侧边栏，若打开则静止下拉组件
-    "$store.state.openSideBar"(newVal) {
-      this.ifOpenSideBar = newVal;
-    },
-    immediate: true
   }
 };
 </script>

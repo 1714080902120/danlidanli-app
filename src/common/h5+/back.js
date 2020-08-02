@@ -19,8 +19,29 @@ document.addEventListener('plusready', () => {
   // if(plus.os.name == 'Android'){
   //    main.moveTaskToBack(false);
   // }
+  
   //如parseColor("#ffffff")设置为白色
   plus.key.addEventListener('backbutton', () => {
+    if (plus.storage.getItem('isInFullScreen') === 'true') {
+      plus.screen.lockOrientation("portrait-primary")
+      plus.storage.setItem('isInFullScreen', 'false')
+      return false
+    }
+    if (plus.storage.getItem('isInHome') === 'true') {
+      if (new Date().getTime() - first < 1500) {
+        // console.log("关闭程序")
+        plus.runtime.quit()
+      } else {
+        // 自定义的弹窗
+        Toast({
+          message: '再按一次退出应用',
+          position: 'middle',
+          duration: 1500
+        })
+        first = new Date().getTime()
+      }
+      return false
+    }
     webview.canBack((e) => {
       if (e.canBack) {
           webview.back(-1)

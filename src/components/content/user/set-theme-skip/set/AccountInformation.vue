@@ -203,6 +203,7 @@ import Cropper from "components/common/cropper/VueCropper";
 import { changeMessage } from "network/user.js";
 import Calendar from "vue-calendar-component";
 import Clipboard from "clipboard";
+import { BASE_URL } from 'common/const.js'
 
 export default {
   name: "AccountInformation",
@@ -814,7 +815,7 @@ export default {
     },
     upload() {
       let task = plus.uploader.createUpload(
-        "http://:4000/user/upload",
+        `http://${BASE_URL}/user/upload`,
         {
           method: "POST",
           //《注意》这里不能像ajax一样把token放在这里。

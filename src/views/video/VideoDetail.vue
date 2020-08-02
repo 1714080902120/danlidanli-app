@@ -61,14 +61,14 @@
             :style="danmakuheight"
             width="20rem" height="422"
             ref="danmakuCanvas"
-          >哥，你浏览器不支持canvas</canvas> -->
+          >哥，你浏览器不支持canvas</canvas>-->
           <div v-if="!isOk" class="poster" :style="posterheight"></div>
           <video-player
             class="video-player-box"
             ref="videoPlayer"
             :options="playerOptions"
             :playsinline="true"
-            crossOrigin="anonymous"
+            crossorigin="anonymous"
             x5-video-orientation="landscape"
             customEventName="customstatechangedeventname"
             @play="onPlayerPlay($event)"
@@ -83,7 +83,10 @@
             @statechanged="playerStateChanged($event)"
             @ready="playerReadied($event)"
           ></video-player>
-          <div class="sound-light" v-if="(volumeAndlight.volume || volumeAndlight.light) && isOk && !whenVideoEnd">
+          <div
+            class="sound-light"
+            v-if="(volumeAndlight.volume || volumeAndlight.light) && isOk && !whenVideoEnd"
+          >
             <img
               :src="volumeAndlight.active"
               alt
@@ -217,7 +220,11 @@
                 </span>
               </div>
             </div>
-            <div class="full-screen-right" v-if="!popupVisible2 && !fullScreenLock" v-show="isOk && !whenVideoEnd">
+            <div
+              class="full-screen-right"
+              v-if="!popupVisible2 && !fullScreenLock"
+              v-show="isOk && !whenVideoEnd"
+            >
               <span @click="shot()">
                 <img src="~assets/img/video/take_photo.svg" alt />
               </span>
@@ -229,19 +236,22 @@
               <img @click="cancelLock()" src="~assets/img/video/lock_pink.svg" alt />
             </div>
             <div class="full-screen-pop" v-if="!fullScreenLock">
-              <mt-popup
-                class="pop"
-                v-model="popupVisible2"
-                :modal="false"
-                position="right">
+              <mt-popup class="pop" v-model="popupVisible2" :modal="false" position="right">
                 <ul>
-                  <li v-for="item in rateList.list" @click="changeRate(item)" :class="{ 'is-in-active-rate': item === rateList.active }" :key="item">
-                    {{ item }}X
-                  </li>
+                  <li
+                    v-for="item in rateList.list"
+                    @click="changeRate(item)"
+                    :class="{ 'is-in-active-rate': item === rateList.active }"
+                    :key="item"
+                  >{{ item }}X</li>
                 </ul>
               </mt-popup>
             </div>
-            <div class="full-screen-footer" v-if="!popupVisible2 && !fullScreenLock" v-show="isOk && !whenVideoEnd">
+            <div
+              class="full-screen-footer"
+              v-if="!popupVisible2 && !fullScreenLock"
+              v-show="isOk && !whenVideoEnd"
+            >
               <div class="process" @click="processChange($event)">
                 <img
                   @touchmove="slide($event)"
@@ -272,20 +282,26 @@
                 <div @click="saySorry()">720P</div>
               </div>
             </div>
-            <div class="full-screen-video-end"  v-if="!popupVisible2" v-show="isOk && whenVideoEnd">
+            <div class="full-screen-video-end" v-if="!popupVisible2" v-show="isOk && whenVideoEnd">
               <div class="full-screen-video-end-1">
                 <div class="up-follows">
                   <div @click="watchUp(videoData.up.mid)">
                     <img v-lazy="upData.baseInfo.logo.src + upData.baseInfo.logo.name" alt />
                   </div>
-                  <div> 
+                  <div>
                     <span @click="watchUp(videoData.up.mid)">{{ upData.baseInfo.name }}</span>
                     <span v-waves>{{ type }}</span>
                   </div>
                 </div>
                 <div class="actions">
-                  <div class="actions-item" v-for="(item, index) in videoEndActionsList" :key="index">
-                    <span @click="actions(index)"><img :src="item.src" alt=""></span>
+                  <div
+                    class="actions-item"
+                    v-for="(item, index) in videoEndActionsList"
+                    :key="index"
+                  >
+                    <span @click="actions(index)">
+                      <img :src="item.src" alt />
+                    </span>
                     <span>{{ item.name }}</span>
                   </div>
                 </div>
@@ -293,10 +309,15 @@
               <div class="full-screen-video-end-2">
                 <div class="full-screen-video-end-2-title">推荐视频</div>
                 <div class="scroll-list">
-                  <div class="scroll-item" v-for="(item, index) in videoList" :key="'item-' + index" @click="changeVideo(index)">
+                  <div
+                    class="scroll-item"
+                    v-for="(item, index) in videoList"
+                    :key="'item-' + index"
+                    @click="changeVideo(index)"
+                  >
                     <div class="scroll-inner" v-if="item.bvid !== videoData.bvid">
                       <div class="scroll-inner-cover">
-                        <img v-lazy="item.img.src + item.img.name" alt="">
+                        <img v-lazy="item.img.src + item.img.name" alt />
                         <div class="info">
                           <span>
                             <img src="~assets/img/recommend_list/play_dark.svg" alt />
@@ -313,43 +334,60 @@
                     </div>
                   </div>
                 </div>
-
               </div>
             </div>
           </div>
           <div class="shot-img" v-if="showShot && dataURL" @click="shareTheShot()">
-            <img :src="dataURL" alt="">
+            <img :src="dataURL" alt />
           </div>
-          <div class="full-screen-input" v-if="isOk && !whenVideoEnd &&  !popupVisible2 && !fullScreenLock && isInFullScreen && showBottomInput">
-              <div class="full-screen-input-danmaku">
-                <input
-                  @focus="bottomFocus()"
-                  @blur="bottomBlur()"
-                  type="text"
-                  v-model="danmaku"
-                  placeholder="发个友善的弹幕见证当下"
-                />
-                <img @click="sendDanmaku()" src="~assets/img/video/send_pink.svg" alt />
-              </div>
-              <div class="select-style" :class="{ 'when-select-color': selectModeType }">
-                <div class="front-btn" @click="selectColor()"></div>
-                <div class="danmaku-style-list">
-                  <div class="font-size-mode">
-                    <span class="font-size-item" @click="selectedStyle(0, index)" v-for="(item, index) in fullScreenDanmakuStyleList.fontSize"
-                    :key="index">
-                    <img :src="item.selected" alt="">
-                    </span>
-                    <span class="mode-item" @click="selectedStyle(1, index)" v-for="(item, index) in fullScreenDanmakuStyleList.mode"
-                    :key="index">
-                    <img :src="item.selected" alt="">
-                    </span>
-                  </div>
-                  <div class="color">
-                    <span class="color-item" :class="{ 'selected-color': fullScreenDanmakuColorList.selected === item }" @click="selectedStyle(2, index)" v-for="(item, index) in fullScreenDanmakuColorList.list" :key="index" :style="{ 'background-color': `#${item.toString(16)}` }"></span>
-                  </div>
+          <div
+            class="full-screen-input"
+            v-if="isOk && !whenVideoEnd &&  !popupVisible2 && !fullScreenLock && isInFullScreen && showBottomInput"
+          >
+            <div class="full-screen-input-danmaku">
+              <input
+                @focus="bottomFocus()"
+                @blur="bottomBlur()"
+                type="text"
+                v-model="danmaku"
+                placeholder="发个友善的弹幕见证当下"
+              />
+              <img @click="sendDanmaku()" src="~assets/img/video/send_pink.svg" alt />
+            </div>
+            <div class="select-style" :class="{ 'when-select-color': selectModeType }">
+              <div class="front-btn" @click="selectColor()"></div>
+              <div class="danmaku-style-list">
+                <div class="font-size-mode">
+                  <span
+                    class="font-size-item"
+                    @click="selectedStyle(0, index)"
+                    v-for="(item, index) in fullScreenDanmakuStyleList.fontSize"
+                    :key="index"
+                  >
+                    <img :src="item.selected" alt />
+                  </span>
+                  <span
+                    class="mode-item"
+                    @click="selectedStyle(1, index)"
+                    v-for="(item, index) in fullScreenDanmakuStyleList.mode"
+                    :key="index"
+                  >
+                    <img :src="item.selected" alt />
+                  </span>
                 </div>
-                <div class="back-btn" @click="selectColor()"></div>
+                <div class="color">
+                  <span
+                    class="color-item"
+                    :class="{ 'selected-color': fullScreenDanmakuColorList.selected === item }"
+                    @click="selectedStyle(2, index)"
+                    v-for="(item, index) in fullScreenDanmakuColorList.list"
+                    :key="index"
+                    :style="{ 'background-color': `#${item.toString(16)}` }"
+                  ></span>
+                </div>
               </div>
+              <div class="back-btn" @click="selectColor()"></div>
+            </div>
           </div>
         </div>
 
@@ -429,12 +467,7 @@
       </div>
       <div class="recommend-list">
         <ul v-if="videoList.length > 0">
-          <li
-            v-for="(item, index) in videoList"
-            :key="index"
-            @click="changeVideo(index)"
-            v-waves
-          >
+          <li v-for="(item, index) in videoList" :key="index" @click="changeVideo(index)" v-waves>
             <div class="inner" v-if="item && item.bvid !== videoData.bvid">
               <div class="item-left">
                 <img v-if="item.img" :src="item.img.src + item.img.name" :alt="item.img.alt" />
@@ -882,6 +915,7 @@ import emoji from "common/emoji/emoji.json";
 import { secondsFormat } from "common/number_time/numberTime.js";
 import Cushion from "components/common/cushion/Cushion";
 import Battery from "components/content/video/Battery.vue";
+import { BASE_URL } from "common/const.js";
 
 export default {
   name: "VideoDetail",
@@ -900,8 +934,7 @@ export default {
         sources: [
           {
             type: "video/mp4", //这里的种类支持很多种：基本视频格式、直播、流媒体等，具体可以参看git网址项目
-            src:
-              "http://:4000/bilibili_data/home/recommend_2/BV17z411b7AL/BV17z411b7AL.mp4" //url地址
+            src: `http://${BASE_URL}/bilibili_data/home/recommend_2/BV17z411b7AL/BV17z411b7AL.mp4` //url地址
           }
         ],
         // poster: "~assets/img/video/2233.gif", //你的封面地址
@@ -1041,112 +1074,105 @@ export default {
       date: `${new Date().getHours()}:${new Date().getMinutes()}`,
       videoEndActionsList: [
         {
-          name: '重播',
-          src: require('assets/img/video/replay.svg')
+          name: "重播",
+          src: require("assets/img/video/replay.svg")
         },
         {
-          name: '点赞',
-          src: require('assets/img/video/likes_empty_white.svg')
+          name: "点赞",
+          src: require("assets/img/video/likes_empty_white.svg")
         },
         {
-          name: '不喜欢',
-          src: require('assets/img/video/dislike_empty_white.svg')
+          name: "不喜欢",
+          src: require("assets/img/video/dislike_empty_white.svg")
         },
         {
-          name: '硬币',
-          src: require('assets/img/video/coin_white.svg')
+          name: "硬币",
+          src: require("assets/img/video/coin_white.svg")
         },
         {
-          name: '收藏',
-          src: require('assets/img/video/collect_white.svg')
+          name: "收藏",
+          src: require("assets/img/video/collect_white.svg")
         },
         {
-          name: '分享',
-          src: require('assets/img/video/wx.svg')
-        },
+          name: "分享",
+          src: require("assets/img/video/wx.svg")
+        }
       ],
       fullScreenDanmakuColorList: {
         list: [
-        16777215,
-        15270420,
-        16642304,
-        1169539,
-        40939,
-        14877568,
-        9355550,
-        1214611,
-        15837484,
-        6830459,
-        8634571,
-        9664828
+          16777215,
+          15270420,
+          16642304,
+          1169539,
+          40939,
+          14877568,
+          9355550,
+          1214611,
+          15837484,
+          6830459,
+          8634571,
+          9664828
         ],
         selected: 16777215
       },
       fullScreenDanmakuStyleList: {
         fontSize: [
           {
-            default: require('assets/img/video/danmaku_font_size_sm_default.svg'),
-            active: require('assets/img/video/danmaku_font_size_sm_active.svg'),
-            selected: require('assets/img/video/danmaku_font_size_sm_active.svg'),
-            fontSize: 15,
+            default: require("assets/img/video/danmaku_font_size_sm_default.svg"),
+            active: require("assets/img/video/danmaku_font_size_sm_active.svg"),
+            selected: require("assets/img/video/danmaku_font_size_sm_active.svg"),
+            fontSize: 15
           },
           {
-            default: require('assets/img/video/danmaku_font_size_l_default.svg'),
-            active: require('assets/img/video/danmaku_font_size_l_active.svg'),
-            selected: require('assets/img/video/danmaku_font_size_l_default.svg'),
-            fontSize: 25,
+            default: require("assets/img/video/danmaku_font_size_l_default.svg"),
+            active: require("assets/img/video/danmaku_font_size_l_active.svg"),
+            selected: require("assets/img/video/danmaku_font_size_l_default.svg"),
+            fontSize: 25
           }
         ],
         mode: [
           {
-            default: require('assets/img/video/danmaku_mode_top_default.svg'),
-            active: require('assets/img/video/danmaku_mode_top_active.svg'),
-            selected: require('assets/img/video/danmaku_mode_top_default.svg'),
-            mode: '顶部'
+            default: require("assets/img/video/danmaku_mode_top_default.svg"),
+            active: require("assets/img/video/danmaku_mode_top_active.svg"),
+            selected: require("assets/img/video/danmaku_mode_top_default.svg"),
+            mode: "顶部"
           },
           {
-            default: require('assets/img/video/danmaku_mode_scroll_default.svg'),
-            active: require('assets/img/video/danmaku_mode_scroll_active.svg'),
-            selected: require('assets/img/video/danmaku_mode_scroll_active.svg'),
-            mode: '滚动'
+            default: require("assets/img/video/danmaku_mode_scroll_default.svg"),
+            active: require("assets/img/video/danmaku_mode_scroll_active.svg"),
+            selected: require("assets/img/video/danmaku_mode_scroll_active.svg"),
+            mode: "滚动"
           },
           {
-            default: require('assets/img/video/danmaku_mode_bottom_default.svg'),
-            active: require('assets/img/video/danmaku_mode_bottom_active.svg'),
-            selected: require('assets/img/video/danmaku_mode_bottom_default.svg'),
-            mode: '底部'
-          },
+            default: require("assets/img/video/danmaku_mode_bottom_default.svg"),
+            active: require("assets/img/video/danmaku_mode_bottom_active.svg"),
+            selected: require("assets/img/video/danmaku_mode_bottom_default.svg"),
+            mode: "底部"
+          }
         ],
         isSelectFontSize: 15,
-        isSelectMode: '滚动'
+        isSelectMode: "滚动"
       },
       selectModeType: false,
       rateList: {
-        list: [
-          '2.0',
-          '1.5',
-          '1.25',
-          '1.0',
-          '0.75',
-          '0.5'
-        ],
-        active: '1.0'
+        list: ["2.0", "1.5", "1.25", "1.0", "0.75", "0.5"],
+        active: "1.0"
       },
       fullScreenLock: false,
-      dataURL: '',
+      dataURL: "",
       showShot: false,
       shotTimer: null
     };
   },
   async created() {
     this.bus();
-    this.$store.commit('pushInRouteList', this.$route.params.bvid)
+    this.$store.commit("pushInRouteList", this.$route.params.bvid);
     this.func2 = this.$debounce(this.getRecommendLst, 1000, true);
     this.func = this.$debounce(this.requireAssessData, 1000, true);
     this.disappearFunc = this.$debounce(this.videoVarDisappear, 5000);
-    
-    await this.getAllData()
-    
+
+    await this.getAllData();
+
     await getHomeData({ skip: this.videoListPage })
       .then(res => {
         this.videoList.push(...res);
@@ -1154,20 +1180,17 @@ export default {
       .catch(err => {
         console.log(err);
       });
-      for (let i = 0; i <= 4; i++) {
-        let level = Math.round(Math.random() * 6);
-        let color = this.colorList[level];
-        let obj = {
-          level,
-          color
-        };
-        this.levelList.push(obj);
-      }
-  
+    for (let i = 0; i <= 4; i++) {
+      let level = Math.round(Math.random() * 6);
+      let color = this.colorList[level];
+      let obj = {
+        level,
+        color
+      };
+      this.levelList.push(obj);
+    }
   },
-  mounted() {
-
-  },
+  mounted() {},
   activated() {
     // this.playPause()
   },
@@ -1180,48 +1203,45 @@ export default {
     Battery
   },
   methods: {
-    async getAllData () {
-
-      this.isActive = 0
-      this.disappear = false
-      this.danmaku = ""
-      this.assessType = "按时间"
-      this.levelList = []
+    async getAllData() {
+      this.isActive = 0;
+      this.disappear = false;
+      this.danmaku = "";
+      this.assessType = "按时间";
+      this.levelList = [];
       this.position = {
         nowY: 0,
         lastY: 0
-      }
-      this.assessSelectType = "replies"
-      this.ifFocus = false
-      this.sheetVisible = false
-      this.isShowEmoji = false
-      this.popupVisible = false
+      };
+      this.assessSelectType = "replies";
+      this.ifFocus = false;
+      this.sheetVisible = false;
+      this.isShowEmoji = false;
+      this.popupVisible = false;
       this.videoState = {
         play: require("assets/img/video/play.svg"),
         pause: require("assets/img/video/pause.svg"),
         active: require("assets/img/video/play.svg")
-      }
-      this.videoBarDisappear = false
-      this.sliding = false
-      this.showBottomInput = false
-      this.danmakuData = []
-      this.currentTime = 0
-      this.lastTime = 0
-      this.allDanmaku = []
-      this.showDanmakuList = []
-      this.whenVideoEnd = false
-
-
+      };
+      this.videoBarDisappear = false;
+      this.sliding = false;
+      this.showBottomInput = false;
+      this.danmakuData = [];
+      this.currentTime = 0;
+      this.lastTime = 0;
+      this.allDanmaku = [];
+      this.showDanmakuList = [];
+      this.whenVideoEnd = false;
 
       this.timestap = {
         max: 0,
         formattedTime_: "",
         now: 0,
         nowFormat: "00:00"
-      }
-      this.assessList = []
-      this.assessPage = 1
-      this.videoData = await this.$route.query.data
+      };
+      this.assessList = [];
+      this.assessPage = 1;
+      this.videoData = await this.$route.query.data;
       this.typeList[1].num = await this.videoData.assess.detail.length;
       await getUpDetail(this.videoData.up.mid).then(res => {
         this.upData = res;
@@ -1231,14 +1251,14 @@ export default {
         this.videoData.video.src + this.videoData.video.name;
 
       await assess(this.videoData.bvid, this.assessPage)
-          .then(res => {
-            if (res && res.page && Object.keys(res.page).length > 0) {
-              this.assessList.push(res);
-            }
-          })
-          .catch(err => {
-            console.log(err);
-          });
+        .then(res => {
+          if (res && res.page && Object.keys(res.page).length > 0) {
+            this.assessList.push(res);
+          }
+        })
+        .catch(err => {
+          console.log(err);
+        });
       if (this.assessList.length > 0) {
         if (this.assessList[0].page.acount > 10000) {
           this.typeList[1].num =
@@ -1250,13 +1270,12 @@ export default {
       await allDanmakuData(this.videoData.bvid).then(res => {
         // console.log(res[0]);
         this.danmakuData = res.sort((a, b) => {
-          return a.time - b.time
-        })
-      })
-
+          return a.time - b.time;
+        });
+      });
     },
     goBack() {
-      this.$router.replace({ path: '/' });
+      this.$router.replace({ path: "/" });
     },
     toActive(i) {
       if (i === this.isActive) {
@@ -1617,7 +1636,7 @@ export default {
         formattedTime_: "",
         now: 0,
         nowFormat: "00:00"
-      }
+      };
       this.video = e;
       this.timestap.max = e.controlBar.durationDisplay.duration_;
       this.timestap.formattedTime_ =
@@ -1630,32 +1649,37 @@ export default {
       this.whenVideoEnd = false;
       this.timestap.now = Math.floor(this.video.currentTime());
       this.timestap.nowFormat = secondsFormat(this.timestap.now);
-      this.danmakuData = [...this.showDanmakuList]
-      this.showDanmakuList = []
+      this.danmakuData = [...this.showDanmakuList];
+      this.showDanmakuList = [];
       this.playPause();
     },
     share() {
       try {
         let msg = {
-          type: 'video',
+          type: "video",
           title: `${this.$store.state.userInfo.baseInfo.name}向你推荐了一个视频`,
           content: `快来看B站UP主${this.upData.baseInfo.name}的新视频${this.videoData.title}啦~`,
           thumbs: [`${this.videoData.img.src + this.videoData.img.name}`],
           media: `${this.videoData.video.src + this.videoData.video.name}`,
-          extra:{scene:"WXSceneSession"}
-        }
-        plus.share.getServices((s) => {
-          s[2].send(msg, () => {},
-          (e) => {
-            plus.nativeUI.toast('分享失败：' + JSON.stringify(e))
-          })
-        }, (e) => {
-          plus.nativeUI.toast('获取分享列表失败：' + JSON.stringify(e))
-        });
-      } catch  {
-        alert('不好意思，该功能只支持真机')
+          extra: { scene: "WXSceneSession" }
+        };
+        plus.share.getServices(
+          s => {
+            s[2].send(
+              msg,
+              () => {},
+              e => {
+                plus.nativeUI.toast("分享失败：" + JSON.stringify(e));
+              }
+            );
+          },
+          e => {
+            plus.nativeUI.toast("获取分享列表失败：" + JSON.stringify(e));
+          }
+        );
+      } catch {
+        alert("不好意思，该功能只支持真机");
       }
-      
     },
     onPlayerPlay() {},
     onPlayerPause() {},
@@ -1694,31 +1718,33 @@ export default {
     changeVideo(i) {
       this.whenVideoEnd = false;
       this.videoBarDisappear = true;
-      this.$router.replace({ path: '/video-detail/' + this.videoList[i].bvid, query: {
+      this.$router.replace({
+        path: "/video-detail/" + this.videoList[i].bvid,
+        query: {
           data: this.videoList[i]
         }
-      })
+      });
     },
-    actions (i) {
+    actions(i) {
       switch (i) {
         case 0:
-          this.replay()
+          this.replay();
           this.whenVideoEnd = false;
           this.videoBarDisappear = true;
-        break;
+          break;
         case 1:
         case 2:
         case 3:
         case 4:
           Toast({
-            message: '哥，这里我真的不想做了，让我偷下懒谢谢，嘤嘤嘤~',
+            message: "哥，这里我真的不想做了，让我偷下懒谢谢，嘤嘤嘤~",
             duration: 3000,
-            positoon: 'middle'
-          })
-        break;
+            positoon: "middle"
+          });
+          break;
         case 5:
-          this.share()
-        break;
+          this.share();
+          break;
       }
     },
     playPause() {
@@ -1785,26 +1811,26 @@ export default {
     },
     touchMove(e) {
       if (this.fullScreenLock) {
-        return false
+        return false;
       }
       if (this.isInFullScreen && this.showBottomInput) {
-        let height = window.innerHeight / 3
+        let height = window.innerHeight / 3;
         if (e.touches[0].pageY > height) {
-          this.showBottomInput = false
+          this.showBottomInput = false;
         }
-        return false
+        return false;
       }
       if (this.popupVisible2) {
-        let width = window.innerWidth / 10
+        let width = window.innerWidth / 10;
         if (e.touches[0].pageX < width * 8) {
-          this.popupVisible2 = false
+          this.popupVisible2 = false;
         }
-        return false
+        return false;
       }
       if (this.isInFullScreen) {
-        let height = window.innerHeight / 10
+        let height = window.innerHeight / 10;
         if (e.touches[0].pageY >= height * 7.5) {
-          return false
+          return false;
         }
       }
       let time = Date.now();
@@ -1822,13 +1848,13 @@ export default {
         this.lastTap = time;
       }
     },
-    changeSpeed () {
-      this.popupVisible2 = true
+    changeSpeed() {
+      this.popupVisible2 = true;
     },
-    changeRate (item) {
-      this.rateList.active = item
+    changeRate(item) {
+      this.rateList.active = item;
       this.video.playbackRate(parseInt(item));
-      this.popupVisible2 = false
+      this.popupVisible2 = false;
     },
     videoInlineShow() {
       if (this.lock) {
@@ -1844,10 +1870,12 @@ export default {
           : "断网";
         this.$refs.videoOuter.requestFullscreen();
         try {
-          let Self = plus.webview.currentWebview();
-          Self.setStyle({
-            videoFullscreen: "landscape"
-          });
+          // let Self = plus.webview.currentWebview();
+          // Self.setStyle({
+          //   videoFullscreen: "landscape"
+          // });
+          plus.storage.setItem("isInFullScreen", "true");
+          plus.screen.lockOrientation("landscape");
         } catch {
           screen.orientation.lock("landscape");
         }
@@ -1857,10 +1885,12 @@ export default {
       this.isInFullScreen = false;
       document.exitFullscreen();
       try {
-        let Self = plus.webview.currentWebview();
-        Self.setStyle({
-          videoFullscreen: "portrait-primary"
-        });
+        // let Self = plus.webview.currentWebview();
+        // Self.setStyle({
+        //   videoFullscreen: "portrait-primary"
+        // });
+        plus.screen.lockOrientation("portrait-primary");
+        plus.storage.setItem("isInFullScreen", "false");
       } catch {
         screen.orientation.lock("portrait-primary");
       }
@@ -1957,14 +1987,14 @@ export default {
       this.sheetVisible = false;
     },
     bus() {
-      this.$Bus.$on('goToShare', () => {
-        this.share()
-      })
+      this.$Bus.$on("goToShare", () => {
+        this.share();
+      });
     },
     sendDanmaku() {
-      let fonsize=25,
-          color=16777215,
-          mode="滚动"
+      let fonsize = 25,
+        color = 16777215,
+        mode = "滚动";
       if (Object.keys(this.$store.state.userInfo).length <= 0) {
         Toast({
           message: "请先登录！",
@@ -1981,9 +2011,9 @@ export default {
         });
         return false;
       } else {
-        fonsize = this.fullScreenDanmakuStyleList.isSelectFontSize
-        mode = this.fullScreenDanmakuStyleList.isSelectMode
-        color = this.fullScreenDanmakuColorList.selected
+        fonsize = this.fullScreenDanmakuStyleList.isSelectFontSize;
+        mode = this.fullScreenDanmakuStyleList.isSelectMode;
+        color = this.fullScreenDanmakuColorList.selected;
         this.showDanmakuList.push({
           date: new Date().getDay(),
           time: new Date().getTime() / 1000,
@@ -2003,180 +2033,205 @@ export default {
         });
       }
     },
-    selectedStyle (type, i) {
+    selectedStyle(type, i) {
       switch (type) {
         case 0:
-        this.fullScreenDanmakuStyleList.isSelectFontSize = this.fullScreenDanmakuStyleList.fontSize[i].fontSize
+          this.fullScreenDanmakuStyleList.isSelectFontSize = this.fullScreenDanmakuStyleList.fontSize[
+            i
+          ].fontSize;
           switch (i) {
             case 0:
-            this.fullScreenDanmakuStyleList.fontSize[0].selected = this.fullScreenDanmakuStyleList.fontSize[0].active
-            this.fullScreenDanmakuStyleList.fontSize[1].selected = this.fullScreenDanmakuStyleList.fontSize[1].default
-            break;
+              this.fullScreenDanmakuStyleList.fontSize[0].selected = this.fullScreenDanmakuStyleList.fontSize[0].active;
+              this.fullScreenDanmakuStyleList.fontSize[1].selected = this.fullScreenDanmakuStyleList.fontSize[1].default;
+              break;
             case 1:
-            this.fullScreenDanmakuStyleList.fontSize[1].selected = this.fullScreenDanmakuStyleList.fontSize[1].active
-            this.fullScreenDanmakuStyleList.fontSize[0].selected = this.fullScreenDanmakuStyleList.fontSize[0].default
-            break;
+              this.fullScreenDanmakuStyleList.fontSize[1].selected = this.fullScreenDanmakuStyleList.fontSize[1].active;
+              this.fullScreenDanmakuStyleList.fontSize[0].selected = this.fullScreenDanmakuStyleList.fontSize[0].default;
+              break;
           }
-        break;
+          break;
         case 1:
-        this.fullScreenDanmakuStyleList.isSelectMode = this.fullScreenDanmakuStyleList.mode[i].mode
+          this.fullScreenDanmakuStyleList.isSelectMode = this.fullScreenDanmakuStyleList.mode[
+            i
+          ].mode;
           switch (i) {
             case 0:
-            this.fullScreenDanmakuStyleList.mode[0].selected = this.fullScreenDanmakuStyleList.mode[0].active
-            this.fullScreenDanmakuStyleList.mode[1].selected = this.fullScreenDanmakuStyleList.mode[1].default
-            this.fullScreenDanmakuStyleList.mode[2].selected = this.fullScreenDanmakuStyleList.mode[2].default
-            break;
+              this.fullScreenDanmakuStyleList.mode[0].selected = this.fullScreenDanmakuStyleList.mode[0].active;
+              this.fullScreenDanmakuStyleList.mode[1].selected = this.fullScreenDanmakuStyleList.mode[1].default;
+              this.fullScreenDanmakuStyleList.mode[2].selected = this.fullScreenDanmakuStyleList.mode[2].default;
+              break;
             case 1:
-            this.fullScreenDanmakuStyleList.mode[1].selected = this.fullScreenDanmakuStyleList.mode[1].active
-            this.fullScreenDanmakuStyleList.mode[0].selected = this.fullScreenDanmakuStyleList.mode[0].default
-            this.fullScreenDanmakuStyleList.mode[2].selected = this.fullScreenDanmakuStyleList.mode[2].default
-            break;
+              this.fullScreenDanmakuStyleList.mode[1].selected = this.fullScreenDanmakuStyleList.mode[1].active;
+              this.fullScreenDanmakuStyleList.mode[0].selected = this.fullScreenDanmakuStyleList.mode[0].default;
+              this.fullScreenDanmakuStyleList.mode[2].selected = this.fullScreenDanmakuStyleList.mode[2].default;
+              break;
             case 2:
-            this.fullScreenDanmakuStyleList.mode[2].selected = this.fullScreenDanmakuStyleList.mode[2].active
-            this.fullScreenDanmakuStyleList.mode[0].selected = this.fullScreenDanmakuStyleList.mode[0].default
-            this.fullScreenDanmakuStyleList.mode[1].selected = this.fullScreenDanmakuStyleList.mode[1].default
-            break;
+              this.fullScreenDanmakuStyleList.mode[2].selected = this.fullScreenDanmakuStyleList.mode[2].active;
+              this.fullScreenDanmakuStyleList.mode[0].selected = this.fullScreenDanmakuStyleList.mode[0].default;
+              this.fullScreenDanmakuStyleList.mode[1].selected = this.fullScreenDanmakuStyleList.mode[1].default;
+              break;
           }
-        break;
+          break;
         case 2:
-        this.fullScreenDanmakuColorList.selected = this.fullScreenDanmakuColorList.list[i]
-        break;
+          this.fullScreenDanmakuColorList.selected = this.fullScreenDanmakuColorList.list[
+            i
+          ];
+          break;
       }
     },
     selectColor() {
-      this.selectModeType = !this.selectModeType
+      this.selectModeType = !this.selectModeType;
     },
-    saySorry () {
+    saySorry() {
       Toast({
-        message: '这里实现不了，太难了',
-        position: 'top',
+        message: "这里实现不了，太难了",
+        position: "top",
         duration: 3000
-      })
+      });
     },
     startLock() {
-      this.fullScreenLock = true
-      this.videoBarDisappear = false
+      this.fullScreenLock = true;
+      this.videoBarDisappear = false;
     },
-    cancelLock () {
-      this.fullScreenLock = false
-      this.videoBarDisappear = false
+    cancelLock() {
+      this.fullScreenLock = false;
+      this.videoBarDisappear = false;
     },
     shot() {
-      this.videoBarDisappear = true
+      this.videoBarDisappear = true;
       this.$nextTick(() => {
-      let canvas = document.createElement('canvas')
-      let ctx = canvas.getContext('2d')
-      canvas.width = 200
-      canvas.height = 120
-      ctx.drawImage(this.$refs.videoOuter.children[1].children[0].children[0], 0, 0, 200, 120)
-      this.dataURL = canvas.toDataURL('image/png')
-      this.showShot = true
-      this.videoBarDisappear = false
-      this.shotTimer = setTimeout(() => {
-        this.showShot = false
-        this.dataURL = ''
-        clearTimeout(this.shotTimer)
-        this.shotTimer = null
-        this.videoBarDisappear = false
-      }, 5000)
-      })
+        let canvas = document.createElement("canvas");
+        let ctx = canvas.getContext("2d");
+        canvas.width = 200;
+        canvas.height = 120;
+        ctx.drawImage(
+          this.$refs.videoOuter.children[1].children[0].children[0],
+          0,
+          0,
+          200,
+          120
+        );
+        this.dataURL = canvas.toDataURL("image/png");
+        this.showShot = true;
+        this.videoBarDisappear = false;
+        this.shotTimer = setTimeout(() => {
+          this.showShot = false;
+          this.dataURL = "";
+          clearTimeout(this.shotTimer);
+          this.shotTimer = null;
+          this.videoBarDisappear = false;
+        }, 5000);
+      });
     },
     shareTheShot() {
-      clearTimeout(this.shotTimer)
-      this.shotTimer = null
+      clearTimeout(this.shotTimer);
+      this.shotTimer = null;
       try {
-      plus.share.getServices((s) => {
-        let bitmap = new plus.nativeObj.Bitmap();
-        bitmap.loadBase64Data(this.dataURL.split(',')[1].toString(), () => {
-          bitmap.save("_downloads/video_shot.png", {
-            overwrite: true,
-            format: 'png',
-            quality: 100,
-          },() => {
-
-            plus.gallery.save("_downloads/video_shot.png",
+        plus.share.getServices(
+          s => {
+            let bitmap = new plus.nativeObj.Bitmap();
+            bitmap.loadBase64Data(
+              this.dataURL.split(",")[1].toString(),
               () => {
-                plus.nativeUI.toast('保存成功！')
-
-                // 可取值：
-                // "WXSceneSession"分享到微信的“我的好友”；
-                // "WXSceneTimeline"分享到微信的“朋友圈”中；
-                // "WXSceneFavorite"分享到微信的“我的收藏”中。
-                // 默认值为"WXSceneSession"`
-                s[2].send(
+                bitmap.save(
+                  "_downloads/video_shot.png",
                   {
-                    type: "image",
-                    pictures: ["_downloads/video_shot.png"],
-                    title: '蛋哩蛋哩截图'
-                  }, () => {
-                    this.showShot = false
-                    this.dataURL = ''
-                    this.videoBarDisappear = false
-                    bitmap.recycle()
-                  }, (e) => {
-                    bitmap.recycle()
-                    console.log('发送失败' + JSON.stringify(e))
-                  }
-                )
-            }, (e) => {
-              console.log('放入Gallay失败' + JSON.stringify(e))
-            })
-          },() => {
-            this.showShot = false
-            this.dataURL = ''
-            this.videoBarDisappear = false
-            bitmap.recycle()
-            console.log('保存失败')
-          })
-        },() => {
-          this.showShot = false
-          this.dataURL = ''
-          this.videoBarDisappear = false
-          bitmap.recycle()
-          console.log('失败')
-        })
-      }, (e) => {
-        this.showShot = false
-        this.dataURL = ''
-        this.videoBarDisappear = false
-        bitmap.recycle()
-        console.log("获取分享服务列表失败：" + JSON.stringify(e));
-      })
-      } catch {
-        this.showShot = false
-        this.dataURL = ''
-        this.videoBarDisappear = false
-        alert('该功能仅提供真机')
+                    overwrite: true,
+                    format: "png",
+                    quality: 100
+                  },
+                  () => {
+                    plus.gallery.save(
+                      "_downloads/video_shot.png",
+                      () => {
+                        plus.nativeUI.toast("保存成功！");
 
+                        // 可取值：
+                        // "WXSceneSession"分享到微信的“我的好友”；
+                        // "WXSceneTimeline"分享到微信的“朋友圈”中；
+                        // "WXSceneFavorite"分享到微信的“我的收藏”中。
+                        // 默认值为"WXSceneSession"`
+                        s[2].send(
+                          {
+                            type: "image",
+                            pictures: ["_downloads/video_shot.png"],
+                            title: "蛋哩蛋哩截图"
+                          },
+                          () => {
+                            this.showShot = false;
+                            this.dataURL = "";
+                            this.videoBarDisappear = false;
+                            bitmap.recycle();
+                          },
+                          e => {
+                            bitmap.recycle();
+                            console.log("发送失败" + JSON.stringify(e));
+                          }
+                        );
+                      },
+                      e => {
+                        console.log("放入Gallay失败" + JSON.stringify(e));
+                      }
+                    );
+                  },
+                  () => {
+                    this.showShot = false;
+                    this.dataURL = "";
+                    this.videoBarDisappear = false;
+                    bitmap.recycle();
+                    console.log("保存失败");
+                  }
+                );
+              },
+              () => {
+                this.showShot = false;
+                this.dataURL = "";
+                this.videoBarDisappear = false;
+                bitmap.recycle();
+                console.log("失败");
+              }
+            );
+          },
+          e => {
+            this.showShot = false;
+            this.dataURL = "";
+            this.videoBarDisappear = false;
+            bitmap.recycle();
+            console.log("获取分享服务列表失败：" + JSON.stringify(e));
+          }
+        );
+      } catch {
+        this.showShot = false;
+        this.dataURL = "";
+        this.videoBarDisappear = false;
+        alert("该功能仅提供真机");
       }
     },
     // 实现画中画功能
     P_In_P() {
       // 第一步，获取DOM
       this.$nextTick(() => {
-        
         try {
-          
           // up用了插件，所以不能直接获取视频元素
-          let video = this.$refs.videoOuter.children[1].children[0].children[0]
+          let video = this.$refs.videoOuter.children[1].children[0].children[0];
           // 第二步， 给DOM添加开启、关闭画中画的监听事件
           // 开启
-          video.addEventListener('enterpictureinpicture', () => {})
+          video.addEventListener("enterpictureinpicture", () => {});
           // 关闭
-          video.addEventListener('leavepictureinpicture', () => {})
-          
+          video.addEventListener("leavepictureinpicture", () => {});
+
           // 第三步， 开启、关闭事件
           if (!document.pictureInPictureElement) {
             // 开启
-            video.requestPictureInPicture().catch(() => {})
+            video.requestPictureInPicture().catch(() => {});
           } else {
             // 关闭
-            document.exitPictureInPicture().catch(() => {})
+            document.exitPictureInPicture().catch(() => {});
           }
         } catch {
-          alert('哥，移动端好像不支持')
+          alert("哥，移动端好像不支持");
         }
-      })
+      });
     }
   },
   computed: {
@@ -2202,7 +2257,6 @@ export default {
         } else {
           height = this.videoDetail.offsetHeight - window.innerWidth / 10;
         }
-        
       }
       return { height: height };
     },
@@ -2250,7 +2304,7 @@ export default {
     },
     currentTime(newVal) {
       this.lastTime = newVal;
-      
+
       for (let i = 0; i < this.danmakuData.length; i++) {
         let front = newVal - 2;
 
@@ -2267,25 +2321,22 @@ export default {
         }
       }
     },
-    async '$route' () {
-      if (this.$route.path.indexOf('video-detail') !== -1) {
-        let list = this.$store.state.routeList
-        let bvid = this.$route.params.bvid
+    async $route() {
+      if (this.$route.path.indexOf("video-detail") !== -1) {
+        let list = this.$store.state.routeList;
+        let bvid = this.$route.params.bvid;
         if (list.indexOf(bvid) === -1) {
-          this.isOk = false
-          await this.getAllData()
-          this.$store.commit('pushInRouteList', bvid)
+          this.isOk = false;
+          await this.getAllData();
+          this.$store.commit("pushInRouteList", bvid);
         } else {
           if (list[list.length - 1] !== bvid) {
-            this.isOk = false
-            await this.getAllData()
-            this.$store.commit('pushInRouteList', bvid)
+            this.isOk = false;
+            await this.getAllData();
+            this.$store.commit("pushInRouteList", bvid);
           }
         }
-        
-        
       }
-      
     },
     immediate: true,
     deep: true
@@ -2327,7 +2378,7 @@ export default {
           position: absolute;
           width: 10rem;
           height: 4.65rem;
-          -webkit-text-stroke: 1px rgba(0, 0, 0, .5);
+          -webkit-text-stroke: 1px rgba(0, 0, 0, 0.5);
           overflow: hidden;
           background-color: transparent;
           top: 0.5rem;
@@ -2688,7 +2739,7 @@ export default {
                   font-size: 0.2rem;
                   padding: 0.2rem;
                   height: 0.4rem;
-                  background-color: rgba(100, 100, 100, .5);
+                  background-color: rgba(100, 100, 100, 0.5);
                   border-radius: 0.1rem;
                   transition: 0.3s;
                 }
@@ -2712,10 +2763,10 @@ export default {
             height: 90vh;
             display: flex;
             align-items: center;
-            
+
             img {
-              width: .5rem;
-              height: .5rem;
+              width: 0.5rem;
+              height: 0.5rem;
             }
           }
           .full-screen-pop {
@@ -2749,7 +2800,7 @@ export default {
             top: 0;
             left: 0;
             width: 100vw;
-            padding: 0 .5rem;
+            padding: 0 0.5rem;
             height: 100vh;
             z-index: 1008;
             background-color: rgba(37, 37, 37, 0.88);
@@ -2757,15 +2808,15 @@ export default {
               height: 1.4rem;
               display: flex;
               align-items: center;
-              margin-top: .85rem;
-              border-bottom: .02rem solid rgba(253, 253, 253, 0.1);
+              margin-top: 0.85rem;
+              border-bottom: 0.02rem solid rgba(253, 253, 253, 0.1);
               justify-content: space-between;
               .up-follows {
                 display: flex;
                 align-items: center;
                 justify-content: space-between;
                 div {
-                  margin-right: .2rem;
+                  margin-right: 0.2rem;
                   &:first-child {
                     background-color: #fff;
                     width: 1rem;
@@ -2774,15 +2825,15 @@ export default {
                     border-radius: 100%;
                     align-items: center;
                     justify-content: center;
-                    background-size: .5rem .5rem;
+                    background-size: 0.5rem 0.5rem;
                     background-position: center center;
                     background-repeat: no-repeat;
                     background-image: url("~assets/img/base/bilibili_user_logo_bg.svg");
                     img {
                       border-radius: 100%;
                       position: relative;
-                      width: .95rem;
-                      height: .95rem;
+                      width: 0.95rem;
+                      height: 0.95rem;
                     }
                   }
                   &:last-child {
@@ -2798,7 +2849,7 @@ export default {
                         width: 1rem;
                         height: 0.34rem;
                         position: relative;
-                        margin-top: .2rem;
+                        margin-top: 0.2rem;
                         font-size: 0.2rem;
                         border-radius: 0.05rem;
                         background-color: var(--color-tint);
@@ -2817,7 +2868,7 @@ export default {
                 flex: auto;
                 display: flex;
                 align-items: center;
-                font-size: .2rem;
+                font-size: 0.2rem;
                 justify-content: space-around;
                 .actions-item {
                   display: flex;
@@ -2830,17 +2881,17 @@ export default {
                     justify-content: center;
                     // margin-bottom: .2rem;
                     img {
-                      width: .35rem;
-                      height: .35rem;
+                      width: 0.35rem;
+                      height: 0.35rem;
                     }
                     &:first-child {
-                      margin-bottom: .2rem;
+                      margin-bottom: 0.2rem;
                     }
                   }
                   &:nth-child(2) {
                     img {
-                      width: .4rem;
-                      height: .4rem;
+                      width: 0.4rem;
+                      height: 0.4rem;
                     }
                   }
                 }
@@ -2848,14 +2899,14 @@ export default {
             }
             .full-screen-video-end-2 {
               display: flex;
-              margin-top: .2rem;
+              margin-top: 0.2rem;
               width: 100vw;
               flex-direction: column;
               color: #fff;
               overflow: hidden;
-              font-size: .2rem;
+              font-size: 0.2rem;
               .full-screen-video-end-2-title {
-                height: .3rem;
+                height: 0.3rem;
               }
               .scroll-list {
                 display: flex;
@@ -2863,44 +2914,43 @@ export default {
                 width: 100vw;
                 overflow-x: scroll;
                 .scroll-item {
-                  
                   display: flex;
                   align-items: center;
                   justify-content: center;
                   .scroll-inner {
-                    margin-right: .2rem;
+                    margin-right: 0.2rem;
                     display: flex;
                     align-items: center;
                     flex-direction: column;
                     width: 2.5rem;
                     height: 2rem;
-                    
+
                     .scroll-inner-cover {
                       position: relative;
                       width: 2.5rem;
                       height: 1.5rem;
-                      border-radius: .05rem;
-                      background-size: .5rem .5rem;
+                      border-radius: 0.05rem;
+                      background-size: 0.5rem 0.5rem;
                       background-color: rgba(0, 0, 0, 0.5);
                       background-position: center center;
                       background-repeat: no-repeat;
                       background-image: url("~assets/img/base/bilibili_user_logo_bg.svg");
                       img {
-                        border-radius: .05rem;
+                        border-radius: 0.05rem;
                         width: 2.5rem;
                         height: 1.5rem;
                       }
                       .info {
                         position: absolute;
-                        bottom: .01rem;
+                        bottom: 0.01rem;
                         display: flex;
-                        
+
                         justify-content: space-between;
                         font-size: 0.15rem;
                         align-items: center;
                         width: 2.5rem;
-                        height: .3rem;
-                        padding: 0 .03rem;
+                        height: 0.3rem;
+                        padding: 0 0.03rem;
                         color: rgb(238, 235, 235);
                         span {
                           display: flex;
@@ -2914,8 +2964,8 @@ export default {
                             justify-content: flex-end;
                           }
                           img {
-                            width: .2rem;
-                            height: .2rem;
+                            width: 0.2rem;
+                            height: 0.2rem;
                           }
                         }
                       }
@@ -2923,8 +2973,8 @@ export default {
                     .scroll-inner-title {
                       position: relative;
                       width: 2.5rem;
-                      height: .5rem;
-                      line-height: .5rem;
+                      height: 0.5rem;
+                      line-height: 0.5rem;
                       white-space: nowrap;
                       overflow: hidden;
                       text-overflow: ellipsis;
@@ -2938,7 +2988,7 @@ export default {
                 }
               }
               .scroll-list::-webkit-scrollbar {
-              display: none;
+                display: none;
               }
             }
             .full-screen-video-end-2::-webkit-scrollbar {
@@ -2950,11 +3000,11 @@ export default {
           @media screen and (orientation: portrait) {
             display: none;
           }
-          
+
           height: 12.5vw;
           position: absolute;
           background-color: #fff;
-          border-radius: .05rem;
+          border-radius: 0.05rem;
           z-index: 2000;
           top: 1.5rem;
           right: 10vw;
@@ -2966,16 +3016,16 @@ export default {
           &::after {
             width: 21vw;
             text-align: center;
-            content: '点击分享';
+            content: "点击分享";
             position: absolute;
             color: #fff;
             font-weight: bold;
             bottom: 0rem;
-            font-size: .25rem;
+            font-size: 0.25rem;
             right: 0rem;
           }
           img {
-            border-radius: .05rem;
+            border-radius: 0.05rem;
             width: 20vw;
             height: 12vw;
           }
@@ -2985,13 +3035,13 @@ export default {
             transform: translateY(0rem);
           }
           25% {
-            transform: translateY(-.1rem);
+            transform: translateY(-0.1rem);
           }
           50% {
             transform: translateY(0rem);
           }
           75% {
-            transform: translateY(.1rem);
+            transform: translateY(0.1rem);
           }
           100% {
             transform: translateY(0rem);
@@ -3002,60 +3052,65 @@ export default {
             display: none;
           }
           z-index: 2000;
-          font-size: .2rem;
+          font-size: 0.2rem;
           position: absolute;
           top: 0rem;
           width: 100vw;
-          padding: 0 .5rem;
+          padding: 0 0.5rem;
           display: flex;
           align-items: center;
           flex-direction: column;
           justify-content: center;
-          background-image: linear-gradient(180deg, rgba(0, 0, 0, 0.5) 0%, transparent 100%);
+          background-image: linear-gradient(
+            180deg,
+            rgba(0, 0, 0, 0.5) 0%,
+            transparent 100%
+          );
           .full-screen-input-danmaku {
             width: 90vw;
-              margin-top: .2rem;
+            margin-top: 0.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            input {
+              width: 80vw;
+              height: 0.4rem;
               display: flex;
+              background-color: #fff;
+              outline: none;
+              border: none;
               align-items: center;
-              justify-content: space-around;
-              input {
-                width: 80vw;
-                height: .4rem;
-                display: flex;
-                background-color: #fff;
-                outline: none;
-                border: none;
-                align-items: center;
-                border-radius: .05rem;
-                padding-left: .05rem;
-              }
-              input::-webkit-input-placeholder {
-                  color: rgb(153, 153, 153);
-                  font-size: 0.2rem;
-              }
-              img {
-                width: .4rem;
-                height: .4rem;
-              }
+              border-radius: 0.05rem;
+              padding-left: 0.05rem;
+            }
+            input::-webkit-input-placeholder {
+              color: rgb(153, 153, 153);
+              font-size: 0.2rem;
+            }
+            img {
+              width: 0.4rem;
+              height: 0.4rem;
+            }
           }
           .select-style {
-            margin-top: .2rem;
-            transition: .3s;
+            margin-top: 0.2rem;
+            transition: 0.3s;
             width: 50vw;
-            height: .5rem;
+            height: 0.5rem;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            .front-btn, .back-btn {
-              width: .3rem;
-              height: .3rem;
+            .front-btn,
+            .back-btn {
+              width: 0.3rem;
+              height: 0.3rem;
               display: flex;
               align-items: center;
               justify-content: center;
               background-repeat: no-repeat;
               background-size: 100% 100%;
               background-position: center center;
-              background-image: url('~assets/img/video/back_white.svg');
+              background-image: url("~assets/img/video/back_white.svg");
             }
             .front-btn {
               opacity: 0;
@@ -3069,21 +3124,23 @@ export default {
               align-items: center;
               justify-content: space-between;
               overflow: hidden;
-              .font-size-mode, .color {
-              transform: translateX(0vw);
-              display: flex;
-              align-items: center;
-              justify-content: space-around;
-              width: 50vw;
-              .font-size-item, .mode-item  {
+              .font-size-mode,
+              .color {
+                transform: translateX(0vw);
                 display: flex;
                 align-items: center;
-                justify-content: center;
-                transition: .3s;
-                width: 8vw;
-                height: 6vw;
+                justify-content: space-around;
+                width: 50vw;
+                .font-size-item,
+                .mode-item {
+                  display: flex;
+                  align-items: center;
+                  justify-content: center;
+                  transition: 0.3s;
+                  width: 8vw;
+                  height: 6vw;
                   img {
-                    transition: .3s;
+                    transition: 0.3s;
                     width: 6vw;
                     height: 4vw;
                   }
@@ -3093,7 +3150,6 @@ export default {
                     width: 6vw;
                     height: 5vw;
                   }
-
                 }
               }
               .color {
@@ -3101,17 +3157,17 @@ export default {
                 .color-item {
                   width: 5vw;
                   height: 3.5vw;
-                  border-radius: .05rem;
-                  margin-right: .05rem;
+                  border-radius: 0.05rem;
+                  margin-right: 0.05rem;
                 }
                 .selected-color {
-                  border: .03rem solid var(--color-tint);
+                  border: 0.03rem solid var(--color-tint);
                 }
               }
             }
           }
           .when-select-color {
-            transition: .3s;
+            transition: 0.3s;
             width: 80vw;
             .front-btn {
               opacity: 1;
@@ -3121,7 +3177,8 @@ export default {
             }
             .danmaku-style-list {
               width: 80vw;
-              .font-size-mode, .color {
+              .font-size-mode,
+              .color {
                 width: 80vw;
               }
               .font-size-mode {
@@ -3257,11 +3314,11 @@ export default {
           }
           @media screen and (orientation: landscape) {
             width: 2rem;
-            height: .6rem;
+            height: 0.6rem;
             border-radius: 0.05rem;
             display: flex;
             img {
-              margin-left: -.15rem;
+              margin-left: -0.15rem;
               width: 0.3rem;
               height: 0.3rem;
             }
@@ -3272,7 +3329,7 @@ export default {
             .line {
               position: relative;
               width: 1rem;
-              margin-left: .1rem;
+              margin-left: 0.1rem;
               span {
                 height: 0.025rem;
                 position: absolute;
@@ -3671,241 +3728,242 @@ export default {
   .in-desc {
     z-index: -1;
     .desc {
-    padding: 0.5rem 0.3rem 0 0.3rem;
-    .desc-up {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 0.4rem;
-      .desc-left {
+      padding: 0.5rem 0.3rem 0 0.3rem;
+      .desc-up {
         display: flex;
         align-items: center;
-        .desc-up-left {
-          width: 1rem;
-          height: 1rem;
-          border-radius: 100%;
-          background-size: 1rem 1rem;
-          background-repeat: no-repeat;
-          background-position: center center;
-          background-image: url("~assets/img/base/bilibili_user_logo_bg.svg");
-          margin-right: 0.3rem;
-          img {
-            border-radius: 100%;
+        justify-content: space-between;
+        margin-bottom: 0.4rem;
+        .desc-left {
+          display: flex;
+          align-items: center;
+          .desc-up-left {
             width: 1rem;
             height: 1rem;
+            border-radius: 100%;
+            background-size: 1rem 1rem;
+            background-repeat: no-repeat;
+            background-position: center center;
+            background-image: url("~assets/img/base/bilibili_user_logo_bg.svg");
+            margin-right: 0.3rem;
+            img {
+              border-radius: 100%;
+              width: 1rem;
+              height: 1rem;
+            }
+          }
+          .desc-up-right {
+            display: flex;
+            flex-direction: column;
+            display: flex;
+            span {
+              &:last-child {
+                font-size: 0.25rem;
+                opacity: 0.6;
+                margin-top: 0.15rem;
+              }
+            }
           }
         }
-        .desc-up-right {
+        .desc-right {
+          width: 1.8rem;
+          height: 0.7rem;
+          position: relative;
           display: flex;
-          flex-direction: column;
-          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 0.4rem;
+          color: #fff;
+          border-radius: 0.1rem;
+          background-color: var(--color-tint);
           span {
-            &:last-child {
-              font-size: 0.25rem;
-              opacity: 0.6;
-              margin-top: 0.15rem;
+            &::before {
+              content: "+";
+              font-size: 0.5rem;
+              margin-right: 0.2rem;
             }
           }
         }
       }
-      .desc-right {
-        width: 1.8rem;
+      .desc-video {
+        display: flex;
+        flex-direction: column;
+        .desc-title {
+          display: flex;
+          justify-content: space-between;
+          .desc-video-title {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            width: 9rem;
+            opacity: 0.9;
+            transition: 0.3s;
+          }
+          .show-all {
+            transition: 0.3s;
+            white-space: initial;
+            overflow: initial;
+            text-overflow: initial;
+            height: 1.2rem;
+          }
+          img {
+            transition: 0.3s;
+            width: 0.4rem;
+            height: 0.4rem;
+            opacity: 0.6;
+          }
+          .rotate {
+            transition: 0.3s;
+            transform: rotateZ(180deg);
+          }
+        }
+        .desc-video-sub {
+          display: flex;
+          align-items: center;
+          font-size: 0.3rem;
+          margin-top: 0.3rem;
+          span {
+            display: flex;
+            align-items: center;
+            margin-right: 0.3rem;
+            opacity: 0.6;
+            img {
+              width: 0.4rem;
+              height: 0.4rem;
+              padding-bottom: 0.05rem;
+            }
+          }
+        }
+      }
+    }
+    .like-pay-collect {
+      padding: 0.1rem 0;
+      border-bottom: 0.02rem solid rgba(50, 50, 50, 0.6);
+    }
+    .desc-state {
+      padding: 0 0.3rem;
+      color: var(--color-tint);
+      margin: 0.3rem 0;
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      span {
         height: 0.7rem;
-        position: relative;
+        width: 1.6rem;
+        font-size: 0.35rem;
+        background-color: rgb(20, 20, 20);
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 0.4rem;
-        color: #fff;
-        border-radius: 0.1rem;
-        background-color: var(--color-tint);
-        span {
-          &::before {
-            content: "+";
-            font-size: 0.5rem;
-            margin-right: 0.2rem;
-          }
-        }
-      }
-    }
-    .desc-video {
-      display: flex;
-      flex-direction: column;
-      .desc-title {
-        display: flex;
-        justify-content: space-between;
-        .desc-video-title {
-          white-space: nowrap;
-          overflow: hidden;
-          text-overflow: ellipsis;
-          width: 9rem;
-          opacity: 0.9;
-          transition: 0.3s;
-        }
-        .show-all {
-          transition: 0.3s;
-          white-space: initial;
-          overflow: initial;
-          text-overflow: initial;
-          height: 1.2rem;
-        }
-        img {
-          transition: 0.3s;
+        border-radius: 0.5rem;
+        &::before {
+          content: "";
+          position: relative;
+          background-image: url("~assets/img/video/hot.svg");
+          background-repeat: no-repeat;
+          background-size: 0.4rem 0.4rem;
+          background-position: center center;
           width: 0.4rem;
           height: 0.4rem;
-          opacity: 0.6;
-        }
-        .rotate {
-          transition: 0.3s;
-          transform: rotateZ(180deg);
         }
       }
-      .desc-video-sub {
-        display: flex;
-        align-items: center;
-        font-size: 0.3rem;
-        margin-top: 0.3rem;
-        span {
-          display: flex;
-          align-items: center;
-          margin-right: 0.3rem;
-          opacity: 0.6;
-          img {
-            width: 0.4rem;
-            height: 0.4rem;
-            padding-bottom: 0.05rem;
-          }
-        }
-      }
-    }
-    }
-    .like-pay-collect {
-    padding: 0.1rem 0;
-    border-bottom: 0.02rem solid rgba(50, 50, 50, 0.6);
-    }
-    .desc-state {
-    padding: 0 0.3rem;
-    color: var(--color-tint);
-    margin: 0.3rem 0;
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    span {
-      height: 0.7rem;
-      width: 1.6rem;
-      font-size: 0.35rem;
-      background-color: rgb(20, 20, 20);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: 0.5rem;
-      &::before {
-        content: "";
-        position: relative;
-        background-image: url("~assets/img/video/hot.svg");
-        background-repeat: no-repeat;
-        background-size: 0.4rem 0.4rem;
-        background-position: center center;
-        width: 0.4rem;
-        height: 0.4rem;
-      }
-    }
     }
     .recommend-list {
-    padding-top: 0;
-    transition: 0.3s;
-    ul {
-      display: flex;
-      flex-direction: column;
-      li {
+      padding-top: 0;
+      transition: 0.3s;
+      ul {
         display: flex;
         flex-direction: column;
-        .inner {
-          padding: 0.3rem;
+        li {
           display: flex;
-          align-items: center;
-          justify-content: space-between;
-          list-style: none;
-          height: 2.6rem;
-          border-bottom: 0.01rem solid rgba(100, 100, 100, 0.2);
-          .item-left {
-            position: relative;
-            width: 3rem;
-            height: 2rem;
-            border-radius: 0.1rem;
-            background-size: 3rem 2rem;
-            background-position: center center;
-            background-repeat: no-repeat;
-            background-image: url("~assets/img/base/bilibili_user_logo_bg.svg");
-            img {
+          flex-direction: column;
+          .inner {
+            padding: 0.3rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            list-style: none;
+            height: 2.6rem;
+            border-bottom: 0.01rem solid rgba(100, 100, 100, 0.2);
+            .item-left {
+              position: relative;
               width: 3rem;
               height: 2rem;
               border-radius: 0.1rem;
-            }
-            .time {
-              font-size: 0.3rem;
-              position: absolute;
-              bottom: 0.05rem;
-              right: 0.1rem;
-              display: flex;
-              align-items: center;
-              justify-content: center;
-              background-color: rgba(50, 50, 50, 0.6);
-            }
-          }
-          .item-right {
-            position: relative;
-            height: 2rem;
-            flex: auto;
-            display: flex;
-            padding-left: 0.3rem;
-            flex-direction: column;
-            justify-content: space-between;
-            .item-right-title {
-              width: 6rem;
-              height: 1.2rem;
-              white-space: nowrap;
-              overflow: hidden;
-              text-overflow: ellipsis;
-            }
-            .publish-time {
-              font-size: 0.3rem;
-              display: flex;
-              align-items: center;
-              opacity: 0.7;
+              background-size: 3rem 2rem;
+              background-position: center center;
+              background-repeat: no-repeat;
+              background-image: url("~assets/img/base/bilibili_user_logo_bg.svg");
               img {
-                opacity: 0.6;
-                width: 0.4rem;
-                height: 0.4rem;
-                margin-right: 0.03rem;
-                padding-bottom: 0.05rem;
+                width: 3rem;
+                height: 2rem;
+                border-radius: 0.1rem;
               }
-            }
-            .message {
-              display: flex;
-              align-items: center;
-              span {
-                position: relative;
-                font-size: 0.28rem;
-                width: 2rem;
-                opacity: 0.7;
+              .time {
+                font-size: 0.3rem;
+                position: absolute;
+                bottom: 0.05rem;
+                right: 0.1rem;
                 display: flex;
                 align-items: center;
-                // margin-top: 0.1rem;
-                justify-content: flex-start;
+                justify-content: center;
+                background-color: rgba(50, 50, 50, 0.6);
+              }
+            }
+            .item-right {
+              position: relative;
+              height: 2rem;
+              flex: auto;
+              display: flex;
+              padding-left: 0.3rem;
+              flex-direction: column;
+              justify-content: space-between;
+              .item-right-title {
+                width: 6rem;
+                height: 1.2rem;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+              }
+              .publish-time {
+                font-size: 0.3rem;
+                display: flex;
+                align-items: center;
+                opacity: 0.7;
                 img {
+                  opacity: 0.6;
                   width: 0.4rem;
                   height: 0.4rem;
-                  margin-right: 0.1rem;
+                  margin-right: 0.03rem;
                   padding-bottom: 0.05rem;
                 }
-                &:last-child {
-                  justify-content: flex-end;
+              }
+              .message {
+                display: flex;
+                align-items: center;
+                span {
+                  position: relative;
+                  font-size: 0.28rem;
+                  width: 2rem;
+                  opacity: 0.7;
+                  display: flex;
+                  align-items: center;
+                  // margin-top: 0.1rem;
+                  justify-content: flex-start;
                   img {
-                    width: 0.6rem;
-                    height: 0.6rem;
-                    margin-right: 0;
-                    padding-bottom: 0;
+                    width: 0.4rem;
+                    height: 0.4rem;
+                    margin-right: 0.1rem;
+                    padding-bottom: 0.05rem;
+                  }
+                  &:last-child {
+                    justify-content: flex-end;
+                    img {
+                      width: 0.6rem;
+                      height: 0.6rem;
+                      margin-right: 0;
+                      padding-bottom: 0;
+                    }
                   }
                 }
               }
@@ -3913,7 +3971,6 @@ export default {
           }
         }
       }
-    }
     }
   }
 

@@ -1,103 +1,60 @@
 <template>
   <v-touch
-    @swipeleft="swipeLeft()"
-    @swiperight="swipeRight()"
-    @panleft="panleft()"
-    @panright="panright()"
-    @panend="panend()"
     id="home-live"
     ref="homeLive"
+    @swipeleft="swipeLeft()"
   >
-    <div class="right" ref="right">
-      <component v-if="$route.path === '/home/live'" :is="apps[0].app.default"></component>
+    <div class="content">
+      <BS ref="scroll" screenWidth="10rem" :screenHeight="height">
+        <Swipe @touchstart.native="closePan()" @touchend.native="openPan()"  />
+        <Category :list="homeLiveCategoryData" />
+        <List :list="homeLiveListData" />
+        <div class="footer" v-if="homeLiveFooter.length > 0">
+          <span v-waves>{{ homeLiveFooter[0].type }}</span>
+          <span v-waves>{{ homeLiveFooter[1].type }}</span>
+        </div>
+      </BS>
     </div>
+    <div class="i-live">我要直播</div>
   </v-touch>
 </template>
 
 <script>
-// import { getHomeSwipe, getHomeData } from "network/live";
+import BS from "components/common/better_scroll/BetterScroll";
+import Swipe from "components/content/home/home_live/HomeLiveSwipe";
+import List from "components/content/home/home_live/HomeLiveList";
+import Category from 'components/content/home/home_live/HomeLiveCategory'
+import { getHomeLiveFooter, getHomeLiveData } from "network/home.js";
 export default {
   name: "HomeLive",
   data() {
     return {
-      swipeData: [],
-      homeData: [],
-      page: 0,
-      offsetX: 0,
+      homeLiveFooter: [],
       isLock: false,
-      cmps: ["HomeRecommend"],
-      apps: []
+      homeLiveListData: [],
+      homeLiveCategoryData: []
     };
   },
   created() {
-    // this.toGetHomeSwipeData(), this.toGetHomeData(this.page);
-    // this.pullDownApplyData();
-    // this.pullUpApplyData();
-    this.cmps.forEach(app => {
-      this.apps.push({ app: require(`./${app}.vue`) });
-    });
+    this.toGetHomeLiveData()
+    this.toGetHomeLiveFooter();
   },
-  activated() {
-    if (this.$route.path === "/home/live") {
-      this.bus();
-    }
-  },
+  activated() {},
   methods: {
-    // async toGetHomeSwipeData() {
-    //   const text = [
-    //     "从前没得选，现在我想做个好人~",
-    //     "华为：最贵的终端~",
-    //     "快进来rua！"
-    //   ];
-    //   await getHomeSwipe().then(res => {
-    //     this.swipeData = res.map((n, i) => {
-    //       n["text"] = text[i];
-    //       return n;
-    //     });
-    //   });
-    // },
-    // // 获取列表数据
-    // async toGetHomeData(page, type) {
-    //   await getHomeData({ skip: page }).then(res => {
-    //     if (res.length === 0) {
-    //       return false;
-    //     }
-    //     if (type === "pullDown") {
-    //       this.homeData.unshift(...res);
-    //     } else {
-    //       this.homeData.push(...res);
-    //     }
-    //   });
-    // },
-    // 下拉获取数据
-    // async pullDownApplyData() {
-    //   let send = this.$debounce(this.finishPullDown, 20);
-    //   this.$nextTick(() => {
-    //     this.$Bus.$on("pullDownData", async () => {
-    //       this.page += 1;
-    //       await this.toGetHomeData(this.page, "pullDown");
-    //       send();
-    //     });
-    //   });
-    // },
-    // 完成下拉
-    finishPullDown() {
-      this.$Bus.$emit("finishPullDown");
+    toGetHomeLiveFooter() {
+      getHomeLiveFooter().then(res => {
+        this.homeLiveFooter.push(...res);
+      });
     },
-    // 上拉获取数据
-    // async pullUpApplyData() {
-    //   let send = this.$debounce(this.finishPullUp, 20);
-    //   this.$Bus.$on("pullUpData", async () => {
-    //     this.page += 1;
-    //     await this.toGetHomeData(this.page, "pullUp");
-    //     send();
-    //   });
-    // },
-    finishPullUp() {
-      this.$Bus.$emit("BSNeedToRefresh");
-      this.$Bus.$emit("finishPullUp");
+    toGetHomeLiveData() {
+      getHomeLiveData().then(res => {
+        
+        this.homeLiveListData.push(...res.module_list.filter((n, i) => {
+          return i > 2 && n.list.length > 0
+        }));
+        this.homeLiveCategoryData = [...res.module_list[2].list]
+      });
     },
-    // 关闭滑动
     closePan() {
       this.isLock = true;
     },
@@ -107,73 +64,67 @@ export default {
     },
     // 往左快滑
     swipeLeft() {
-      if (!this.$store.state.loadingLock) {
-        this.$store.commit("changeLoadingLockState", true);
-      }
-      if (this.isLock) return false;
-      this.$store.commit("offSetItem", 1);
-      this.$nextTick(() => {
-        this.$refs.homeLive.$el.style.transform = `translateX(-10rem)`;
-        this.$router.push({ name: "HomeRecommend" });
-        this.offsetX = 0;
-        this.$store.commit("offSetX", 0);
-        this.$refs.homeLive.$el.style.transform = `translateX(${0}px)`;
-        this.$store.commit("changeLoadingLockState", false);
-      });
+      if (this.isLock) return false
+      this.$router.push({ name: "HomeRecommend" });
     },
-    // 左滑
-    panleft() {
-      if (!this.$store.state.loadingLock) {
-        this.$store.commit("changeLoadingLockState", true);
-      }
-      if (this.isLock) return false;
-      this.offsetX -= 1;
-      this.$nextTick(() => {
-        this.$refs.homeLive.$el.style.transform = `translateX(${this.offsetX /
-          5}rem)`;
-        this.$store.commit("offSetX", this.offsetX);
-      });
-    },
-    // 停止滑动
-    panend() {
-      this.$nextTick(() => {
-        if (this.offsetX < -30) {
-          if (this.$store.state.offSetItem < 6) {
-            this.$store.commit("offSetItem", 1);
-          }
-          this.$router.push({ path: "HomeRecommend" });
-        }
-        this.offsetX = 0;
-        this.$store.commit("offSetX", 0);
-        this.$refs.homeLive.$el.style.transform = `translateX(${0}px)`;
-        this.$store.commit("changeLoadingLockState", false);
-      });
-    },
-    // 中央事务总线
-    bus() {
-      this.$Bus.$on("whereYouAreNow", y => {
-        this.$nextTick(() => {
-          this.$refs.right.style.opacity = 1;
-          this.$refs.right.style.transform = `translate(${
-            window.innerWidth
-          }px, ${-y}px)`;
-        });
+    // 刷新
+    refresh() {
+      this.$Bus.$on("BSNeedToRefresh", () => {
+        this.$refs.scroll.refresh();
       });
     }
   },
-  components: {}
+  components: {
+    BS,
+    Swipe,
+    List,
+    Category
+  },
+  computed: {
+    height() {
+      let one = window.innerWidth / 10;
+      let height = window.innerHeight;
+      return `${(height - 2.2 * one) / one}rem`;
+    }
+  }
 };
 </script>
 
 <style lang="less" scoped>
 #home-live {
   background-color: var(--base-bg-color-sec);
-  .left,
-  .right {
-    position: absolute;
-    top: 0;
-    opacity: 0;
+  .content {
+    .footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-evenly;
+      height: 3rem;
+      span {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 3rem;
+        height: 1rem;
+        font-size: 0.3rem;
+        border-radius: 0.1rem;
+        border: 0.02rem solid rgba(100, 100, 100, 0.3);
+      }
+    }
+  }
+  .i-live {
+    color: #fff;
     overflow: hidden;
+    bottom: 2rem;
+    font-size: .52rem;
+    position: fixed;
+    right: .5rem;
+    height: 1.5rem;
+    width: 1.5rem;
+    border-radius: 100%;
+    display: flex;
+    align-items: center;
+    text-align: center;
+    background-color: var(--color-tint);
   }
 }
 </style>

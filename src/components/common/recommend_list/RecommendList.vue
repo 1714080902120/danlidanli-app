@@ -238,8 +238,9 @@ export default {
     }
     .label {
       display: flex;
-      margin: 30px 0px 10px 10px;
-      font-size: 30px;
+      margin-top: .2rem;
+      margin-bottom: .1rem;
+      font-size: .32rem;
       color: rgb(124, 121, 121);
       border-radius: 6px;
       align-items: center;
@@ -248,8 +249,8 @@ export default {
         margin-left: 10px;
       }
       img {
-        width: 50px;
-        height: 50px;
+        width: .6rem;
+        height: .6rem;
       }
     }
   }

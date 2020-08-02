@@ -14,42 +14,31 @@
 <script>
 export default {
   name: "Navbar",
-  props: {
-    isActive: {
-      type: Number,
-      default: 1
-    }
-  },
   data() {
     return {
       default: 1
     };
-  },
-  created () {
-    this.$nextTick(() => {
-
-    })
   },
   methods: {
     touchStart() {},
     touchMove() {},
     touchEnd() {},
     bottom () {
-
-
     }
   },
-  components: {},
   watch: {
-    '$store.state.offSetX' (newVal) {
-      this.$nextTick(() => {
-        this.$refs.bottom.style.transform = `translateX(${-newVal / 2}px)`
-      })
-    },
-    'isActive' (newVal) {
-      this.$nextTick(() => {        
-        this.$refs.bottom.style.transform = `translateX(${2 * (newVal - this.default)}rem)`
-      })
+    '$route.path' (newVal) {
+      if (newVal.indexOf('/home/') !== -1) {
+        let path = newVal.split('/home')[1]
+        let arr = ['/live', '/', '/hot', '/animate', '/movie', '/new-date', '/study']
+        arr.forEach((e, i) => {
+          if (e === path) {
+            this.$nextTick(() => {        
+              this.$refs.bottom.style.transform = `translateX(${2 * (i - this.default)}rem)`
+            })            
+          }
+        })
+      }
     },
     immediate: true,
     deep: true

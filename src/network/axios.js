@@ -1,10 +1,11 @@
 import Axios from 'axios';
+import { BASE_URL } from 'common/const.js'
 // import store from 'store/index'
 export default function (options) {
   return new Promise((resolve, reject) => {
     let instance = Axios.create({
       // baseURL: 'http://localhost:4000/',
-      baseURL: 'http://:4000/',
+      baseURL: `http://${BASE_URL}/`,
       timeout: 10000
     })
     instance.interceptors.request.use(config => {

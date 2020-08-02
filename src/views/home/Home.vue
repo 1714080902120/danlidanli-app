@@ -9,7 +9,9 @@
           </div>
         </div>
         <div class="home-right" slot="right">
-          <span class="game" @click="goToGame()"><img src="~assets/img/home/game_dark.svg" alt=""></span>
+          <span class="game" @click="goToGame()">
+            <img src="~assets/img/home/game_dark.svg" alt />
+          </span>
           <span class="download">
             <img src="~assets/img/base/download_dark.svg" alt />
           </span>
@@ -18,7 +20,7 @@
           </span>
         </div>
         <div class="bottom" slot="bottom">
-          <Navbar class="bottom" :isActive="sendActive">
+          <Navbar class="bottom">
             <NavbarItem
               slot="navbar"
               :isActive="toActive(index)"
@@ -34,24 +36,23 @@
           </Navbar>
         </div>
       </BaseOuter>
-      <BS
-        ref="scroll"
-        :pullDownRefresh="{ threshold: 0, stop: 0 }"
-        :bounce="bounce"
-        screenWidth="100%"
-        :screenHeight="height"
-        :probeType="3"
-      >
+      <transition name="slide-fade">
         <keep-alive>
           <router-view />
         </keep-alive>
-      </BS>
+      </transition>
     </div>
   </div>
 </template>
 
 <script>
-import { BaseOuter, Navbar, NavbarItem, BS } from "./index";
+/* eslint-disable no-undef */
+import {
+  BaseOuter,
+  Navbar,
+  NavbarItem
+  // BS
+} from "./index";
 
 export default {
   name: "Home",
@@ -66,28 +67,15 @@ export default {
         { title: "新时代", path: "/home/new-date" },
         { title: "学习区", path: "/home/study" }
       ],
-      sendActive: 1,
-      bounce: {
-        top: false,
-        bottom: true,
-        left: false,
-        right: false
-      }
+      sendActive: 1
     };
   },
   created() {
+    // plus.storage.setItem('isInHome', 'true')
+    this.bus();
   },
   mounted() {
-    this.$nextTick(() => {
-      let timer = setTimeout(() => {
-        this.whenStart();
-        clearTimeout(timer);
-        timer = null;
-      }, 100);
-      this.refresh();
-      this.backToTop();
-      this.navBarTransform();
-    });
+    this.navBarTransform();
   },
   activated() {
     if (
@@ -97,13 +85,14 @@ export default {
     ) {
       this.$router.go(0);
     }
-    this.$nextTick(() => {
-      let timer = setTimeout(() => {
-        this.whenStart();
-        clearTimeout(timer);
-        timer = null;
-      }, 100);
-    });
+    this.bus();
+    // plus.storage.setItem('isInHome', 'true')
+  },
+  deactivated() {
+    // plus.storage.setItem('isInHome', 'false')
+  },
+  destroyed() {
+    // plus.storage.setItem('isInHome', 'false')
   },
   methods: {
     // 路由跳转
@@ -114,32 +103,16 @@ export default {
       this.$router.replace({ path });
     },
     goToGame() {
-      this.$router.replace({ path: '/game' })
-    },
-    // 刷新
-    refresh() {
-      this.$Bus.$on("BSNeedToRefresh", () => {
-        this.$refs.scroll.refresh();
-      });
-    },
-    // 返回顶部
-    backToTop() {
-      this.$Bus.$on("backToTop", () => {
-        this.$refs.scroll.scrollTo(0, 0, 500);
-        this.$refs.scroll.refresh();
-      });
-    },
-    // 处于当前
-    whenStart() {
-      this.$refs.scroll.scrollTo(0, 0, 100);
-      this.$refs.scroll.refresh();
-      this.$refs.scroll.scrollEnd();
+      this.$router.replace({ path: "/game" });
     },
     // 上滑navbar消失特效
     navBarTransform() {
       this.$Bus.$on("NavbarTransform", ({ offsetY }) => {
         this.$refs.outer.style.transform = `translateY(${offsetY * 0.12}rem)`;
       });
+    },
+    bus() {
+      this.$Bus.$emit("isInActive", 0);
     }
   },
   computed: {
@@ -147,25 +120,36 @@ export default {
       return index => {
         return this.sendActive === index;
       };
-    },
-    height () {
-      let one = window.innerWidth / 10
-      let height = window.innerHeight
-        return `${(height - 2.2 * one) / one}rem`;
-
     }
   },
   components: {
     BaseOuter,
     Navbar,
-    NavbarItem,
-    BS
+    NavbarItem
+    // BS
   },
   watch: {
-    "$store.state.offSetItem"(newVal) {
-      this.sendActive = newVal;
+    "$route.path"(newVal) {
+      if (newVal.indexOf("/home/") !== -1) {
+        let path = newVal.split("/home")[1];
+        let arr = [
+          "/live",
+          "/",
+          "/hot",
+          "/animate",
+          "/movie",
+          "/new-date",
+          "/study"
+        ];
+        arr.forEach((e, i) => {
+          if (e === path) {
+            this.sendActive = i;
+          }
+        });
+      }
     },
-    immediate: true
+    immediate: true,
+    deep: true
   }
 };
 </script>
@@ -178,5 +162,18 @@ export default {
 }
 #home::-webkit-scrollbar {
   display: none;
+}
+/* 可以设置不同的进入和离开动画 */
+/* 设置持续时间和动画函数 */
+.slide-fade-enter-active {
+  transition: all 0.3s ease-in-out;
+}
+.slide-fade-leave-active {
+  transition: all 0.01s cubic-bezier(1, 0.5, 0.8, 1);
+}
+.slide-fade-enter, .slide-fade-leave-to
+/* .slide-fade-leave-active for below version 2.1.8 */ {
+  transform: translateX(10px);
+  opacity: 0;
 }
 </style>
