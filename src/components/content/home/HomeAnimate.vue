@@ -82,13 +82,14 @@ export default {
 #home-animate {
   overflow: hidden;
   .bottom {
-    height: 1rem;
+    height: 2rem;
     width: 10rem;
     display: flex;
     align-items: center;
     justify-content: center;
     color: #fff;
     font-size: .4rem;
+    margin-top: -.3rem;
   }
 }
 </style>

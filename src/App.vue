@@ -16,7 +16,7 @@
 <script>
 import Sidebar from "components/common/base/sidebar/Sidebar";
 import Tabbar from "components/common/base/tabbar/Tabbar";
-
+// document.domain = 'm.bilibili.com'
 export default {
   name: "App",
   data() {

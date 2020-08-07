@@ -71,6 +71,7 @@ export default {
   methods: {
     async toGetHomeSwipeData() {
       await getHomeSwipe().then(res => {
+        
         this.swipeData = res.map((n) => {
           n["text"] = n.name;
           n.name = ''

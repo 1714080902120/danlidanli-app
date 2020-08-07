@@ -38,10 +38,10 @@ export default {
 <style lang="less" scoped>
 #swipe {
   position: relative;
-  border-radius: 10px;
+  border-radius: .1rem;
   padding-top: .2rem;
-  height: 5.2rem;
-  line-height: 5.2rem;
+  height: 5rem;
+  line-height: 5rem;
   margin-bottom: -.1rem;
     background-repeat: no-repeat;
   background-position: center center;
@@ -49,20 +49,19 @@ export default {
   background-image: url("~assets/img/base/bilibili_user_logo_bg.svg");
   .mt-swipe {
     width: 10rem;
-    border-radius: .2rem;
+    border-radius: .1rem;
     img {
-      border-radius: .2rem;
-      // margin: 0 15px;
+      border-radius: .1rem;
       position: absolute;
       left: 0;
       right: 0;
       margin: auto;
       width: 9.6rem;
-      height: 4.7rem;
+      height: 4.5rem;
     }
     .text {
       position: absolute;
-      top: 1.7rem;
+      top: 1.6rem;
       left: .6rem;
       font-size: .4rem;
       color: rgb(255, 255, 255);

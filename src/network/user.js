@@ -114,3 +114,13 @@ export async function changeMessage({ username, name, desc }) {
     }
   })
 }
+
+export async function getUsualView(cookie) {
+  return await axios({
+    url: '/user/get-usual-view',
+    method: 'get',
+    params: {
+      cookie
+    }
+  })
+}

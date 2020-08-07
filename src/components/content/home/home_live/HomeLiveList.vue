@@ -102,13 +102,13 @@ export default {
             position: relative;
             width: 4.5rem;
             height: 2.9rem;
-            border-radius: .1rem .1rem 0 0;
+            border-radius: .1rem .1rem;
             background-repeat: no-repeat;
             background-position: center center;
             background-size: 2rem 2rem;
             background-image: url("~assets/img/base/bilibili_user_logo_bg.svg");
             img {
-              border-radius: .1rem .1rem 0 0;
+              border-radius: .1rem .1rem;
               width: 4.5rem;
               height: 2.8rem;
             }

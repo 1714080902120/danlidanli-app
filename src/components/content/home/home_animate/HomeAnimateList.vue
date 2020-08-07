@@ -40,7 +40,7 @@ export default {
   methods: {
     toGetHomeAnimateData() {
       this.rid += 1;
-      let arr = [32, 33, 51, 152];
+      let arr = [ 24, 25, 47, 210, 86, 27, 32, 33, 51, 152, 167, 153, 169, 195];
       arr.forEach(e => {
         getHomeAnimateData(e, "ranking", 0).then(res => {
           let obj = {
@@ -108,13 +108,13 @@ export default {
             position: relative;
             width: 4.5rem;
             height: 3rem;
-            border-radius: 0.1rem 0.1rem 0 0;
+            border-radius: 0.1rem 0.1rem;
             background-repeat: no-repeat;
             background-position: center center;
             background-size: 2rem 2rem;
             background-image: url("~assets/img/base/bilibili_user_logo_bg.svg");
             img {
-              border-radius: 0.1rem 0.1rem 0 0;
+              border-radius: 0.1rem 0.1rem;
               width: 4.5rem;
               height: 2.9rem;
             }

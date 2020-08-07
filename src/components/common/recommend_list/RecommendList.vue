@@ -142,8 +142,8 @@ export default {
     margin-bottom: 20px;
     width: 350px;
     margin-right: 15px;
-    background-color: rgb(60, 60, 60);
-    border-radius: 10px;
+    background-color: rgb(50, 50, 50);
+    border-radius: .1rem;
     .cover {
       position: relative;
       margin-bottom: -20px;
@@ -154,7 +154,7 @@ export default {
       background-repeat: no-repeat;
       background-size: 1.4rem 1.4rem;
       margin-bottom: 0.2rem;
-      border-radius: 0.2rem;
+      border-radius: 0.1rem;
       background-color: var(--base-set-bg-color);
       .is-tip {
         filter: blur(15px);
@@ -185,14 +185,14 @@ export default {
       img {
         width: 350px;
         height: 3rem;
-        border-radius: .2rem .2rem 0 0;
+        border-radius: .1rem .1rem 0 0;
       }
     }
     .info {
       position: absolute;
       display: flex;
       justify-content: space-between;
-      font-size: 0.3rem;
+      font-size: 0.28rem;
       align-items: flex-end;
       width: 5rem;
       height: .6rem;
@@ -205,11 +205,11 @@ export default {
         align-items: center;
         flex: auto;
         &:nth-child(2) {
-          margin: 0 0 0 -0.15rem;
+          margin: 0 .3rem 0 -0.3rem;
         }
         img {
-          width: .4rem;
-          height: .4rem;
+          width: .32rem;
+          height: .32rem;
         }
       }
     }
@@ -229,7 +229,7 @@ export default {
       }
     }
     .title {
-      font-size: 0.35rem;
+      font-size: 0.32rem;
       overflow: hidden;
       white-space: nowrap;
       text-overflow: ellipsis;

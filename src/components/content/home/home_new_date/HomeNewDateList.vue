@@ -1,7 +1,7 @@
 <template>
-  <div id="home-movie-list" v-if="homeMovieData.length > 0">
+  <div id="home-new-date-list" v-if="homeNewDateData.length > 0">
     <div class="content">
-      <div class="items" v-for="items in homeMovieData" :key="items.type">
+      <div class="items" v-for="items in homeNewDateData" :key="items.type">
         <div class="items-title">
           <span>{{ items.type }}</span>
           <span class="title-right">查看更多</span>
@@ -12,7 +12,7 @@
             <div class="cover" v-waves>
               <img v-lazy="item.pic" alt />
               <div class="detail">
-                <div class="up">{{(item.play / 10000).toFixed(1)}}万追番</div>
+                <div class="up">{{(item.play / 10000).toFixed(1)}}万播放</div>
               </div>
             </div>
             <div class="item-title">{{ item.title }}</div>
@@ -26,21 +26,21 @@
 <script>
 import { getHomeAnimateData } from "network/home.js";
 export default {
-  name: "HomeMovieList",
+  name: "HomeNewDateList",
   data() {
     return {
       rid: 31,
-      homeMovieData: []
+      homeNewDateData: []
     };
   },
   created() {
-    this.toGetHomeMovieData();
+    this.toGetHomeNewDateData();
     
   },
   methods: {
-    toGetHomeMovieData() {
+    toGetHomeNewDateData() {
       this.rid += 1;
-      let arr = [145, 147, 146, 83, 182, 183, 85, 184, 185, 187, 37, 178, 179];
+      let arr = [ 138, 21, 76, 75, 161, 162, 163, 176, 174, 157, 158, 164, 159, 192, 71, 137, 180];
       arr.forEach(e => {
         getHomeAnimateData(e, "ranking", 0).then(res => {
           let obj = {
@@ -50,7 +50,7 @@ export default {
             })
           };
 
-          this.homeMovieData.push(obj);
+          this.homeNewDateData.push(obj);
         });
       });
     }
@@ -59,7 +59,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
-#home-movie-list {
+#home-new-date-list {
   width: 10rem;
   padding: 0 0.3rem;
   font-size: 0.3rem;

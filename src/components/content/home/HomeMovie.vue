@@ -42,7 +42,7 @@ export default {
     // 往左快滑
     swipeLeft() {
       if (this.isLock) return false;
-      this.$router.push({ name: "HomeStudy" });
+      this.$router.push({ name: "HomeNewDate" });
     },
     // 往右快滑
     swipeRight() {
@@ -52,7 +52,7 @@ export default {
     // 左滑
     panleft() {
       if (this.isLock) return false;
-      this.$router.push({ name: "HomeStudy" });
+      this.$router.push({ name: "HomeNewDate" });
     },
     // 右滑
     panright() {
@@ -82,13 +82,14 @@ export default {
 #home-movie {
   overflow: hidden;
   .bottom {
-    height: 1rem;
+    height: 2rem;
     width: 10rem;
     display: flex;
     align-items: center;
     justify-content: center;
     color: #fff;
     font-size: .4rem;
+    margin-top: -.3rem;
   }
 }
 </style>

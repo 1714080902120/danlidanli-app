@@ -139,7 +139,7 @@ export default {
               color: #fff;
               font-size: 0.25rem;
               background-color: rgb(243, 169, 20);
-              width: 1.4rem;
+              width: 1.6rem;
               height: 0.5rem;
               border-radius: 0.05rem;
               display: flex;

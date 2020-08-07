@@ -39,7 +39,7 @@ export default {
 <style lang="less" scoped>
 #home-hot-top {
   width: 10rem;
-  height: 2rem;
+  height: 3rem;
   display: flex;
   align-items: center;
   justify-content: space-around;
@@ -53,19 +53,19 @@ export default {
       font-size: 0.3rem;
       &:first-child {
         border-radius: 100%;
-        height: 1rem;
-        width: 1rem;
+        height: 1.3rem;
+        width: 1.3rem;
         display: flex;
         align-items: center;
         justify-content: center;
         margin-bottom: .1rem;
         span {
           
-          width: .6rem;
-          height: .6rem;
+          width: .8rem;
+          height: .8rem;
           background-repeat: no-repeat;
           background-position: center center;
-          background-size: .6rem .6rem;
+          background-size: 80% 80%;
         }
       }
     }
