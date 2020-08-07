@@ -124,3 +124,25 @@ export async function getUsualView(cookie) {
     }
   })
 }
+
+export async function getAllChannels(cookie) {
+  return await axios({
+    url: '/user/get-all-channels',
+    method: 'get',
+    params: {
+      cookie
+    }
+  })
+}
+
+export async function getChannelsDetail(cookie, id, offset) {
+  return await axios({
+    url: '/user/get-channels-detail',
+    method: 'get',
+    params: {
+      cookie,
+      id,
+      offset
+    }
+  })
+}

@@ -38,6 +38,16 @@ export default {
     return {
       count: 2533,
     };
+  },
+  created () {
+    this.bus()
+  },
+  methods: {
+    bus() {
+      this.$Bus.$on('channelsCount', count => {
+        this.count = count
+      })
+    }
   }
 };
 </script>
