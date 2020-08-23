@@ -11,11 +11,19 @@ import VueTouch from 'vue-touch'
 import VueCropper from 'vue-cropper'
 import Back from 'common/h5+/back.js'
 import VideoPlayer from 'vue-video-player'
+import VueDirectiveImagePreviewer from 'vue-directive-image-previewer'
+import 'vue-directive-image-previewer/dist/assets/style.css'
+
 require('video.js/dist/video-js.css')
 require('vue-video-player/src/custom-theme.css')
 
 Vue.config.productionTip = false
 
+Vue.use(VueDirectiveImagePreviewer, {
+  zIndex: 999,
+  animate: {duration: 200, delay: 100, func: "ease-in-out"},
+  // maxWidth: '100%'
+}) 
 Vue.use(VideoPlayer)
 Vue.use(VueTouch, { name: 'v-touch' })
 Vue.use(MintUI, {

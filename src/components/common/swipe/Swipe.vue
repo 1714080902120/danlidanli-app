@@ -30,28 +30,27 @@ export default {
     return {};
   },
   created() {},
-  methods: {
-  }
+  methods: {}
 };
 </script>
 
 <style lang="less" scoped>
 #swipe {
   position: relative;
-  border-radius: .1rem;
-  padding-top: .2rem;
+  border-radius: 0.1rem;
+  padding-top: 0.2rem;
   height: 5rem;
   line-height: 5rem;
-  margin-bottom: -.1rem;
-    background-repeat: no-repeat;
+  margin-bottom: -0.1rem;
+  background-repeat: no-repeat;
   background-position: center center;
   background-size: 3rem 3rem;
   background-image: url("~assets/img/base/bilibili_user_logo_bg.svg");
   .mt-swipe {
     width: 10rem;
-    border-radius: .1rem;
+    border-radius: 0.1rem;
     img {
-      border-radius: .1rem;
+      border-radius: 0.1rem;
       position: absolute;
       left: 0;
       right: 0;
@@ -62,11 +61,10 @@ export default {
     .text {
       position: absolute;
       top: 1.6rem;
-      left: .6rem;
-      font-size: .4rem;
+      left: 0.6rem;
+      font-size: 0.4rem;
       color: rgb(255, 255, 255);
     }
   }
 }
-
 </style>

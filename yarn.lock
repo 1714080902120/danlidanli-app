@@ -5179,6 +5179,11 @@ lodash.uniq@^4.5.0:
   resolved "https://registry.npm.taobao.org/lodash.uniq/download/lodash.uniq-4.5.0.tgz#d0225373aeb652adc1bc82e4945339a842754773"
   integrity sha1-0CJTc662Uq3BvILklFM5qEJ1R3M=
 
+lodash@^4.17.10:
+  version "4.17.20"
+  resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.20.tgz#b44a9b6297bcb698f1c51a3545a2b3b368d59c52"
+  integrity sha512-PlhdFcillOINfeV7Ni6oF1TAEayyZBoZ8bcshTHqOYJYlrqzRK5hagpagky5o4HfCzzd1TRkXPMFq6cKk9rGmA==
+
 lodash@^4.17.11, lodash@^4.17.13, lodash@^4.17.14, lodash@^4.17.15, lodash@^4.17.3:
   version "4.17.15"
   resolved "https://registry.npm.taobao.org/lodash/download/lodash-4.17.15.tgz?cache=0&sync_timestamp=1571657272199&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Flodash%2Fdownload%2Flodash-4.17.15.tgz#b447f6670a0455bbfeedd11392eff330ea097548"
@@ -8532,6 +8537,14 @@ vue-cropper@^0.5.2:
   resolved "https://registry.yarnpkg.com/vue-cropper/-/vue-cropper-0.5.2.tgz#069b2ffe5336b3f800d3049df2b0746263bd8642"
   integrity sha512-51lj/7s3ok6pVvceibc/dM4zFccrx3020CX7i/k6Kl9K3M9ot8NXRvXf813ME2Dwwa3Eb/TeSM87+zu5ZcXAZA==
 
+vue-directive-image-previewer@^2.2.2:
+  version "2.2.2"
+  resolved "https://registry.yarnpkg.com/vue-directive-image-previewer/-/vue-directive-image-previewer-2.2.2.tgz#56d74e7ab109be9b5fd399a86ff868f2e2ca754a"
+  integrity sha512-/9gMB7BAzh1i+l5k2LTFe71sJQ4JnLdND71PPYQBYi7fx84yx050F951btzugkdbo2+Qw8kNq2pYcFDdDmMy9A==
+  dependencies:
+    lodash "^4.17.10"
+    vue "^2.4.2"
+
 vue-eslint-parser@^7.0.0:
   version "7.0.0"
   resolved "https://registry.npm.taobao.org/vue-eslint-parser/download/vue-eslint-parser-7.0.0.tgz?cache=0&sync_timestamp=1573306368916&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fvue-eslint-parser%2Fdownload%2Fvue-eslint-parser-7.0.0.tgz#a4ed2669f87179dedd06afdd8736acbb3a3864d6"
@@ -8617,7 +8630,7 @@ vue-video-player@^5.0.2:
     videojs-flash "^2.1.0"
     videojs-hotkeys "^0.2.20"
 
-vue@^2.6.11:
+vue@^2.4.2, vue@^2.6.11:
   version "2.6.11"
   resolved "https://registry.npm.taobao.org/vue/download/vue-2.6.11.tgz#76594d877d4b12234406e84e35275c6d514125c5"
   integrity sha1-dllNh31LEiNEBuhONSdcbVFBJcU=

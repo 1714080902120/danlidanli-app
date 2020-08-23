@@ -295,7 +295,7 @@ export default {
   .tabbar-outer {
     position: relative;
     display: flex;
-    bottom: 0;
+    bottom: 0%;
     background-color: var(--base-bg-color);
     justify-content: space-around;
     align-items: center;

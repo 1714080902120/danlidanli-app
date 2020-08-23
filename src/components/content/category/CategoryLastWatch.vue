@@ -19,6 +19,7 @@
 
 <script>
 import { getUsualView } from "network/user.js";
+import { COOKIE } from 'common/const.js'
 
 export default {
   name: "CategoryLastWatch",
@@ -32,9 +33,7 @@ export default {
   },
   methods: {
     toGetUsualView() {
-      let cookie =
-        "DedeUserID=81583053; DedeUserID__ckMd5=36103985fd4c465e; SESSDATA=bcc738e9%2C1612236607%2Cd4df7*81; bili_jct=a2423d1291dea30b6f0ea6490af16d5b;";
-      getUsualView(cookie).then(res => {
+      getUsualView(COOKIE).then(res => {
         if (res.data != -1) {
           for (let i = 0; i < res.data.channels.length; i++) {
             const e = res.data.channels[i];

@@ -96,7 +96,6 @@ export default {
           this.$refs.swipe.style.transform = `translateY(-${1 *
             this.swipeLength}rem)`;
           if (this.swipeLength >= this.channelsList.length - 1) {
-            console.log(123)
             clearInterval(timer);
             timer = null;
           }
