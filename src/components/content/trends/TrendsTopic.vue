@@ -70,7 +70,10 @@ export default {
     .item {
       height: 1rem;
       width: 4.7rem;
-
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      
       .left {
         margin-right: 0.2rem;
         span {
@@ -104,7 +107,7 @@ export default {
     .for-more {
       width: 4.2rem;
       height: 1rem;
-      color: rgb(26, 114, 247);
+      color: rgb(56, 114, 158);
       &::after {
         content: "";
         display: flex;

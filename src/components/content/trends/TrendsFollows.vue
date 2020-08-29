@@ -1,8 +1,8 @@
 <template>
-  <div id="home-animate-follows">
+  <div id="trends-follows">
     <div class="head">
-      <span>我的追番</span>
-      <span>查看全部</span>
+      <span>我的追番·追剧</span>
+      <span>全部</span>
     </div>
     <div class="content">
       <div class="item" v-for="item in list" :key="item.title">
@@ -21,7 +21,7 @@
 
 <script>
 export default {
-  name: "HomeAnimateFollows",
+  name: "TrendsFollows",
   data() {
     return {
       list: [
@@ -74,23 +74,24 @@ export default {
 </script>
 
 <style lang="less" scoped>
-#home-animate-follows {
+#trends-follows {
   overflow: hidden;
-  padding: 0 .3rem;
+  // padding: 0 .3rem;
   width: 10rem;
   font-size: 0.25rem;
   border-bottom: 0.02rem solid rgba(100, 100, 100, 0.3);
-  margin-bottom: .3rem;
+  margin-top: .3rem;
+  background-color: rgb(54, 54, 54);
   .head {
     display: flex;
     align-items: center;
     font-size: 0.3rem;
     justify-content: space-between;
     margin: .3rem 0;
+    padding: 0 .3rem;
     span {
-      
+      position: relative;
       &:last-child {
-        opacity: 0.6;
         margin-right: 0.4rem;
         &::after {
           content: "";
@@ -110,7 +111,6 @@ export default {
     display: flex;
     align-items: center;
     width: 10rem;
-    flex-wrap: wrap;
     justify-content: flex-start;
     overflow-x: auto;
     display: flex;
@@ -122,6 +122,12 @@ export default {
       flex-direction: column;
       justify-content: space-around;
       margin-bottom: .2rem;
+      &:first-child {
+        margin-left: .3rem;
+      }
+      &:last-child {
+        margin-right: .3rem;
+      }
       .cover {
         position: relative;
         height: 2rem;

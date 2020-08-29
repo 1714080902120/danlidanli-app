@@ -3,7 +3,7 @@
     <div class="items">
       <div class="item" v-for="item in feeds" :key="item.id" v-waves>
         <img v-if="item.type === 'mallitems'" :src="item.imageUrls[0]" alt />
-        <img v-if="item.type === 'ticketproject'" :src="item.cover" alt />
+        <img v-if="item.type === 'ticketproject'" :src="`https:${item.cover}`" alt />
         <img v-if="item.type === 'ugcs'" :src="'https:' + item.imgs.split(';')[0]" alt />
         <div class="title">
           <div v-if="item.type !== 'ugcs'" class="title-tag">

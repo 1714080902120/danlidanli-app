@@ -29,36 +29,49 @@
         <span class="edit"></span>
       </div>
     </BaseOuter>
-    <div class="content">
+    <div class="content" @scroll="scroll($event)">
       <Top :title="title" />
-      <Topic />
-      <List />
+      <Topic v-show="isActive === 1" />
+      <Follows v-show="isActive === 0" />
+      <List :activeType="isActive" />
     </div>
   </div>
 </template>
 
 <script>
-import { BaseOuter, Top, Topic, List } from "./index";
+/* eslint-disable no-undef */
+import { BaseOuter, Top, Topic, List, Follows } from "./index";
 
 export default {
   name: "Trends",
   data() {
     return {
       isActive: 1,
-      title: ''
+      title: '',
+      func: null
     };
   },
   created() {
+    // plus.storage.setItem('isInHome', 'true')
     this.bus();
+    this.func = this.$debounce(this.needToAddData, 500, true)
   },
   activated() {
     this.bus();
+    // plus.storage.setItem('isInHome', 'true')
+  },
+  deactivated () {
+    // plus.storage.setItem('isInHome', 'false')
+  },
+  destroyed () {
+    // plus.storage.setItem('isInHome', 'false')
   },
   components: {
     BaseOuter,
     Top,
     Topic,
-    List
+    List,
+    Follows
   },
   methods: {
     bus() {
@@ -74,6 +87,18 @@ export default {
           this.title = ''
         break;
       }
+    },
+    scroll (e) {
+      if (
+        e.srcElement.scrollTop >=
+        e.srcElement.scrollHeight - window.innerHeight - 300
+      ) {
+        this.func()
+      }
+      
+    },
+    needToAddData () {
+      this.$Bus.$emit('trendsNeedToAddData')
     }
   }
 };

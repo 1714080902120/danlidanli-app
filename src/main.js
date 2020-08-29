@@ -21,9 +21,9 @@ Vue.config.productionTip = false
 
 Vue.use(VueDirectiveImagePreviewer, {
   zIndex: 999,
-  animate: {duration: 200, delay: 100, func: "ease-in-out"},
-  // maxWidth: '100%'
-}) 
+  animate: {duration: 100, delay: 0, func: "ease-in-out"},
+  maxWidth: '100%'
+})
 Vue.use(VideoPlayer)
 Vue.use(VueTouch, { name: 'v-touch' })
 Vue.use(MintUI, {

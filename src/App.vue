@@ -3,33 +3,45 @@
     <Sidebar />
     <transition name="slide-fade">
       <keep-alive>
-        <router-view class="Router" />
+        <router-view class="Router" :class="{ 'is-loading': isInLoading }" />
       </keep-alive>
     </transition>
     <div v-if="active()">
       <Tabbar />
     </div>
     <div class="modal" v-if="modal"></div>
+    <!-- <LoadingAnimate v-show="isInLoading" /> -->
   </div>
 </template>
 
 <script>
 import Sidebar from "components/common/base/sidebar/Sidebar";
 import Tabbar from "components/common/base/tabbar/Tabbar";
-// document.domain = 'm.bilibili.com'
+// import LoadingAnimate from "components/common/loading-animate/LoadingAnimate";
+
 export default {
   name: "App",
   data() {
     return {
-      modal: false
+      modal: false,
+      isInLoading: false
     };
   },
-  created() {},
+  created() {
+    this.bus()
+  },
   components: {
     Sidebar,
-    Tabbar
+    Tabbar,
+    // LoadingAnimate
   },
-  methods: {},
+  methods: {
+    bus() {
+      this.$Bus.$on("finishRender", () => {
+        this.isInLoading = false;
+      });
+    }
+  },
   computed: {
     active() {
       let path = this.$route.path;
@@ -110,7 +122,9 @@ export default {
   //   -webkit-transform: translate(-10rem, 0);
   //   transform: translate(-10rem 0);
   // } */
-
+.is-loading {
+  filter: blur(50px);
+}
 .modal {
   position: absolute;
   top: 0;

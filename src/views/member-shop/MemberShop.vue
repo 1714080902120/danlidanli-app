@@ -37,6 +37,7 @@
 </template>
 
 <script>
+/* eslint-disable no-undef */
 import {
   BaseOuter,
   Top,
@@ -67,6 +68,7 @@ export default {
     };
   },
   created() {
+    // plus.storage.setItem('isInHome', 'true')
     this.toGetmemberShopAll();
     this.bus();
     this.funcForAll = this.$debounce(this.getAll, 500, true);
@@ -76,6 +78,13 @@ export default {
   },
   activated() {
     this.bus();
+    // plus.storage.setItem('isInHome', 'true')
+  },
+  deactivated () {
+    // plus.storage.setItem('isInHome', 'false')
+  },
+  destroyed () {
+    // plus.storage.setItem('isInHome', 'false')
   },
   components: {
     BaseOuter,

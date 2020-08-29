@@ -5,11 +5,12 @@
         <img src="~assets/img/home/search_dark.svg" alt />
         <input type="text" name id placeholder="探索你感兴趣的频道" />
       </div>
+     
     </div>
+    <div class="title" v-if="title !== ''">{{ title }}</div>
     <div class="content">
-      <div class="title" v-if="title !== ''">{{ title }}</div>
       <div class="items">
-        <div class="items-live" v-if="liveList.length > 0">
+        <div class="items-live" v-if="liveList.length > 0 && title === ''">
           <div class="item-live" v-for="item in liveList" :key="item.uid">
             <span :style="{ 'backgroundImage': `url(${item.face})` }"></span>
             <span>直播中</span>
@@ -106,13 +107,16 @@ export default {
       }
     }
   }
+  .title {
+    height: 0.6rem;
+    width: 100%;
+    align-items: flex-end;
+    padding: 0 .3rem;
+    margin-bottom: -.3rem;
+  }
   .content {
     width: 100%;
     height: 3rem;
-    .title {
-      height: 0.6rem;
-      width: 100%;
-    }
     .items {
       overflow: hidden;
       overflow-x: scroll;

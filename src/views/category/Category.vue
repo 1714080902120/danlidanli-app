@@ -52,6 +52,7 @@
 </template>
 
 <script>
+/* eslint-disable no-undef */
 import { BaseOuter, Top, UsualView, Hot, Zone } from "./index";
 
 export default {
@@ -62,10 +63,18 @@ export default {
     };
   },
   created() {
+    // plus.storage.setItem('isInHome', 'true')
     this.bus();
   },
   activated() {
     this.bus();
+    // plus.storage.setItem('isInHome', 'true')
+  },
+  deactivated () {
+    // plus.storage.setItem('isInHome', 'false')
+  },
+  destroyed () {
+    // plus.storage.setItem('isInHome', 'false')
   },
   components: {
     BaseOuter,
